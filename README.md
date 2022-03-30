@@ -56,10 +56,9 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 
 ## THANKS TO : 
 
-***ADVPHISHING AUTHOR FOR PAGES***
-
-***BLACKEYE TOOL AUTHOR FOR PAGES***
-
-***LINUXCHOICE TOOL FOR PAGES***
+***MRPHISH TOOL FOR PAGES***
 
 ***ZPHISHER TOOL FOR PAGES***
+
+## WARNING : 
+***This tool is only for educational purpose. If you use this tool for other purposes except education we will not be responsible in such cases.***
