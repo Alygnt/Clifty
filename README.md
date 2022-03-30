@@ -24,7 +24,7 @@
 <a href="https://github.com/rdxlr"><img title="Watching" src="https://img.shields.io/github/watchers/rdxlr/nphisher?label=Watchers&color=blue&style=flat-square"></a>
 </p>
 
-### ABOUT TOOL:
+## ABOUT TOOL:
 NPhisher is the most powerful phishing site. it has lots of advantages. Give it a try.
  
 ### What makes Nphisher so powerful:
@@ -33,10 +33,10 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 * Saves the logs and manages it
 * More than you think
 
-### TESTED ON:
+## TESTED ON:
 * Termux
 
-### Requirments:
+## REQUIRMENTS:
 * Internet 400 MB
 * Storage 500 MB
 * Ngrok Token
@@ -56,9 +56,9 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 
 ## THANKS TO : 
 
-***MRPHISH TOOL FOR PAGES***
+* MRPHISH TOOL FOR PAGES
 
-***ZPHISHER TOOL FOR PAGES***
+* ZPHISHER TOOL FOR PAGES
 
 ## WARNING : 
 ***This tool is only for educational purpose. If you use this tool for other purposes except education we will not be responsible in such cases.***
