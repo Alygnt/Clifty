@@ -23,3 +23,43 @@
 <a href="https://github.com/rdxlr"><img title="Forks" src="https://img.shields.io/github/forks/rdxlr/nphisher?color=red&style=flat-square"></a>
 <a href="https://github.com/rdxlr"><img title="Watching" src="https://img.shields.io/github/watchers/rdxlr/nphisher?label=Watchers&color=blue&style=flat-square"></a>
 </p>
+
+### ABOUT TOOL:
+NPhisher is the most powerful phishing site. it has lots of advantages. Give it a try.
+ 
+### What makes Nphisher so powerful:
+* Has 100+ Phishing Options
+* Has OTP phishing function
+* Saves the logs and manages it
+* More than you think
+
+### TESTED ON:
+* Termux
+
+### Requirments:
+* Internet 400 MB
+* Storage 500 MB
+* Ngrok Token
+
+## INSTALLATION [Termux] :
+
+* `apt-get update -y`
+* `apt-get upgrade -y`
+* `pkg install git -y`
+* `git clone https://github.com/rdxlr/nphisher`
+* `cd $HOME`
+* `ls`
+* `cd mrphish`
+* `ls`
+* `bash setup`
+
+
+## THANKS TO : 
+
+***ADVPHISHING AUTHOR FOR PAGES***
+
+***BLACKEYE TOOL AUTHOR FOR PAGES***
+
+***LINUXCHOICE TOOL FOR PAGES***
+
+***ZPHISHER TOOL FOR PAGES***
