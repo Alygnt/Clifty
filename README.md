@@ -9,7 +9,7 @@
 </p>
 (Poster)
 <p align="center">
-<a href="https://github.com/rdxlr"><img title="Github" src="https://img.shields.io/badge/rdxlr-brightgreen?style=for-the-badge&logo=github"></a>
+<a href="https://github.com/rdxlr"><img title="Github" src="https://img.shields.io/badge/rdxlr?style=for-the-badge&logo=github"></a>
 </p>
 
 <p align="center">
