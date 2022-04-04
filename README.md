@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/RDXLR/NPhisher/main/core/pics/logo.png">
+<img src="https://raw.githubusercontent.com/RDXLR/NPhisher/main/core/pics/banner.png">
 </p>
 
 <p align="center">
