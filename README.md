@@ -42,9 +42,8 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 * Termux
 
 ## REQUIRMENTS:
-* Internet 400 MB
-* Storage 500 MB
-* Ngrok Token
+* Internet 
+* Storage 300 MB
 
 ## INSTALLATION [Termux] :
 
