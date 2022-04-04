@@ -184,7 +184,7 @@ if [ -x "nphisher.sh" ];
         then
         continue
 else
-        chmod 0755 nphisher.sh
+        chmod 777 nphisher.sh
 fi
 }
 
