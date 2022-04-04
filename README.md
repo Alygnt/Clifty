@@ -26,7 +26,6 @@
 <a href="https://github.com/rdxlr"><img title="Stars" src="https://img.shields.io/github/stars/rdxlr/nphisher?color=red&style=flat-square"></a>
 <a href="https://github.com/rdxlr"><img title="Forks" src="https://img.shields.io/github/forks/rdxlr/nphisher?color=red&style=flat-square"></a>
 <a href="https://github.com/rdxlr"><img title="Issues" src="https://img.shields.io/github/issues/rdxlr/nphisher?color=red&style=flat-square"></a>
-
 <a href="https://github.com/rdxlr"><img title="Watching" src="https://img.shields.io/github/watchers/rdxlr/nphisher?label=Watchers&color=blue&style=flat-square"></a>
 </p>
 
