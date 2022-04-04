@@ -32,9 +32,10 @@
 NPhisher is the most powerful phishing site. it has lots of advantages. Give it a try.
  
 ### What makes Nphisher so powerful:
-* Has 100+ Phishing Options
+* Has 150+ Phishing Options
 * Has OTP phishing function
 * Saves the logs and manages it
+* User frieu
 * More than you think
 
 ## TESTED ON:
