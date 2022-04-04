@@ -18,7 +18,7 @@
 
 </p>
 
-<p align='centre'>
+<p align="entre">
 <a href="https://github.com/rdxlr"><img title="Licence" src="https://img.shields.io/badge/License-GNU General Public License v3.0-blue.svg"></a>
 </p>
 
