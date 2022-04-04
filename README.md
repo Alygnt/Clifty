@@ -25,7 +25,7 @@
 </p>
 
 <p align="center">
-src="https://raw.githubusercontent.com/RDXLR/NPhisher/main/core/pics/poster.png"
+<img src="https://raw.githubusercontent.com/RDXLR/NPhisher/main/core/pics/poster.png">
 </p>
 
 ## ABOUT TOOL:
