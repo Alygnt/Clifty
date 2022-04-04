@@ -35,7 +35,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 * Has 150+ Phishing Options
 * Has OTP phishing function
 * Saves the logs and manages it
-* User frieu
+* User friendly
 * More than you think
 
 ## TESTED ON:
