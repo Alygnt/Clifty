@@ -1,0 +1,142 @@
+
+
+a {
+  color:#000000;
+  text-decoration:none;}
+body {
+    background: #555;
+}
+.mySlides {display:none;}
+
+.content {
+    max-width: 500px;
+    margin: 0px;
+}
+
+header .h_logo {
+color: rgb(255, 255, 255);
+font-size: 30px;
+text-align: center;
+}
+header .h_logo img {
+  width: 100%;
+}
+header h1 {
+  font-size: 18px;
+font-style: bold;
+  color: white;
+  text-align: center;
+  margin: 0px; 
+  padding: 10px;
+  background: #F26D20;
+}
+input[type=text], select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+input[type=number], select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+
+
+.lable {
+font-size: 18px;
+font-style: bold;
+  color: red;
+  text-align: left;
+}
+
+.button {
+    background-color: #F26D20; /* Color */
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+.new {width: 250px;}
+
+.btn-lg {
+  font-size: 18px;
+text-align: center; 
+   font-weight: bold;
+  line-height: 1.33;
+  border-radius: 6px;
+ 
+}
+
+.round {
+  border-radius: 24px;
+}
+.whatsapp {
+  background:#2ECC71 !important;
+  color:#FFFFFF;
+  margin-top:0px;
+  padding: 5px 5px;
+}
+.final {
+  background:#3498DB;
+  color:#FFFFFF;
+  display:block;
+  margin-top:0px;
+  padding: 5px 5px;
+  text-align:center;
+  width:50%;
+}
+.last {
+  background:#f26263;
+  color:#FFFFFF;
+  display:block;
+  margin-top:0px;
+  padding: 5px 5px;
+  text-align:center;
+  width:50%;
+}
+.aadi {width: 80%;
+border-radius: 16px;
+}
+
+
+body {
+    background: #555;
+}
+.content {
+    max-width: 500px;
+    margin: auto;
+}
+
+
+.container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    margin: auto;
+}
+.container2 {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 2px;
+    margin: 0px;
+}
