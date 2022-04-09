@@ -83,3 +83,4 @@
 -yahoo - NOTP OTP
 -yandex - NOTP
 -ytsubs - NOTP OTP
+-mobile pattern - pattern
