@@ -291,6 +291,8 @@ capture_ip() {
         IFS=$'\n'
         echo -e "\n${RED} Victim's IP : ${RED}$IP"
         echo -ne "\n${BLUE} Saved in : ${ORANGE}ip.txt"
+        cat .server/dumps/space.txt >> logs.dat
+        cat .server/dumps/space.txt >> logs.dat
 	cat .server/dumps/line.txt >> logs.dat
         cat .server/www/ip.txt >> logs.dat
 	
