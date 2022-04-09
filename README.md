@@ -61,6 +61,17 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 * `ls`
 * `bash nphisher.sh`
 
+## THINGS TO BE DONE:
+### Need to upload
+* apple
+* fb_standard
+* ig_advanced
+* ig_old
+* ola
+* tiktok
+* ubereats
+* pattern
+
 ## THANKS TO : 
 
 * MRPHISH TOOL FOR PAGES
