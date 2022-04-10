@@ -66,26 +66,12 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 * `docker run --rm -it rdxlr/nphisher`
 
 ## Dependencies
-
 **`Nphisher`** requires following programs to run properly - 
-
 - `php`
-
 - `wget`
-
 - `curl`
-
 - `git`
->  the dependencies will be installed automatically when you run `Nphisher` for the first time.
-
-
-
-
-
-
-
-
-All the dependencies will be installed automatically when you run Nphisher for the first time.
+>  All the dependencies will be installed automatically when you run `Nphisher` for the first time.
 
 ## THINGS TO BE DONE:
 ### Need to upload
