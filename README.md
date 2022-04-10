@@ -57,7 +57,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 * `apt-get upgrade -y`
 * `pkg install git -y`
 * `git clone https://github.com/rdxlr/NPhisher`
-* `cd nphisher`
+* `cd NPhisher`
 * `ls`
 * `bash nphisher.sh`
 
