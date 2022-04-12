@@ -44,7 +44,7 @@ cbanner(){
 	echo -e "${RED} ██║   ╚███║${BLUE}██║     ██╔══██║██║╚════██║██╔══██║██╔══╝  ██╔══██╗${NC}"
 	echo -e "${RED} ██║    ███║${BLUE}██║     ██║  ██║██║███████║██║  ██║███████╗██║  ██║${NC}"
 	echo -e "${RED} ╚═╝    ╚══╝${BLUE}╚═╝     ╚═╝  ╚═╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝${NC}"
-	echo -e "${CYAN}                                                  By - NEERAJ${NC}"
+	echo -e "${CYAN}                                                  By - ${RED}RDXLR${NC}"
 	echo -e "${CYAN}        ${NC} "
 	echo -e "${GREEN}                           Version 1.0 ${NC}"
 	echo -e "${CYAN}        ${NC} "
