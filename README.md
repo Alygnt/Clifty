@@ -88,13 +88,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 >  All the dependencies will be installed automatically when you run `Nphisher` for the first time.
 
 ## THINGS TO BE DONE:
-### Need to upload
-* apple
-* ig_advanced
-* ig_old
-* ola
-* tiktok
-* ubereats
+*** Nothing to be done now... ***
 
 ## THANKS TO : 
 
