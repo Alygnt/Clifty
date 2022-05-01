@@ -192,7 +192,7 @@ fi
 cd ..
 rm -rf NPhisher
 echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} REINSTALLING THE TOOL ${NC} "
-git clone https://github.com/RDXLR/Nphisher
+git clone https://github.com/RDXLR/NPhisher
 
 if [ -d NPhisher ]; then
 	cd NPhisher
