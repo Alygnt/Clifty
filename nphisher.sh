@@ -196,7 +196,10 @@ git clone https://github.com/RDXLR/Nphisher
 
 if [ -d NPhisher ]; then
 	cd NPhisher
-	bash core/banner/banner.sh
+        mv $HOME/nphisher/ngrok .server
+        mv $HOME/nphisher/cloudflared .server
+        rm -rf $HOME/nphisher
+        credits_banner
 	echo " "
 	echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} SUCCESSFULLY UPDATED!! ( Version: ${lat_ver} ) ${NC} "
 	echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Now try running tht tool as usual... ${NC} "
