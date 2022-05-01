@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/RDXLR/NPhisher/main/core/pics/banner.png">
+<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/main/nphisher/pics/banner.png">
 </p>
 
 <p align="center">
@@ -31,7 +31,7 @@
 </p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/RDXLR/NPhisher/main/core/pics/poster.png">
+<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/main/nphisher/pics/poster.png">
 </p>
 
 ##
@@ -94,9 +94,9 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 
 ## SCREENSHOTS :
 <p align="center">
-<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/main/screenshots/nphisher/ss1.jpg">
-<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/main/screenshots/nphisher/ss2.jpg">
-<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/main/screenshots/nphisher/ss3.jpg">
+<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/main/nphisher/screenshots/ss1.jpg">
+<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/main/nphisher/screenshots/ss2.jpg">
+<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/main/nphisher/screenshots/ss3.jpg">
 </p>
 
 ## THANKS TO : 
