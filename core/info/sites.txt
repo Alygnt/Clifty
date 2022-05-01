@@ -84,3 +84,4 @@
 -yandex - NOTP
 -ytsubs - NOTP OTP
 -mobile pattern - pattern
+-discord - NOTP OTP
