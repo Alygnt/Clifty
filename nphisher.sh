@@ -202,7 +202,10 @@ if [ -d NPhisher ]; then
         credits_banner
 	echo " "
 	echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} SUCCESSFULLY UPDATED!! ( Version: ${lat_ver} ) ${NC} "
-	echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Now try running tht tool as usual... ${NC} "
+        sleep 0.3
+	echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Now running the tool!! ${NC} "
+        sleep 2
+        bash nphisher.sh
 	echo  " "
 else 
 	echo -e "\n${GREEN}[${WHITE}!${GREEN}]${RED} SORRY, ERROR OCCURED!! TRY REINSTALLING MANUALLY!! ${NC} "
