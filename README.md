@@ -15,19 +15,19 @@
 
 <p align="center">
 <a href="https://github.com/rdxlr"><img title="Language" src="https://img.shields.io/badge/Made%20with-Bash-1f425f.svg?v=103"></a>
-<a href="https://github.com/rdxlr"><img title="Language" src="https://img.shields.io/badge/Other%20Languages-Html, PHP, Javascript, CSS, etc-1f425f.svg?v=103"></a>
+<a href="https://github.com/rdxlr"><img title="other Language" src="https://img.shields.io/badge/Other%20Languages-Html, PHP, Javascript, CSS, etc-1f425f.svg?v=103"></a>
 </p>
 
 <p align="center">
-<a href="https://github.com/rdxlr"><img title="Licence" src="https://img.shields.io/badge/License-GNU General Public License v3.0-blue.svg"></a>
+<a href="https://github.com/RDXLR/NPhisher/blob/main/LICENSE"><img title="Licence" src="https://img.shields.io/badge/License-GNU General Public License v3.0-blue.svg"></a>
 </p>
 
 <p align="center">
 <a href="https://github.com/rdxlr"><img title="Followers" src="https://img.shields.io/github/followers/rdxlr?color=blue&style=flat-square"></a>
-<a href="https://github.com/rdxlr"><img title="Stars" src="https://img.shields.io/github/stars/rdxlr/nphisher?color=red&style=flat-square"></a>
-<a href="https://github.com/rdxlr"><img title="Forks" src="https://img.shields.io/github/forks/rdxlr/nphisher?color=red&style=flat-square"></a>
-<a href="https://github.com/rdxlr"><img title="Issues" src="https://img.shields.io/github/issues/rdxlr/nphisher?color=red&style=flat-square"></a>
-<a href="https://github.com/rdxlr"><img title="Watching" src="https://img.shields.io/github/watchers/rdxlr/nphisher?label=Watchers&color=blue&style=flat-square"></a>
+<a href="https://github.com/rdxlr/Nphisher"><img title="Stars" src="https://img.shields.io/github/stars/rdxlr/nphisher?color=red&style=flat-square"></a>
+<a href="https://github.com/rdxlr/Nphisher"><img title="Forks" src="https://img.shields.io/github/forks/rdxlr/nphisher?color=red&style=flat-square"></a>
+<a href="https://github.com/rdxlr/Nphisher"><img title="Issues" src="https://img.shields.io/github/issues/rdxlr/nphisher?color=red&style=flat-square"></a>
+<a href="https://github.com/rdxlr/Nphisher"><img title="Watching" src="https://img.shields.io/github/watchers/rdxlr/nphisher?label=Watchers&color=blue&style=flat-square"></a>
 </p>
 
 <p align="center">
