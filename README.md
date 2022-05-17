@@ -36,8 +36,6 @@
 <img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/main/nphisher/pics/poster.png">
 </p>
 
-##
-
 <h3><p align="center">Disclaimer</p></h3>
 
 <i>Any actions and or activities related to <b>Nphisher</b> is solely your responsibility. The misuse of this toolkit can result in <b>criminal charges</b> brought against the persons in question. <b>The contributors will not be held responsible</b> in the event any criminal charges be brought against any individuals misusing this toolkit to break the law.
@@ -46,9 +44,7 @@
 
 <b>This Tool is made for educational purposes only</b>. Do not attempt to violate the law with anything contained here. <b>If this is your intention, then Get the hell out of here</b>!
 
-It only demonstrates "how phishing works". <b>You shall not misuse the information to gain unauthorized access to someones social media</b>. However you may try out this at your own risk.</i>
-
-##
+It only demonstrates "how phishing works". <b>You shall not misuse the information to gain unauthorized access to someones social media</b>. However you may try out this at your own risk.
 
 ## ABOUT TOOL:
 NPhisher is the most powerful phishing site. it has lots of advantages. Give it a try.
