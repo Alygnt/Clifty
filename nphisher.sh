@@ -317,7 +317,7 @@ ngrok_token_setup(){
 
         if [[ -s "${HOME}/.ngrok2/ngrok.yml" ]]; then
                rm -rf ${HOME}/.ngrok2/ngrok.yml
-	       echo " "
+	       echo -e " "
                read -p "${RED}[${WHITE}-${RED}]${GREEN} Enter your authtoken :" ntoken
                authline="authtoken : ${ntoken}"
                echo "$authline" >> ngrok.yml
