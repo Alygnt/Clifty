@@ -22,6 +22,11 @@ WHITEBG="$(printf '\033[47m')"
 BLACKBG="$(printf '\033[40m')"
 RESETBG="$(printf '\e[0m\n')" #Reset background
 
+#Directories
+pro_dir=$(pwd)
+server_dir="${pro_dir}/.server"
+sites_dir="${pro_dir}/.sites"
+
 #Normal Banner
 banner(){
 	echo " "
@@ -288,6 +293,39 @@ install_cloudflared() {
                 else
                         download_cloudflared 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-386'
                 fi
+        fi
+
+}
+
+##Ngrok token auth
+ngrok_token_check(){
+        if [ -s "${HOME}/.ngrok2/ngrok.yml" ]; then
+                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Ngrok Authtoken setup is already done."
+        else
+                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Setting up authtoken"
+                ngrok_token_setup
+        fi
+}
+
+ngrok_token_setup(){
+        if [[ -d "${HOME}/.ngrok2/" ]]; then
+               echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Ngrok2 directory exists!!"
+        else
+               mkdir $HOME/.ngrok2
+               echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Created Ngrok2 directory "
+        fi
+
+        if [[ -s "${HOME}/.ngrok2/ngrok.yml" ]]; then
+               rm -rf ${HOME}/.ngrok2/ngrok.yml
+	       echo " "
+               read -p "${RED}[${WHITE}-${RED}]${GREEN} Enter your authtoken :" ntoken
+               authline="authtoken : ${ntoken}"
+               echo "$authline" >> ngrok.yml
+               mv ngrok.yml ${HOME}/.ngrok2/
+        else
+               read -p "${RED}[${WHITE}-${RED}]${GREEN} Enter your authtoken :" ntoken
+               echo "authtoken : ${ntoken}" >> ngrok.yml
+               mv ngrok.yml ${HOME}/.ngrok2/
         fi
 
 }
@@ -1815,6 +1853,7 @@ dependencies
 xpermission
 install_ngrok
 install_cloudflared
+ngrok_token_check
 clear
 mainmenu
 
