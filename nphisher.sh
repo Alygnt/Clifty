@@ -260,7 +260,7 @@ ngrok_token_setup(){
 
         if [[ -s "${HOME}/.ngrok2/ngrok.yml" ]]; then
                rm -rf ${HOME}/.ngrok2/ngrok.yml
-	       echo -e " "
+	       echo -e "\n"
                read -p "${RED}[${WHITE}-${RED}]${GREEN} Enter your authtoken :" ntoken
                authline="authtoken : ${ntoken}"
                echo "$authline" >> ngrok.yml
@@ -357,7 +357,7 @@ auth_localxpose() {
 	[ "$(./.server/loclx account status | grep Error)" ] && {
 		echo -e "\n\n${RED}[${WHITE}!${RED}]${GREEN} Create an account on ${ORANGE}localxpose.io${GREEN} & copy the token\n"
 		sleep 3
-		read -p "${RED}[${WHITE}-${RED}]${ORANGE} Input Loclx Token :${ORANGE} " loclx_token
+		read -p "${RED}[${WHITE}-${RED}]${ORANGE} Loclx Token :${ORANGE} " loclx_token
 		[[ $loclx_token == "" ]] && {
 			echo -e "\n${RED}[${WHITE}!${RED}]${RED} You have to input Localxpose Token." ; sleep 2 ; tunnel_menu
 		} || {
