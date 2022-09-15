@@ -384,7 +384,7 @@ start_loclx() {
 	{ sleep 12; clear; banner; }
 	loclx_url=$(cat .server/.loclx | grep -o '[0-9a-zA-Z.]*.loclx.io') #DONE :)
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL : ${GREEN}http://$loclx_url"
-	capture_data
+	capture_data_check
 }
 
 # Download Binaries
