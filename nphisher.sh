@@ -221,43 +221,23 @@ update() {
 
 }
 
-## Download Ngrok
-download_ngrok() {
-        url="$1"
-        file=`basename $url`
-        if [[ -e "$file" ]]; then
-                rm -rf "$file"
-        fi
-        wget --no-check-certificate "$url" > /dev/null 2>&1
-        if [[ -e "$file" ]]; then
-                tar xvzf "$file" > /dev/null 2>&1
-                mv -f ngrok .server > /dev/null 2>&1
-                rm -rf "$file" > /dev/null 2>&1
-                chmod +x .server/ngrok > /dev/null 2>&1
-        else
-                echo -e "\n${RED}[${WHITE}!${RED}]${RED} Error occured, Install Ngrok manually."
-                { reset_color; exit 1; }
-        fi
-}
-
 ## Install ngrok
 install_ngrok() {
-        if [[ -e ".server/ngrok" ]]; then
-                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Ngrok already installed."
-        else
-                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${CYAN} Installing ngrok..."${WHITE}
-                arch=`uname -m`
-                if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
-                        download_ngrok 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.tgz'
-                elif [[ "$arch" == *'aarch64'* ]]; then
-                        download_ngrok 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm64.tgz'
-                elif [[ "$arch" == *'x86_64'* ]]; then
-                        download_ngrok 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.tgz'
-                else
-                        download_ngrok 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-386.tgz'
-                fi
-        fi
-
+	if [[ -e ".server/ngrok" ]]; then
+		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} Ngrok already installed."
+	else
+		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing ngrok..."${WHITE}
+		arch=`uname -m`
+		if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
+			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-arm.tgz' 'ngrok'
+		elif [[ "$arch" == *'aarch64'* ]]; then
+			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-arm64.tgz' 'ngrok'
+		elif [[ "$arch" == *'x86_64'* ]]; then
+			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz' 'ngrok'
+		else
+			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-386.tgz' 'ngrok'
+		fi
+	fi
 }
 
 ##Ngrok token auth
@@ -311,41 +291,23 @@ start_ngrok() {
         capture_data_check
 }
 
-## Download Cloudflared
-download_cloudflared() {
-        url="$1"
-        file=`basename $url`
-        if [[ -e "$file" ]]; then
-                rm -rf "$file"
-        fi
-        wget --no-check-certificate "$url" > /dev/null 2>&1
-        if [[ -e "$file" ]]; then
-                mv -f "$file" .server/cloudflared > /dev/null 2>&1
-                chmod +x .server/cloudflared > /dev/null 2>&1
-        else
-                echo -e "\n${RED}[${WHITE}!${RED}]${RED} Error occured, Install Cloudflared manually."
-                { reset_color; exit 1; }
-        fi
-}
-
 ## Install Cloudflared
 install_cloudflared() {
-        if [[ -e ".server/cloudflared" ]]; then
-                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Cloudflared already installed."
-        else
-                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${CYAN} Installing Cloudflared..."${WHITE}
-                arch=`uname -m`
-                if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
-                        download_cloudflared 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm'
-                elif [[ "$arch" == *'aarch64'* ]]; then
-                        download_cloudflared 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64'
-                elif [[ "$arch" == *'x86_64'* ]]; then
-                        download_cloudflared 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64'
-                else
-                        download_cloudflared 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-386'
-                fi
-        fi
-
+	if [[ -e ".server/cloudflared" ]]; then
+		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} Cloudflared already installed."
+	else
+		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing Cloudflared..."${WHITE}
+		arch=`uname -m`
+		if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
+			download 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm' 'cloudflared'
+		elif [[ "$arch" == *'aarch64'* ]]; then
+			download 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64' 'cloudflared'
+		elif [[ "$arch" == *'x86_64'* ]]; then
+			download 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64' 'cloudflared'
+		else
+			download 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-386' 'cloudflared'
+		fi
+	fi
 }
 
 ## Start Cloudflared
@@ -423,6 +385,35 @@ start_loclx() {
 	loclx_url=$(cat .server/.loclx | grep -o '[0-9a-zA-Z.]*.loclx.io') #DONE :)
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL : ${GREEN}http://$loclx_url"
 	capture_data
+}
+
+# Download Binaries
+download() {
+	url="$1"
+	output="$2"
+	file=`basename $url`
+	if [[ -e "$file" || -e "$output" ]]; then
+		rm -rf "$file" "$output"
+	fi
+	curl --silent --insecure --fail --retry-connrefused \
+		--retry 3 --retry-delay 2 --location --output "${file}" "${url}"
+
+	if [[ -e "$file" ]]; then
+		if [[ ${file#*.} == "zip" ]]; then
+			unzip -qq $file > /dev/null 2>&1
+			mv -f $output .server/$output > /dev/null 2>&1
+		elif [[ ${file#*.} == "tgz" ]]; then
+			tar -zxf $file > /dev/null 2>&1
+			mv -f $output .server/$output > /dev/null 2>&1
+		else
+			mv -f $file .server/$output > /dev/null 2>&1
+		fi
+		chmod +x .server/$output > /dev/null 2>&1
+		rm -rf "$file"
+	else
+		echo -e "\n${RED}[${WHITE}!${RED}]${RED} Error occured while downloading ${output}."
+		{ reset_color; exit 1; }
+	fi
 }
 
 ## Start localhost
