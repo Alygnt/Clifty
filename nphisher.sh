@@ -601,7 +601,7 @@ echo -e "${RED}[${WHITE}03${RED}]${ORANGE} LocalXpose   ${RED}[${CYAN}Max 15 min
 		3 | 03)
                         start_loclx;;
                 *)
-0                       echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
                         { sleep 1; tunnel_menu; };;
         esac
 }
