@@ -1912,6 +1912,7 @@ dependencies
 xpermission
 install_ngrok
 install_cloudflared
+install_localxpose
 clear
 mainmenu
 
