@@ -233,13 +233,13 @@ shortut_check() {
 shortcut() {
 	read -p "${RED}[${WHITE}-${RED}]${GREEN} Do you want to setup shortcut (Y/n) : ${BLUE}" shortcut_reply
 		case $shortcut_reply
-		"Y" | "y")
-			shortcut_setup
-		"N" | "n")
-			echo ""
+		Y | y)
+			shortcut_setup;;
+		N | n)
+			echo "";;
 		*)
 			echo -e "\n${GREEN}[${WHITE}+${GREEN}]${RED} Invaild option try again."
-			shortcut_check
+			shortcut_check;;
 		esac
 }
 shortcut_setup() {
