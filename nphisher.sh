@@ -233,16 +233,16 @@ shortut_check() {
 shortcut() {
 	read -p "${RED}[${WHITE}-${RED}]${GREEN} Do you want to setup shortcut (Y/n) : ${BLUE}" shortcut_reply
 		case $shortcut_reply
-		Y | y)
+		"Y" | "y")
 			shortcut_setup
-		N | n)
+		"N" | "n")
 			echo ""
 		*)
 			echo -e "\n${GREEN}[${WHITE}+${GREEN}]${RED} Invaild option try again."
 			shortcut_check
 		esac
 }
-shortcut() {
+shortcut_setup() {
 	rm -rf /bin/nphisher
 	shortcutcmd = 
 	"pro_dir = ${pro_dir}"
