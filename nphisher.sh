@@ -232,7 +232,7 @@ shortut_check() {
 }
 shortcut() {
 	read -p "${RED}[${WHITE}-${RED}]${GREEN} Do you want to setup shortcut (Y/n) : ${BLUE}" shortcut_reply
-		case $shortcut_reply
+		case $shortcut_reply in
 		Y | y)
 			shortcut_setup;;
 		N | n)
