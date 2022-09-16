@@ -23,9 +23,9 @@ BLACKBG="$(printf '\033[40m')"
 RESETBG="$(printf '\e[0m\n')" #Reset background
 
 #Directories
-pro_dir=$(pwd)
-server_dir="${pro_dir}/.server"
-sites_dir="${pro_dir}/.sites"
+pro_dir=$(pwd) #project directory
+server_dir="${pro_dir}/.server" #server directory
+sites_dir="${pro_dir}/.sites" #sites directory
 
 #Normal Banner
 banner(){
@@ -219,6 +219,42 @@ update() {
 		echo -e "\n${GREEN}[${WHITE}!${GREEN}]${RED} SORRY, ERROR OCCURED!! TRY REINSTALLING MANUALLY!! ${NC} "
 	fi
 
+}
+
+
+## Shortcut
+shortut_check() {
+	if [[ -s "/bin/nphisher" ]]; then
+		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} Shortcut is active."
+	else
+		shortcut
+	fi
+}
+shortcut() {
+	read -p "${RED}[${WHITE}-${RED}]${GREEN} Do you want to setup shortcut (Y/n) : ${BLUE}" shortcut_reply
+		case $shortcut_reply
+		Y | y)
+			shortcut_setup
+		N | n)
+			echo ""
+		*)
+			echo -e "\n${GREEN}[${WHITE}+${GREEN}]${RED} Invaild option try again."
+			shortcut_check
+		esac
+}
+shortcut() {
+	rm -rf /bin/nphisher
+	shortcutcmd = 
+	"pro_dir = ${pro_dir}"
+	"if [[ -d "${pro_dir}" ]]; then
+		bash ${pro_dir}/nphisher.sh
+	else
+		echo -e "\n [-] NPhisher directory not found. It maybe moved or deleted try downloading NPhisher again. "
+	fi
+	"
+	echo ${shortcutcmd} >> nphisher
+	chmod 777 nphisher
+	mv nphisher /bin
 }
 
 ## Install ngrok
