@@ -1940,6 +1940,7 @@ xpermission
 install_ngrok
 install_cloudflared
 install_localxpose
+shortcut_check
 clear
 mainmenu
 
