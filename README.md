@@ -1,35 +1,35 @@
-<link rel="icon" type="image/x-icon" href="https://rdxlr.github.io/logo/favicon.ico">
+<link rel="icon" type="image/x-icon" href="https://alygnt.github.io/logo/favicon.ico">
 
 <p align="center">
-<a href="https://github.com/rdxlr"><img title="Github" src="https://img.shields.io/badge/rdxlr-grey?style=for-the-badge&logo=github"></a>
-<a href="https://github.com/rdxlr/nphisher"><img title="Github" src="https://img.shields.io/badge/N-red?style=for-the-badge"></a>
-<a href="https://github.com/rdxlr/nphisher"><img title="Github" src="https://img.shields.io/badge/Phisher-blue?style=for-the-badge"></a>
+<a href="https://github.com/alygnt"><img title="Github" src="https://img.shields.io/badge/alygnt-grey?style=for-the-badge&logo=github"></a>
+<a href="https://github.com/alygnt/nphisher"><img title="Github" src="https://img.shields.io/badge/N-red?style=for-the-badge"></a>
+<a href="https://github.com/alygnt/nphisher"><img title="Github" src="https://img.shields.io/badge/Phisher-blue?style=for-the-badge"></a>
 </p>
 
 <p align="center">
-<a href="https://github.com/RDXLR/NPhisher"><img title="Version" src="https://img.shields.io/badge/Version-1.0-green.svg"></a>
-<a href="https://github.com/RDXLR/NPhisher"><img title="Maintainence" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg"></a>
+<a href="https://github.com/Alygnt/NPhisher"><img title="Version" src="https://img.shields.io/badge/Version-1.0-green.svg"></a>
+<a href="https://github.com/Alygnt/NPhisher"><img title="Maintainence" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg"></a>
 </p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/main/nphisher/pics/banner.png">
+<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/main/nphisher/pics/banner.png">
 </p>
 
 <p align="center">
-<a href="https://github.com/rdxlr"><img title="Language" src="https://img.shields.io/badge/Made%20with-Bash-1f425f.svg?v=103"></a>
-<a href="https://github.com/rdxlr"><img title="other Language" src="https://img.shields.io/badge/Other%20Languages-Html, PHP, Javascript, CSS, etc-1f425f.svg?v=103"></a>
+<a href="https://github.com/Alygnt"><img title="Language" src="https://img.shields.io/badge/Made%20with-Bash-1f425f.svg?v=103"></a>
+<a href="https://github.com/Alygnt"><img title="other Language" src="https://img.shields.io/badge/Other%20Languages-Html, PHP, Javascript, CSS, etc-1f425f.svg?v=103"></a>
 </p>
 
 <p align="center">
-<a href="https://github.com/RDXLR/NPhisher/blob/main/LICENSE"><img title="Licence" src="https://img.shields.io/badge/License-GNU General Public License v3.0-blue.svg"></a>
+<a href="https://github.com/Alygnt/NPhisher/blob/main/LICENSE"><img title="Licence" src="https://img.shields.io/badge/License-GNU General Public License v3.0-blue.svg"></a>
 </p>
 
 <p align="center">
-<a href="https://github.com/rdxlr"><img title="Followers" src="https://img.shields.io/github/followers/rdxlr?color=blue&style=flat-square"></a>
-<a href="https://github.com/rdxlr/Nphisher"><img title="Stars" src="https://img.shields.io/github/stars/rdxlr/nphisher?color=red&style=flat-square"></a>
-<a href="https://github.com/rdxlr/Nphisher"><img title="Forks" src="https://img.shields.io/github/forks/rdxlr/nphisher?color=red&style=flat-square"></a>
-<a href="https://github.com/rdxlr/Nphisher"><img title="Issues" src="https://img.shields.io/github/issues/rdxlr/nphisher?color=red&style=flat-square"></a>
-<a href="https://github.com/rdxlr/Nphisher"><img title="Watching" src="https://img.shields.io/github/watchers/rdxlr/nphisher?label=Watchers&color=blue&style=flat-square"></a>
+<a href="https://github.com/Alygnt"><img title="Followers" src="https://img.shields.io/github/followers/Alygnt?color=blue&style=flat-square"></a>
+<a href="https://github.com/Alygnt/Nphisher"><img title="Stars" src="https://img.shields.io/github/stars/Alygnt/nphisher?color=red&style=flat-square"></a>
+<a href="https://github.com/Alygnt/Nphisher"><img title="Forks" src="https://img.shields.io/github/forks/Alygnt/nphisher?color=red&style=flat-square"></a>
+<a href="https://github.com/Alygnt/Nphisher"><img title="Issues" src="https://img.shields.io/github/issues/Alygnt/nphisher?color=red&style=flat-square"></a>
+<a href="https://github.com/Alygnt/Nphisher"><img title="Watching" src="https://img.shields.io/github/watchers/Alygnt/nphisher?label=Watchers&color=blue&style=flat-square"></a>
 </p>
 
 <p align="center">
@@ -70,14 +70,10 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 * `apt-get update -y`
 * `apt-get upgrade -y`
 * `pkg install git -y`
-* `git clone https://github.com/rdxlr/NPhisher`
+* `git clone https://github.com/Alygnt/NPhisher`
 * `cd NPhisher`
 * `ls`
 * `bash nphisher.sh`
-
-## Docker Installation :
-* `docker pull rdxlr/nphisher`
-* `docker run --rm -it rdxlr/nphisher`
 
 ## Dependencies
 **`Nphisher`** requires following programs to run properly - 
@@ -92,9 +88,9 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 
 ## SCREENSHOTS :
 <p align="center">
-<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/main/nphisher/screenshots/ss1.jpg">
-<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/main/nphisher/screenshots/ss2.jpg">
-<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/main/nphisher/screenshots/ss3.jpg">
+<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/main/nphisher/screenshots/ss1.jpg">
+<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/main/nphisher/screenshots/ss2.jpg">
+<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/main/nphisher/screenshots/ss3.jpg">
 </p>
 
 ## THANKS TO : 
