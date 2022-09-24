@@ -33,7 +33,7 @@
 </p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/main/nphisher/pics/poster.png">
+<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/main/nphisher/pics/NPhisher-poster.png">
 </p>
 
 <h3><p align="center">Disclaimer</p></h3>
