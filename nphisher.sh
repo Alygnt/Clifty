@@ -51,7 +51,7 @@ cbanner(){
 	echo -e "${RED} ██║   ╚███║${BLUE}██║     ██╔══██║██║╚════██║██╔══██║██╔══╝  ██╔══██╗${NC}"
 	echo -e "${RED} ██║    ███║${BLUE}██║     ██║  ██║██║███████║██║  ██║███████╗██║  ██║${NC}"
 	echo -e "${RED} ╚═╝    ╚══╝${BLUE}╚═╝     ╚═╝  ╚═╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝${NC}"
-	echo -e "${CYAN}                                                  By - ${RED}RDXLR${NC}"
+	echo -e "${CYAN}                                                  By - ${RED}Alygnt${NC}"
 	echo -e "${CYAN}        ${NC} "
 	echo -e "${GREEN}                           Version 1.0 ${NC}"
 	echo -e "${CYAN}        ${NC} "
@@ -164,7 +164,7 @@ check_update() {
 	rm -rf version.txt
 	rm -rf core/update/tmp/version.txt
 	
-	wget --no-check-certificate https://raw.githubusercontent.com/RDXLR/NPhisher/main/core/update/version.txt > /dev/null 2>&1
+	wget --no-check-certificate https://raw.githubusercontent.com/Alygnt/NPhisher/main/core/update/version.txt > /dev/null 2>&1
 	mv version.txt core/update/tmp
 	
 	current_ver=$( cat core/update/version.txt )
@@ -200,7 +200,7 @@ update() {
 	cd ..
 	rm -rf NPhisher
 	echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} REINSTALLING THE TOOL ${NC} "
-	git clone https://github.com/RDXLR/NPhisher
+	git clone https://github.com/Alygnt/NPhisher
 	
 	if [ -d NPhisher ]; then
 		cd NPhisher
