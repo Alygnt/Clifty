@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/Alygnt/NPhisher"><img title="Version" src="https://img.shields.io/badge/Version-1.0-green.svg"></a>
+<a href="https://github.com/Alygnt/NPhisher"><img title="Version" src="https://img.shields.io/badge/Version-1.1-green.svg"></a>
 <a href="https://github.com/Alygnt/NPhisher"><img title="Maintainence" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg"></a>
 </p>
 
@@ -48,7 +48,7 @@ It only demonstrates "how phishing works". <b>You shall not misuse the informati
 
 ## ABOUT TOOL:
 NPhisher is the most powerful phishing site. it has lots of advantages. Give it a try.
- 
+
 ### What makes Nphisher so powerful:
 * Has 150+ Phishing Options
 * Has OTP phishing function
@@ -62,7 +62,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 * Kali Linux
 
 ## REQUIRMENTS:
-* Internet 
+* Internet
 * Storage 300 MB
 
 ## INSTALLATION :
@@ -76,7 +76,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 * `bash nphisher.sh`
 
 ## Dependencies
-**`Nphisher`** requires following programs to run properly - 
+**`Nphisher`** requires following programs to run properly -
 - `php`
 - `wget`
 - `curl`
@@ -93,11 +93,11 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 <img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/main/nphisher/screenshots/ss3.jpg">
 </p>
 
-## THANKS TO : 
+## THANKS TO :
 
 * MRPHISH TOOL FOR PAGES
 
 * ZPHISHER TOOL FOR PAGES
 
-## WARNING : 
+## WARNING :
 ***This tool is only for educational purpose. If you use this tool for other purposes except education we will not be responsible in such cases.***

