@@ -678,11 +678,11 @@ capture_data_3() {
 
 #Logs check
 logs_check() {
-	if [ "$(ls -A $DIR)" ]; then
+	if [ -z "$(ls -A $DIR)" ]; then
 		logs_menu
 	else
 		echo "No logs found"
-		{ sleep 1; clear; logs_menu; }
+		{ sleep 1; clear; tunnel_menu; }
 	fi
 }
 logs_menu() {
