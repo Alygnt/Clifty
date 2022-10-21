@@ -67,7 +67,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 
 ## INSTALLATION :
 
-###Termux
+### Termux
 * `pkg update -y`
 * `pkg upgrade -y`
 * `pkg install git -y`
@@ -75,7 +75,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 * `cd NPhisher`
 * `bash nphisher.sh`
 
-###Kali Linux
+### Kali Linux
 * `sudo apt update -y`
 * `sudo apt upgrade -y`
 * `sudo apt install git -y`
@@ -83,7 +83,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 * `cd NPhisher`
 * `sudo bash nphisher.sh`
   
-###Google cloud shell
+### Google cloud shell
 * `apt update -y`
 * `apt upgrade -y`
 * `apt install git -y`
@@ -97,6 +97,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 <p align="left">
   <a href="https://shell.cloud.google.com/cloudshell/open?cloudshell_git_repo=https://github.com/Alygnt/NPhisher.git&tutorial=README.md" target="_blank"><img src="https://gstatic.com/cloudssh/images/open-btn.svg"></a>
 </p>
+  
 -And type:
 * `cd NPhisher`
 * `bash nphisher.sh`
