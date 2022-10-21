@@ -99,7 +99,6 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
   </p>
   
 - And type:
-* `cd NPhisher`
 * `bash nphisher.sh`
 
 ## Dependencies
