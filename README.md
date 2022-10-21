@@ -67,12 +67,38 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 
 ## INSTALLATION :
 
-* `apt-get update -y`
-* `apt-get upgrade -y`
+###Termux
+* `pkg update -y`
+* `pkg upgrade -y`
 * `pkg install git -y`
 * `git clone https://github.com/Alygnt/NPhisher`
 * `cd NPhisher`
-* `ls`
+* `bash nphisher.sh`
+
+###Kali Linux
+* `sudo apt update -y`
+* `sudo apt upgrade -y`
+* `sudo apt install git -y`
+* `git clone https://github.com/Alygnt/NPhisher`
+* `cd NPhisher`
+* `sudo bash nphisher.sh`
+  
+###Google cloud shell
+* `apt update -y`
+* `apt upgrade -y`
+* `apt install git -y`
+* `git clone https://github.com/Alygnt/NPhisher`
+* `cd NPhisher`
+* `bash nphisher.sh`
+
+**OR**
+
+- Click this:
+<p align="left">
+  <a href="https://shell.cloud.google.com/cloudshell/open?cloudshell_git_repo=https://github.com/Alygnt/NPhisher.git&tutorial=README.md" target="_blank"><img src="https://gstatic.com/cloudssh/images/open-btn.svg"></a>
+</p>
+-And type:
+* `cd NPhisher`
 * `bash nphisher.sh`
 
 ## Dependencies
