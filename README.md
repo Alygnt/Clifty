@@ -100,7 +100,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 
 - Run the tool:
   ```
-  nphisher
+  bash nphisher.sh
   ```
   
 ### Install via '.deb' file
