@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/Alygnt/NPhisher"><img title="Version" src="https://img.shields.io/badge/Version-1.1-green.svg"></a>
+<a href="https://github.com/Alygnt/NPhisher"><img title="Version" src="https://img.shields.io/badge/Version-1.2-green.svg"></a>
 <a href="https://github.com/Alygnt/NPhisher"><img title="Maintainence" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg"></a>
 </p>
 
@@ -82,7 +82,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 * `git clone https://github.com/Alygnt/NPhisher`
 * `cd NPhisher`
 * `sudo bash nphisher.sh`
-  
+
 ### Google cloud shell
 * `apt update -y`
 * `apt upgrade -y`
@@ -97,7 +97,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 <p align="left">
   <a href="https://shell.cloud.google.com/cloudshell/open?cloudshell_git_repo=https://github.com/Alygnt/NPhisher.git&tutorial=README.md" target="_blank"><img src="https://gstatic.com/cloudssh/images/open-btn.svg"></a>
   </p>
-  
+
 - And type:
 * `bash nphisher.sh`
 

