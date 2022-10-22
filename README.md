@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/main/nphisher/pics/banner.png">
+<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/nphisher/pics/banner.png">
 </p>
 
 <p align="center">
@@ -33,7 +33,7 @@
 </p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/main/nphisher/pics/NPhisher-poster.png">
+<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/nphisher/pics/NPhisher-poster.png">
 </p>
 
 <h3><p align="center">Disclaimer</p></h3>
@@ -114,9 +114,9 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 
 ## SCREENSHOTS :
 <p align="center">
-<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/main/nphisher/screenshots/ss1.jpg">
-<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/main/nphisher/screenshots/ss2.jpg">
-<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/main/nphisher/screenshots/ss3.jpg">
+<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/nphisher/screenshots/ss1.jpg">
+<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/nphisher/screenshots/ss2.jpg">
+<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/nphisher/screenshots/ss3.jpg">
 </p>
 
 ## THANKS TO :
