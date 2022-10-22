@@ -98,9 +98,9 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
   <a href="https://shell.cloud.google.com/cloudshell/open?cloudshell_git_repo=https://github.com/Alygnt/NPhisher.git&tutorial=README.md" target="_blank"><img src="https://gstatic.com/cloudssh/images/open-btn.svg"></a>
   </p>
 
-- And type:
-* `bash nphisher.sh`
-
+- Run the tool:
+`bash lphisher.sh`
+  
 ### Install via '.deb' file
 - Download `.deb` files from the [**Latest Release**](https://github.com/Alygnt/NPhisher/releases/latest)
 - Install the `.deb` file by executing
