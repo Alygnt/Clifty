@@ -179,7 +179,8 @@ check_net_update(){
 }
 check_update() {
 	rm -rf version.txt
-	rm -rf core/update/tmp/version.txt
+	rm -rf core/update/tmp
+	mkdir core/update/tmp
 
 	wget --no-check-certificate https://raw.githubusercontent.com/Alygnt/NPhisher/main/core/update/version.txt > /dev/null 2>&1
 	mv version.txt core/update/tmp
