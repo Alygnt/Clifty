@@ -112,12 +112,16 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
   dpkg -i <your path to deb file>
   ```
   - Run the tool by typing
-  `nphisher`
+  ```
+  nphisher
+  ```
 
 ### Install via '.deb' file (TERMUX)
 - Download `.deb` files from the [**Latest Release**](https://github.com/Alygnt/NPhisher/releases/latest)
 - Enable termux chroot
-  `termux-chroot`
+  ```
+  termux-chroot
+  ```
 - Install the `.deb` file by executing
   ```
   apt install <your path to deb file>
