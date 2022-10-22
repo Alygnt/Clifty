@@ -101,6 +101,34 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 - And type:
 * `bash nphisher.sh`
 
+### Install via '.deb' file
+- Download `.deb` files from the [**Latest Release**](https://github.com/Alygnt/NPhisher/releases/latest)
+- Install the `.deb` file by executing
+  ```
+  apt install <your path to deb file>
+  ```
+  Or
+  ```
+  dpkg -i <your path to deb file>
+  ```
+  - Run the tool by typing
+  `nphisher`
+
+### Install via '.deb' file (TERMUX)
+- Download `.deb` files from the [**Latest Release**](https://github.com/Alygnt/NPhisher/releases/latest)
+- Enable termux chroot
+  `termux-chroot`
+- Install the `.deb` file by executing
+  ```
+  apt install <your path to deb file>
+  ```
+  Or
+  ```
+  dpkg -i <your path to deb file>
+  ```
+  - Run the tool by typing
+  `nphisher`
+
 ## Dependencies
 **`Nphisher`** requires following programs to run properly -
 - `php`
