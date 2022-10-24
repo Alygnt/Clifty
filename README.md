@@ -146,6 +146,10 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 ## THINGS TO BE DONE:
 *** Nothing to be done now... ***
 
+## Bugs recognized (need to be fixed):
+- **(25-Oct-2022)** > Instagram otp site
+- **(25-Oct-2022)** > Ngrok authtoken setup
+
 ## SCREENSHOTS :
 <p align="center">
 <img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/nphisher/screenshots/ss1.jpg">
