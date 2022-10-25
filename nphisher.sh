@@ -283,7 +283,7 @@ ngrok_token_setup(){
                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Ngrok2 directory exists!!"
         else
                mkdir $HOME/.ngrok2
-               echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Created Ngrok2 directory "
+               echo -ne "\n${RED}[${WHITE}-${RED}]${RED} Created Ngrok2 directory "
 		echo " "
         fi
 
@@ -298,6 +298,8 @@ ngrok_token_setup(){
 					echo "authtoken : ${ntoken}" >> ngrok.yml
 					mv ngrok.yml ${HOME}/.ngrok2/
         fi
+	./.server/ngrok config upgrade
+	echo -ne "\n${RED}[${WHITE}-${RED}]${RED} Upgraded ngrok configurations"
 	start_ngrok
 }
 ngrok_region() {
@@ -508,6 +510,7 @@ start_localhost() {
         setup_site
         { sleep 1; clear; banner; }
         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Successfully Hosted at : ${GREEN}${CYAN}http://$HOST:$PORT ${GREEN}"
+				capture_data_check
 }
 
 #Host and port setup
