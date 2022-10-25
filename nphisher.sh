@@ -303,7 +303,7 @@ ngrok_token_setup(){
 ngrok_region() {
         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Enter prefered region (Deafult=us):"
 				read -p "${GREEN} (Example: us eu au ap sa jp in ):" ngrokregion
-				case $nregion in
+				case $ngrokregion in
 				"us" | "US")
 					ngrokregion="us";;
 				"eu" | "EU")
