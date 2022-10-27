@@ -143,6 +143,15 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 - `git`
 >  All the dependencies will be installed automatically when you run `Nphisher` for the first time.
 
+## API's used
+- **GitHub API**
+- **ngrok.io** to tunnel the localhost
+- **cloudflare** to tunnel the localhost
+- **localxpose.io** to tunnel the localhost
+- **ipwhois.app** to get IP details
+- **is.gd** to shorten url
+- **shrtco.de** to shorten url
+- **tinyurl.com** to shorten url
 ## THINGS TO BE DONE:
 *** Nothing to be done now... ***
 
