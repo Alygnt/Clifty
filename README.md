@@ -168,8 +168,19 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 <img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/nphisher/screenshots/ss3.jpg">
 </p>
 
-##Too Heavy?? Use <a href="https://github.com/Alygnt/LPhisher">LPhisher<a/> it's light as feather
+##Too Heavy?? Use LPhisher it's light as feather
   
+<p align="center">
+<a href="https://github.com/Alygnt/LPhisher"><img title="LPhisher" src="https://raw.githubusercontent.com/Alygnt/phisher-modules/lphisher/pics/LPhisher-poster.png"></a>
+</p>
+  
+### Difference between NPhisher and LPhisher
+  
+|    NPhisher   |    LPhisher   |
+| ------------- | ------------- |
+| Installation size : approx 250 mb  | Installation size : less than 1mb  |
+| Minimum storage required : 300mb  | Minimum storage required : 50mb  |
+| Internet connection : Only for tunneling and shortening link  | Internet connection : Always  |
 
 ## THANKS TO :
 * MRPHISH TOOL FOR PAGES
