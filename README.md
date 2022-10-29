@@ -171,7 +171,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 ## Too Heavy?? Use <a href="https://github.com/Alygnt/LPhisher">LPhisher</a> it's light as feather
   
 <p align="center">
-<a href="https://github.com/Alygnt/LPhisher"><img title="LPhisher" height=75 src="https://raw.githubusercontent.com/Alygnt/phisher-modules/lphisher/pics/LPhisher-poster.png"></a>
+<a href="https://github.com/Alygnt/LPhisher"><img title="LPhisher" height=200 src="https://raw.githubusercontent.com/Alygnt/phisher-modules/lphisher/pics/LPhisher-poster.png"></a>
 </p>
   
 ### Difference between NPhisher and LPhisher
