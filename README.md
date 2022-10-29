@@ -169,9 +169,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 </p>
 
 ## THANKS TO :
-
 * MRPHISH TOOL FOR PAGES
-
 * ZPHISHER TOOL FOR PAGES
 
 ## WARNING :
