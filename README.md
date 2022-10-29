@@ -152,12 +152,13 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 - **is.gd** to shorten url
 - **shrtco.de** to shorten url
 - **tinyurl.com** to shorten url
+
 ## THINGS TO BE DONE:
-*** Nothing to be done now... ***
+- Network check before starting tunneler
+**Give your suggestions in issues**
 
 ## Bugs recognized (need to be fixed):
-- **(25-Oct-2022)** > Instagram otp site
-- **(25-Oct-2022)** > Ngrok authtoken setup
+**All identified bugs fixed**
 
 ## SCREENSHOTS :
 <p align="center">
