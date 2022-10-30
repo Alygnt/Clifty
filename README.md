@@ -170,8 +170,9 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 <br>
 
 ## THINGS TO BE DONE:
+- Mails you the login details 
 - Network check before starting tunneler
-  
+
 **Give your suggestions in issues**
 
 <br>
