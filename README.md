@@ -48,6 +48,8 @@
 
 It only demonstrates "how phishing works". <b>You shall not misuse the information to gain unauthorized access to someones social media</b>. However you may try out this at your own risk.
 
+<br>
+
 ## ABOUT TOOL:
 NPhisher is the most powerful phishing site. it has lots of advantages. Give it a try.
 
@@ -58,14 +60,20 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 * User friendly
 * More than you think
 
+<br>
+
 ## TESTED ON:
 ***NOTE: This tool is not tested completely***
 * Termux
 * Kali Linux
 
+<br>
+
 ## REQUIRMENTS:
 * Internet
 * Storage 300 MB
+
+<br>
 
 ## INSTALLATION :
 
@@ -137,6 +145,8 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
   - Run the tool by typing
   `nphisher`
 
+<br>
+
 ## Dependencies
 **`Nphisher`** requires following programs to run properly -
 - `php`
@@ -144,6 +154,8 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 - `curl`
 - `git`
 >  All the dependencies will be installed automatically when you run `Nphisher` for the first time.
+
+<br>
 
 ## API's used
 - **GitHub API**
@@ -155,13 +167,19 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 - **shrtco.de** to shorten url
 - **tinyurl.com** to shorten url
 
+<br>
+
 ## THINGS TO BE DONE:
 - Network check before starting tunneler
   
 **Give your suggestions in issues**
 
+<br>
+
 ## Bugs recognized (need to be fixed):
 **All identified bugs has been fixed**
+
+<br>
 
 ## SCREENSHOTS :
 <p align="center">
@@ -170,7 +188,8 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 <img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/nphisher/screenshots/ss3.jpg">
 </p>
 
-  
+<br>
+<br>
 
 ## Too Heavy?? Use <a href="https://github.com/Alygnt/LPhisher">LPhisher</a> it's light as feather
   
@@ -185,10 +204,14 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 | Installation size : approx 250 mb  | Installation size : less than 1mb  |
 | Minimum storage required : 300mb  | Minimum storage required : 50mb  |
 | Internet connection : Only for tunneling and shortening link  | Internet connection : Always  |
-
+  
+<br>
+  
 ## THANKS TO :
 * MRPHISH TOOL FOR PAGES
 * ZPHISHER TOOL FOR PAGES
 
+<br>
+  
 ## WARNING :
 ***This tool is only for educational purpose. If you use this tool for other purposes except education we will not be responsible in such cases.***
