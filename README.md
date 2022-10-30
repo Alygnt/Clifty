@@ -183,7 +183,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 
 ## SCREENSHOTS :
 <p align="center">
-<img height=400 src="https://raw.githubusercontent.com/Alygnt/phisher-modules/nphisher/screenshots/ss1.jpg">
+<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/nphisher/screenshots/ss1.jpg">
 <img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/nphisher/screenshots/ss2.jpg">
 <img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/nphisher/screenshots/ss3.jpg">
 </p>
