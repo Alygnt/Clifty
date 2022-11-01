@@ -174,6 +174,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 - Network check before starting tunneler
 - To change type to number from password in few otp pages
 - To display users ip in main menu
+- Instagram OTP phishing page fix
 
 **Give your suggestions in issues**
 
