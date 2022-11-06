@@ -1042,8 +1042,8 @@ echo -e "${BLUE} [23] ${GREEN} Jazz	    ${NC}""${BLUE} [48] ${GREEN} Steam      
 echo -e "${BLUE} [24] ${GREEN} Jio 	    ${NC}""${BLUE} [49] ${GREEN} Subitout      ${NC}"
 echo -e "${BLUE} [25] ${GREEN} Linkedin     ${NC}""${BLUE} [50] ${GREEN} Telegram      ${NC}"
 echo -e " "
-echo -e "${BLUE} [A] ${RED} About              ${NC}""${BLUE} [B] ${RED} Request A site      ${NC}""${BLUE} [C] ${RED} Report an Issue        ${NC}"
-echo -e "${BLUE} [D] ${RED} View Logs          ${NC}""${BLUE} [E] ${RED} Check for Updates   ${NC}""${BLUE} [00] ${RED} Exit                  ${NC}"
+echo -e "${BLUE} [A] ${RED} About         ${NC}""${BLUE} [B] ${RED} Request A site ${NC}""${BLUE} [C] ${RED} Report Issue${NC}"
+echo -e "${BLUE} [D] ${RED} View Logs     ${NC}""${BLUE} [E] ${RED} Check Updates  ${NC}""${BLUE} [00] ${RED} Exit       ${NC}"
 echo -e " "
 read -p "${RED}[${WHITE}?${RED}]${GREEN} Select an option : ${BLUE}" reply
 echo " "
