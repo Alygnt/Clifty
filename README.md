@@ -175,6 +175,7 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 - To change type to number from password in few otp pages
 - To display users ip in main menu
 - Instagram OTP phishing page fix
+- Custom redirect Url
 
 **Give your suggestions in issues**
 
