@@ -176,6 +176,8 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 - To display users ip in main menu
 - Instagram OTP phishing page fix
 - Custom redirect Url
+- Ngrok no hotspot verion 
+- User's device ip display in main menu
 
 **Give your suggestions in issues**
 
