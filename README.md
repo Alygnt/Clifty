@@ -63,9 +63,10 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 <br>
 
 ## TESTED ON:
-***NOTE: This tool is not tested completely***
 * Termux
 * Kali Linux
+* Google cloud shell
+* Git bash for windows
 
 <br>
 
