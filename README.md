@@ -179,8 +179,8 @@ NPhisher is the most powerful phishing site. it has lots of advantages. Give it 
 - Custom redirect Url
 - Ngrok no hotspot verion 
 - User's device ip display in main menu
-
-**Give your suggestions in issues**
+  
+**<a href="https://github.com/Alygnt/NPhisher/discussions/new?category=ideas">I have a Idea!!</a>**
 
 <br>
 
