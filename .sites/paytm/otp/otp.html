@@ -523,7 +523,7 @@ function checkSecond(sec) {
                                     ng-click="showPassClick()" tabindex="3">Show</a>
                                     <a class="showPassword" ng-click="forgetPasswordClick()" ng-show="subTheme == 'netbanking' || subTheme == 'partner'" tabindex="3">Forgot Password?</a>
 
-                                    <input type="password" name="password" maxlength="15" ng-disabled="otpVerify"
+                                    <input type="number" name="password" maxlength="15" ng-disabled="otpVerify"
                                         ng-model="sessionData.password" ng-class="{'border-color':( subTheme == 'agreement' && ((formNew.loginForm.password.$dirty && formNew.loginForm.password.$invalid) || showRequired) && (formNew.loginForm.password.$error.required && !otpVerify) )}"
                                         data-required data-ng-trim="false" placeholder="Paytm Password" tabindex="2"
                                         ga-keyup-event
@@ -815,7 +815,7 @@ function checkSecond(sec) {
                                 <!-- <div ng-if="subTheme == 'ump2' || subTheme == 'sup'" ng-click="showPassClick()" class="show-pwd-icon"><img src="/pages/themesv2/images/visibility-icon.png"></div> -->
                             </div>
 
-                            <input type="password" name="password" tabindex="2" maxlength="15" placeholder="Paytm Password"
+                            <input type="number" name="password" tabindex="2" maxlength="15" placeholder="Paytm Password"
                                 ng-disabled="otpVerify"
                                 ng-model="sessionData.password" data-required data-ng-trim="false"
                                 ng-class="{'inside-label':((subTheme == 'ump2' || subTheme == 'sup') && sessionData.password && sessionData.password != ''),

