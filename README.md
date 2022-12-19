@@ -196,9 +196,7 @@ Clifty is the most powerful phishing site. it has lots of advantages. Give it a 
 
 ## SCREENSHOTS :
 <p align="center">
-<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/clifty/screenshots/ss1.jpg">
-<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/clifty/screenshots/ss2.jpg">
-<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/clifty/screenshots/ss3.jpg">
+<img src="https://github.com/Alygnt/phisher-modules/blob/clifty/screenshot/clifty_ss_1.4.gif?raw=true">
 </p>
 
 <br>
