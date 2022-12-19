@@ -1,0 +1,87 @@
+-Adobe :NOTP
+-AirtelSim : OTP
+-Airtelxtream : NOTP , OTP
+-AJIO : NOTP , OTP
+-Amazon : NOTP , OTP
+-Apple : NOTP , OTP
+-Badoo - NOTP, OTP
+-Clash of clans - NOTP
+-Date1 - NOTP, OTP
+-Date2 - NOTP, OTP
+-DevainArt - NOTP, OTP
+-DropBox - NOTP
+-Ebay - NOTP, OTP
+-Facebook (own)- NOTP, OTP
+-facebook (poll) - NOTP, OTP
+-facebook (security) - NOTP, OTP
+-facebook (standard) - NOTP
+-flipcart - NOTP, OTP
+-Free fire - NOTP
+-github - NOTP, OTP
+-github (advanced) - NOTP OTP
+-gitlab - NOTP OTP
+-gitlab advanced - NOTP OTP
+-gmail - NOTP, OTP
+-google (old) - NOTP, OTP
+-google (new) - NOTP, OTP
+-google (poll) - NOTP, OTP
+-gpay - NOTP, OTP
+-icloud - NOTP
+-instagram (advanced) - NOTP, OTP
+-instagram (autoliker) - NOTP OTP
+-instagram (followers) - NOTP, OTP
+-instagram (verify) - NOTP
+-instagram (web) - NOTP OTP
+-instagram - NOTP, OTP
+-jazz - OTP
+-jio (offer) - OTP
+-jio (sim) - OTP
+-linkedin - NOTP, OTP
+-mediafirw - NOTP
+-Messenger - NOTP , OTP
+-Messenger (old) - NOTP
+-Microsoft - NOTP, OTP
+-Mobikwik - OTP
+-myspace - NOTP
+-Netflix - NOTP, OTP
+-ola - OTP
+-origin - NOTP
+-paypal - NOTP, OTP
+-paytm - NOTP, OTP
+-paytm (offer) - NOTP, OTP
+-phonepay - OTP
+-pinterest - NOTP
+-playstation - NOTP, OTP
+-playstation (2) - NOTP
+-protonmail - NOTP, OTP
+-pubg - NOTP
+-quora - NOTP
+-reddit - NOTP
+-reddit (old) - NOTP
+-shopify - NOTP, OTP
+-snapchat - NOTP, OTP
+-socialclub - NOTP, OTP
+-spotify - NOTP, OTP
+-stackoverflow - NOTP
+-steam- NOTP
+-subitout- NOTP
+-telegram - OTP
+-telenor - OTP
+-tiktok - NOTP
+-tiktok (likes) - NOTP, OTP
+-twitch - NOTP, OTP
+-twitch (new) - NOTP
+-twitter - NOTP, OTP
+-ubereats - NOTP, OTP
+-verizon - NOTP
+-visim - OTP
+-vk - NOTP, OTP
+-vk (poll) - NOTP
+-whatsapp - OTP
+-wordpress - NOTP OTP
+-xbox - NOTP OTP
+-yahoo - NOTP OTP
+-yandex - NOTP
+-ytsubs - NOTP OTP
+-mobile pattern - pattern
+-discord - NOTP OTP
