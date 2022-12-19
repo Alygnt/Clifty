@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/Alygnt/Clifty><img title="Version" src="https://img.shields.io/badge/Version-1.3-green.svg"></a>
+<a href="https://github.com/Alygnt/Clifty"><img title="Version" src="https://img.shields.io/badge/Version-1.4-green.svg"></a>
 <a href="https://github.com/Alygnt/Clifty"><img title="Maintainence" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg"></a>
 </p>
 
