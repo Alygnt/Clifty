@@ -32,7 +32,7 @@
 </p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/clifty/pics/poster.png">
+<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/clifty/pics/poster.png">
 </p>
 
 <br>
@@ -50,11 +50,7 @@ It only demonstrates "how phishing works". <b>You shall not misuse the informati
 <br>
 
 ## ABOUT TOOL:
-Clifty is the most powerful phishing site. it has lots of advantages. Give it a try.
-                                         
-<br>
-                 
-## Tool is under maintenance for 1.4 update
+Clifty is the most powerful and compact phishing tool. it has lots of advantages. Give it a try.
   
 <br>
                                          
@@ -77,7 +73,7 @@ Clifty is the most powerful phishing site. it has lots of advantages. Give it a 
 
 ## REQUIRMENTS:
 * Internet
-* Storage 300 MB
+* Storage 30 MB
 
 <br>
 
@@ -172,18 +168,12 @@ Clifty is the most powerful phishing site. it has lots of advantages. Give it a 
 - **is.gd** to shorten url
 - **shrtco.de** to shorten url
 - **tinyurl.com** to shorten url
+- **ipinfo.io** to see users ip
 
 <br>
 
 ## THINGS TO BE DONE:
 - Mails you the login details 
-- Network check before starting tunneler
-- To change type to number from password in few otp pages
-- To display users ip in main menu
-- Instagram OTP phishing page fix
-- Custom redirect Url
-- Ngrok no hotspot verion 
-- User's device ip display in main menu
   
 **<a href="https://github.com/Alygnt/Clifty/discussions/new?category=ideas">I have a Idea!!</a>**
 
