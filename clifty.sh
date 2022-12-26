@@ -303,7 +303,7 @@ check_update() {
 
 	current_ver=$( cat ${update_dir}/version.txt )
 	lat_ver=$( cat ${update_dir}/tmp/version.txt )
-	if [ -z $lat_ver]; then
+	if [ -z $lat_ver ]; then
                 echo -e "\n${GREEN}[${WHITE}!${GREEN}]${RED}Error occured try again later!!."
 		sleep 5
 		mainmenu
