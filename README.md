@@ -144,7 +144,7 @@ Clifty is the most powerful and compact phishing tool. it has lots of advantages
   ```
   dpkg -i <your path to deb file>
   ```
-  - Run the tool by typing
+ - Run the tool by typing
   `clifty`
 
 <br>
