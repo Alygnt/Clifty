@@ -1251,21 +1251,26 @@ capture_otp() {
 
 #online or offline stats
 check_netstats() {
-	wget -q --spider http://api.github.com
-	if [ $? -eq 0 ]; then
-		netstats="${GREEN}Online"
-		plainnetstats="online"
-	else
-		netstats="${RED}Offline"
-		plainnetstats="offline"
-	fi
+userip
+#	wget -q --spider http://api.github.com
+#	if [ $? -eq 0 ]; then
+#		netstats="${GREEN}Online"
+#		plainnetstats="online"
+#	else
+#		netstats="${RED}Offline"
+#		plainnetstats="offline"
+#	fi
 }
 userip() {
         myip=$(curl -s ipinfo.io/ip)
 	if [ -z $myip ]; then
 		myip="${RED}Offline"
+		netstats="${RED}Offline"
+                plainnetstats="offline"
 	else
 		myip="${GREEN}$myip"
+		netstats="${GREEN}Online"
+                plainnetstats="online"
 	fi
 }
 #Logs check
