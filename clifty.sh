@@ -838,11 +838,17 @@ redirect_input() {
 	fi
 }
 redirect_setup() {
+        rm -rf rdurl.php
+        rm -rf "${www_dir}/rdurl.php"
 	if [ -f ${www_dir}/NOTP ];then
-                sed -i "s/redirecturl/${urdurl}/g" "${www_dir}/process.php"
+                awk '{gsub("redirecturl","https://${rdurl}"); print}' "${www_dir}/process.php" > rdurl.php
+                rm -rf "${www_dir}/process.php"
+                mv rdurl.php "${www_dir}/process.php"
                 rdurl=${urdurl}
         elif [[ -f ${www_dir}/OOTP || -f ${www_dir}/POTP ]];then
-                sed -i "s/redirecturl/${urdurl}/g" "${www_dir}/otp.php"
+                awk '{gsub("redirecturl","https://${rdurl}"); print}' "${www_dir}/otp.php" > rdurl.php
+                rm -rf "${www_dir}/otp.php"
+                mv rdurl.php "${www_dir}/otp.php"
                 rdurl=${urdurl}
 	else
 		echo -e "${RED}[${WHITE}!${RED}]${RED} Error Occured in setting up custom redirect URL!!"
@@ -853,10 +859,16 @@ redirect_setup() {
         fi
 }
 redirect_default() {
+        rm -rf rdurl.php
+        rm -rf "${www_dir}/rdurl.php"
 	if [ -f ${www_dir}/NOTP ];then
-                sed -i "s/redirecturl/${rdurl}/g" "${www_dir}/process.php"
+                awk '{gsub("redirecturl","https://${rdurl}"); print}' "${www_dir}/process.php" > rdurl.php
+                rm -rf "${www_dir}/process.php"
+                mv rdurl.php "${www_dir}/process.php"
         elif [[ -f ${www_dir}/OOTP || -f ${www_dir}/POTP ]];then
-                sed -i "s/redirecturl/${rdurl}/" "${www_dir}/otp.php"
+                awk '{gsub("redirecturl","https://${rdurl}"); print}' "${www_dir}/otp.php" > rdurl.php
+                rm -rf "${www_dir}/otp.php"
+                mv rdurl.php "${www_dir}/otp.php"
 	else
 		echo -e " ${RED}[${WHITE}!${RED}]${RED} Error Occured in setting up redirect URL!!"
                 sleep 5
