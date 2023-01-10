@@ -173,8 +173,17 @@ Clifty is the most powerful and compact phishing tool. it has lots of advantages
 <br>
 
 ## THINGS TO BE DONE:
+- Add more than just login
 - Mails you the login details 
-  
+- Back option in menu
+- Use sed instead of awk in redirect url
+- Add NOTP, POTP and OOTP in sites
+- Remove NOTP, POTP and OOTP files in sites
+
+### Sites 
+- Update : Few sites
+- Add : Roblox
+
 **<a href="https://github.com/Alygnt/Clifty/discussions/new?category=ideas">I have a Idea!!</a>**
 
 <br>
