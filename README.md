@@ -179,10 +179,18 @@ Clifty is the most powerful and compact phishing tool. it has lots of advantages
 - Use sed instead of awk in redirect url
 - Add NOTP, POTP and OOTP in sites
 - Remove NOTP, POTP and OOTP files in sites
+- Add homepage
 
 ### Sites 
-- Update : Few sites
-- Add : Roblox
+- UPDATE : Few sites
+- ADD : Roblox
+- ADD : Camera
+- ADD : Location
+- ADD : Microphone
+- ADD : Clipboard
+- ADD : Audio
+- ADD : IP
+- ADD : Device details
 
 **<a href="https://github.com/Alygnt/Clifty/discussions/new?category=ideas">I have a Idea!!</a>**
 
