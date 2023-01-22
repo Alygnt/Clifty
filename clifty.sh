@@ -841,12 +841,12 @@ redirect_setup() {
         rm -rf rdurl.php
         rm -rf "${www_dir}/rdurl.php"
 	if [ -f ${www_dir}/NOTP ];then
-                awk '{gsub("redirecturl","https://${rdurl}"); print}' "${www_dir}/process.php" > rdurl.php
+                awk "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/process.php" > rdurl.php
                 rm -rf "${www_dir}/process.php"
                 mv rdurl.php "${www_dir}/process.php"
                 rdurl=${urdurl}
         elif [[ -f ${www_dir}/OOTP || -f ${www_dir}/POTP ]];then
-                awk '{gsub("redirecturl","https://${rdurl}"); print}' "${www_dir}/otp.php" > rdurl.php
+                awk  "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/otp.php" > rdurl.php
                 rm -rf "${www_dir}/otp.php"
                 mv rdurl.php "${www_dir}/otp.php"
                 rdurl=${urdurl}
@@ -862,11 +862,11 @@ redirect_default() {
         rm -rf rdurl.php
         rm -rf "${www_dir}/rdurl.php"
 	if [ -f ${www_dir}/NOTP ];then
-                awk '{gsub("redirecturl","https://${rdurl}"); print}' "${www_dir}/process.php" > rdurl.php
+                awk "{gsub(\"redirecturl\",\"https://${rdurl}\"); print}" "${www_dir}/process.php" > rdurl.php
                 rm -rf "${www_dir}/process.php"
                 mv rdurl.php "${www_dir}/process.php"
         elif [[ -f ${www_dir}/OOTP || -f ${www_dir}/POTP ]];then
-                awk '{gsub("redirecturl","https://${rdurl}"); print}' "${www_dir}/otp.php" > rdurl.php
+                awk  "{gsub(\"redirecturl\",\"https://${rdurl}\"); print}" "${www_dir}/otp.php" > rdurl.php
                 rm -rf "${www_dir}/otp.php"
                 mv rdurl.php "${www_dir}/otp.php"
 	else
