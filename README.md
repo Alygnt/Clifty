@@ -32,7 +32,7 @@
 </p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/RDXLR/phisher-modules/clifty/pics/poster.png">
+<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/clifty/pics/poster.png">
 </p>
 
 <br>
@@ -50,11 +50,7 @@ It only demonstrates "how phishing works". <b>You shall not misuse the informati
 <br>
 
 ## ABOUT TOOL:
-Clifty is the most powerful phishing site. it has lots of advantages. Give it a try.
-                                         
-<br>
-                 
-## Tool is under maintenance for 1.4 update
+Clifty is the most powerful and compact phishing tool. it has lots of advantages. Give it a try.
   
 <br>
                                          
@@ -77,7 +73,7 @@ Clifty is the most powerful phishing site. it has lots of advantages. Give it a 
 
 ## REQUIRMENTS:
 * Internet
-* Storage 300 MB
+* Storage 30 MB
 
 <br>
 
@@ -148,7 +144,7 @@ Clifty is the most powerful phishing site. it has lots of advantages. Give it a 
   ```
   dpkg -i <your path to deb file>
   ```
-  - Run the tool by typing
+ - Run the tool by typing
   `clifty`
 
 <br>
@@ -172,19 +168,30 @@ Clifty is the most powerful phishing site. it has lots of advantages. Give it a 
 - **is.gd** to shorten url
 - **shrtco.de** to shorten url
 - **tinyurl.com** to shorten url
+- **ipinfo.io** to see users ip
 
 <br>
 
 ## THINGS TO BE DONE:
+- Add more than just login
 - Mails you the login details 
-- Network check before starting tunneler
-- To change type to number from password in few otp pages
-- To display users ip in main menu
-- Instagram OTP phishing page fix
-- Custom redirect Url
-- Ngrok no hotspot verion 
-- User's device ip display in main menu
-  
+- Back option in menu
+- Add NOTP, POTP and OOTP in sites
+- Remove NOTP, POTP and OOTP files in sites
+- Add homepage
+
+### Sites 
+- UPDATE : Few sites
+- ADD : Roblox
+- ADD : Camera
+- ADD : Location
+- ADD : Microphone
+- ADD : Clipboard
+- ADD : Audio
+- ADD : IP
+- ADD : Device details
+- ADD : Binance
+
 **<a href="https://github.com/Alygnt/Clifty/discussions/new?category=ideas">I have a Idea!!</a>**
 
 <br>
@@ -196,9 +203,7 @@ Clifty is the most powerful phishing site. it has lots of advantages. Give it a 
 
 ## SCREENSHOTS :
 <p align="center">
-<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/clifty/screenshots/ss1.jpg">
-<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/clifty/screenshots/ss2.jpg">
-<img src="https://raw.githubusercontent.com/Alygnt/phisher-modules/clifty/screenshots/ss3.jpg">
+<img src="https://github.com/Alygnt/phisher-modules/blob/clifty/screenshot/clifty_ss_1.4.gif?raw=true">
 </p>
 
 <br>

