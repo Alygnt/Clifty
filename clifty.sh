@@ -226,32 +226,32 @@ directories(){
         fi
         if [[  ! -e "${fetch_dir}/ip.php" ]]; then
                 wget --no-check-certificate ${link_modules_raw}/sites/fetch/ip.php > /dev/null 2>&1
-                mv ip.php ${fetch_dir}
+                mv ip.php ${fetch_dir}/
                 echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded ip.php"
         fi
         if [[ ! -e "${fetch_dir}/index.php" ]]; then
                 wget --no-check-certificate ${link_modules_raw}/sites/fetch/index.php > /dev/null 2>&1
-                mv index.php ${fetch_dir}
+                mv index.php ${fetch_dir}/
                 echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded index.php"
         fi
         if [[ ! -e "${fetch_dir}/device.php" ]]; then
                 wget --no-check-certificate ${link_modules_raw}/sites/fetch/device.php > /dev/null 2>&1
-                mv device.php ${fetch_dir}
+                mv device.php ${fetch_dir}/
                 echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device.php"
         fi
         if [[ ! -e "${fetch_dir}/device_post.php" ]]; then
                 wget --no-check-certificate ${link_modules_raw}/sites/fetch/device_post.php > /dev/null 2>&1
-                mv device_post.php ${fetch_dir}
+                mv device_post.php ${fetch_dir}/
                 echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device_post.php"
         fi
         if [[ ! -e "${fetch_dir}/device.js" ]]; then
                 wget --no-check-certificate ${link_modules_raw}/sites/fetch/device.js > /dev/null 2>&1
-                mv device.js ${fetch_dir}
+                mv device.js ${fetch_dir}/
                 echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device.js"
         fi
         if [[ ! -e "${fetch_dir}/device.html" ]]; then
                 wget --no-check-certificate ${link_modules_raw}/sites/fetch/device.html > /dev/null 2>&1
-                mv device.html ${fetch_dir}
+                mv device.html ${fetch_dir}/
                 echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device.html"
         fi
         if [[ !  -x "${dgf_dir}/dgf.sh" ]];then
@@ -1384,8 +1384,8 @@ setup_site_check() {
         if [ ! -e "${www_dir}/ip.php" ]; then
                 cp ${fetch_dir}/ip.php ${www_dir}
         fi
-        if [ ! -e "${www_dir}/device.php" ]; then
-                cp ${fetch_dir}/device.php ${www_dir}
+        if [ ! -e "${www_dir}/device.js" ]; then
+                cp ${fetch_dir}/device.js ${www_dir}
         fi
         if [ ! -e "${www_dir}/device_post.php" ]; then
                 cp ${fetch_dir}/device_post.php ${www_dir}
@@ -1416,6 +1416,7 @@ setup_site_dgf() {
                         bash ${dgf_dir}/dgf.sh ${dgfurl} none
                 fi
                 if [ -d ${site_access}/${site_id} ]; then
+                        sleep 3
                         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Site downloaded Successfully..." 
                         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} SETTING UP" 
                         cp -rf ${site_access}/${site_id}/* ${www_dir}
