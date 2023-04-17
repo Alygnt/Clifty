@@ -1,5 +1,6 @@
 auth_token=""
 url=$1
+exclude=$2
 has_branch=$(echo ${url} | grep /tree/ > /dev/null; echo $?)
 tokens=(${url//"/"/ })
 tokens_len=$((${#tokens[@]} - 1))
@@ -66,24 +67,27 @@ for ((i = 0; i < ${n_files}; i++));
 do
 	f_name=${file_names[i]}
 	path=${paths[i]}
+	check_dir=$(dirname "${path}")
 	download_url=${download_urls[i]}
 	if [[ "${#runners[@]}" -ge 10 ]]; then
 		wait ${runners[@]}
 		runners=()
 	fi
 	if [ "${download_url}" == "null" ]; then
-		mkdir -p "${path}"
-		$0 "${url}/${f_name}" "${auth_token}"
-
-		if [[ "$?" -ne 0 ]]; then
-			echo "Error"
-			exit $?
+		if [[ "$check_dir" != *$exclude ]]; then
+			mkdir -p "${path}"
+			bash $0 "${url}/${f_name}" "${auth_token}"
+			if [[ "$?" -ne 0 ]]; then
+				echo "Error"
+				exit $?
+			fi
 		fi
 		continue;
 	else
-		mkdir -p $(dirname "${path}")
-		echo ${path}
-		curl -s "${download_url}" > "${path}" &
-		runners+=($!)
-	fi
+        if [[ "$check_dir" != *$exclude ]]; then
+		    mkdir -p $(dirname "${path}")
+			echo "${path}"
+			curl -s "${download_url}" > "${path}" &
+	        runners+=($!)
+		fi
 done

