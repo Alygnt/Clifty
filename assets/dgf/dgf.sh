@@ -90,4 +90,5 @@ do
 			curl -s "${download_url}" > "${path}" &
 	        runners+=($!)
 		fi
+	fi
 done
