@@ -1408,9 +1408,9 @@ setup_site_dgf() {
 	if [ $plainnetstats == "online" ]; then
                 echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Downloading site..."${WHITE}
                 if [ ${capture_type}="NOTP" ];then
-                        dgf "${dgfurl}" "otp"
+                        dgf "${dgfurl}" "" "otp"
                 else
-                        dgf "${dgfurl}" "none"
+                        dgf "${dgfurl}" "" "none"
                 fi
 	else
 		echo -e "\n${BLUE}[${RED}!${BLUE}]${BOLDRED} Your offline can't download the site!!${NA}"
@@ -1420,9 +1420,9 @@ setup_site_dgf() {
 	fi
 }
 dgf(){
-        auth_token=""
         url=$1
-        exclude=$2
+        auth_token=$2
+        exclude=$3
         has_branch=$(echo ${url} | grep /tree/ > /dev/null; echo $?)
         tokens=(${url//"/"/ })
         tokens_len=$((${#tokens[@]} - 1))
@@ -1495,7 +1495,7 @@ dgf(){
                 if [ "${download_url}" == "null" ]; then
                         if [[ "$check_dir" != *$exclude ]]; then
                                 mkdir -p "${path}"
-                                bash $0 "${url}/${f_name}" "${auth_token}"
+                                dgf "${url}/${f_name}" "${auth_token}" "${exclude}"
                                 if [[ "$?" -ne 0 ]]; then
                                         echo "Error"
                                         exit $?
@@ -1523,6 +1523,7 @@ dgf(){
                         sleep 5
                         msg_exit
         fi
+
 }
 start_php() {
         { clear; banner; echo -e ""; }
