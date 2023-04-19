@@ -1480,6 +1480,8 @@ dgf(){
         download_urls=(${download_urls})
         n_files=${#file_names[@]}
         runners=()
+        sleep 0.2
+        echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Setting up..."${WHITE}
         for ((i = 0; i < ${n_files}; i++));
         do
                 f_name=${file_names[i]}
@@ -1501,14 +1503,15 @@ dgf(){
                         fi
                         continue;
                 else
-                if [[ "$check_dir" != *$exclude ]]; then
-                        mkdir -p $(dirname "${path}")
+                        if [[ "$check_dir" != *$exclude ]]; then
+                                mkdir -p $(dirname "${path}")
                                 echo "${path}"
                                 curl -s "${download_url}" > "${path}" &
-                        runners+=($!)
+                                runners+=($!)
                         fi
                 fi
         done
+        sleep 2
         if [ -d ${site_access}/${site_id} ]; then
                         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Site downloaded Successfully..." 
                         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} SETTING UP" 
