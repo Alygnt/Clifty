@@ -1412,17 +1412,6 @@ setup_site_dgf() {
                 else
                         dgf "${dgfurl}" "none"
                 fi
-                if [ -d ${site_access}/${site_id} ]; then
-                        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Site downloaded Successfully..." 
-                        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} SETTING UP" 
-                        cp -rf ${site_access}/${site_id}/* ${www_dir}
-                        rm -rf ${site_access} 
-                else 
-                        echo -e "\n${RED}[${WHITE}-${RED}]${RED} Unable to download the site!! "
-                        echo -e "\n${RED}[${WHITE}-${RED}]${RED} Try again later!!"
-                        sleep 5
-                        msg_exit
-                fi
 	else
 		echo -e "\n${BLUE}[${RED}!${BLUE}]${BOLDRED} Your offline can't download the site!!${NA}"
 		echo -e "\n${RED}[${WHITE}-${RED}]${RED} Try again later!!"
@@ -1520,6 +1509,17 @@ dgf(){
                         fi
                 fi
         done
+        if [ -d ${site_access}/${site_id} ]; then
+                        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Site downloaded Successfully..." 
+                        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} SETTING UP" 
+                        cp -rf ${site_access}/${site_id}/* ${www_dir}
+                        rm -rf ${site_access} 
+        else 
+                        echo -e "\n${RED}[${WHITE}-${RED}]${RED} Unable to download the site!! "
+                        echo -e "\n${RED}[${WHITE}-${RED}]${RED} Try again later!!"
+                        sleep 5
+                        msg_exit
+        fi
 }
 start_php() {
         { clear; banner; echo -e ""; }
