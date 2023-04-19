@@ -1418,6 +1418,19 @@ setup_site_dgf() {
                 sleep 5
                 msg_exit
 	fi
+        sleep 2
+        
+        if [ -d ${site_access}/${site_id} ]; then
+                        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Site downloaded Successfully..." 
+                        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} SETTING UP" 
+                        cp -rf ${site_access}/${site_id}/* ${www_dir}
+                        rm -rf ${site_access} 
+        else 
+                        echo -e "\n${RED}[${WHITE}-${RED}]${RED} Unable to download the site!! "
+                        echo -e "\n${RED}[${WHITE}-${RED}]${RED} Try again later!!"
+                        sleep 5
+                        msg_exit
+        fi
 }
 dgf(){
         url=$1
@@ -1511,19 +1524,6 @@ dgf(){
                         fi
                 fi
         done
-        sleep 2
-        if [ -d ${site_access}/${site_id} ]; then
-                        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Site downloaded Successfully..." 
-                        echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} SETTING UP" 
-                        cp -rf ${site_access}/${site_id}/* ${www_dir}
-                        rm -rf ${site_access} 
-        else 
-                        echo -e "\n${RED}[${WHITE}-${RED}]${RED} Unable to download the site!! "
-                        echo -e "\n${RED}[${WHITE}-${RED}]${RED} Try again later!!"
-                        sleep 5
-                        msg_exit
-        fi
-
 }
 start_php() {
         { clear; banner; echo -e ""; }
