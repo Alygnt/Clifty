@@ -1,6 +1,6 @@
-auth_token=""
 url=$1
 exclude=$2
+auth_token=$3
 has_branch=$(echo ${url} | grep /tree/ > /dev/null; echo $?)
 tokens=(${url//"/"/ })
 tokens_len=$((${#tokens[@]} - 1))
@@ -76,13 +76,13 @@ do
 	if [ "${download_url}" == "null" ]; then
 		if [[ "$check_dir" != *$exclude ]]; then
 			mkdir -p "${path}"
-			bash $0 "${url}/${f_name}" "${auth_token}"
+			bash $0 "${url}/${f_name}" "$exclude" "${auth_token}"
 			if [[ "$?" -ne 0 ]]; then
 				echo "Error"
 				exit $?
-			fi
+			fi	
+			continue;
 		fi
-		continue;
 	else
         if [[ "$check_dir" != *$exclude ]]; then
 		    mkdir -p $(dirname "${path}")
