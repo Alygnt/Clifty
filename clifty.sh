@@ -404,7 +404,7 @@ status_display(){
 
 homepage() {
 status_display
-if [[ ! -d "${site_dir}" ]]; then
+if [[ ! -d "${sites_dir}" ]]; then
         d4site="Download"
 else
         d4site="Delete"
@@ -929,7 +929,7 @@ esac
 dsites(){
         { clear; banner; echo -e ""; }
         status
-        if [[ ! -d "${site_dir}" ]]; then
+        if [[ ! -d "${sites_dir}" ]]; then
                 if [ $plainnetstats == "online" ]; then
                         rm -rf ${sites_dir}
                         echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloading Sites..."
@@ -955,7 +955,7 @@ dsites(){
                         homepage
                 fi
         else
-                rm -rf ${site_dir}
+                rm -rf ${sites_dir}
                 echo -e "\n${BLUE}[${WHITE}-${BLUE}]${BOLDGREEN} SITES ARE DELETED SUCCESSFULLY... ${NA}"
         fi
 }
