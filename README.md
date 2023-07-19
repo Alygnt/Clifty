@@ -50,11 +50,11 @@ It only demonstrates "how phishing works". <b>You shall not misuse the informati
 <br>
 
 ## ABOUT TOOL:
-Clifty is the most powerful and compact phishing tool. it has lots of advantages. Give it a try.
+pullo is the most powerful and compact phishing tool. it has lots of advantages. Give it a try.
   
 <br>
                                          
-### What makes Clifty so powerful:
+### What makes Pullo so powerful:
 * Has 150+ Phishing Options
 * Has OTP phishing function
 * Saves the logs and manages it
@@ -67,7 +67,7 @@ Clifty is the most powerful and compact phishing tool. it has lots of advantages
 * Termux
 * Kali Linux
 * Google cloud shell
-* Git bash for windows
+* Git bash for windows=Android 
 
 <br>
 
@@ -83,9 +83,9 @@ Clifty is the most powerful and compact phishing tool. it has lots of advantages
 * `pkg update -y`
 * `pkg upgrade -y`
 * `pkg install git -y`
-* `git clone https://github.com/Alygnt/Clifty`
-* `cd Clifty`
-* `bash clifty.sh`
+* `git clone https://github.com/Alygnt/Pullo`
+* `cd Pullo`
+* `bash pullo.sh`
 
 ### Kali Linux
 * `sudo apt update -y`
@@ -191,7 +191,7 @@ Clifty is the most powerful and compact phishing tool. it has lots of advantages
 - ADD : IP
 - ADD : Device details
 - ADD : Binance
-
+- ADD : WhatsApp 
 **<a href="https://github.com/Alygnt/Clifty/discussions/new?category=ideas">I have a Idea!!</a>**
 
 <br>
