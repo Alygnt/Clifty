@@ -75,7 +75,7 @@ cbanner(){
 	echo -e "${MAGENTA}|       ${CYAN}╚██████╗███████╗██║██║        ██║      ██║        ${MAGENTA}|${NC}"
 	echo -e "${MAGENTA}|       ${CYAN} ╚═════╝╚══════╝╚═╝╚═╝        ╚═╝      ╚═╝        ${MAGENTA}|${NC}"
 	echo -e "${MAGENTA}-----------------------------------------------------------${NC}"
-	echo -e "${BOLDBLUE}           ᴠᴇʀsɪᴏɴ 1.4               ＢＹ －ＡＬＹＧＮＴ           ${NC}"
+	echo -e "${BOLDBLUE}           ᴠᴇʀsɪᴏɴ 1.5               ＢＹ －ＡＬＹＧＮＴ           ${NC}"
         echo -e ""
 }
 #Small Banner

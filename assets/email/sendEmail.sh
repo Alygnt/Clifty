@@ -4,18 +4,22 @@ pro_dir=$(pwd)
 email_dir="${pro_dir}/assets/email"
 #email_dir="$pro_dir"
 
-if [[ "$4"=="" || "$4"== " " ]]; then
+if [ -z "${4}" ] || [ "${4}" == " " ]; then
     4="NaN"
 fi
-if [[ "$6"=="" || "$6"== " " ]]; then
+
+if [ -z "${6}" ] || [ "${6}" == " " ]; then
     6="NaN"
 fi
-if [[ "$7"=="" || "$7"== " " ]]; then
+
+if [ -z "${7}" ] || [ "${7}" == " " ]; then
     7="NaN"
 fi
-if [[ "$8"=="" || "$8"== " " ]]; then
+
+if [ -z "${8}" ] || [ "${8}" == " " ]; then
     8="NaN"
 fi
+
 
 # Replace placeholders in email.json with actual values
 sed -i "s/replace_my_email/$1/" "${email_dir}/email.json"

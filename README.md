@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/Alygnt/Clifty"><img title="Version" src="https://img.shields.io/badge/Version-1.4-green.svg"></a>
+<a href="https://github.com/Alygnt/Clifty"><img title="Version" src="https://img.shields.io/badge/Version-1.5-green.svg"></a>
 <a href="https://github.com/Alygnt/Clifty"><img title="Maintainence" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg"></a>
 </p>
 
@@ -173,23 +173,11 @@ Clifty is the most powerful and compact phishing tool. it has lots of advantages
 <br>
 
 ## THINGS TO BE DONE:
-- Add more than just login
-- Mails you the login details 
-- Back option in menu
-- Add NOTP, POTP and OOTP in sites
-- Remove NOTP, POTP and OOTP files in sites
-- Add homepage
+**Nothing for now...**
 
 ### Sites 
 - UPDATE : Few sites
 - ADD : Roblox
-- ADD : Camera
-- ADD : Location
-- ADD : Microphone
-- ADD : Clipboard
-- ADD : Audio
-- ADD : IP
-- ADD : Device details
 - ADD : Binance
 
 **<a href="https://github.com/Alygnt/Clifty/discussions/new?category=ideas">I have a Idea!!</a>**
@@ -203,7 +191,7 @@ Clifty is the most powerful and compact phishing tool. it has lots of advantages
 
 ## SCREENSHOTS :
 <p align="center">
-<img src="https://github.com/Alygnt/phisher-modules/blob/clifty/screenshot/clifty_ss_1.4.gif?raw=true">
+<img src="https://github.com/Alygnt/phisher-modules/blob/clifty/screenshot/clifty_ss_1.5.gif?raw=true">
 </p>
 
 <br>
