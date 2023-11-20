@@ -166,9 +166,9 @@ Clifty is the most powerful and compact phishing tool. it has lots of advantages
 - **localxpose.io** to tunnel the localhost
 - **ipwhois.app** to get IP details
 - **is.gd** to shorten url
-- **shrtco.de** to shorten url
 - **tinyurl.com** to shorten url
 - **ipinfo.io** to see users ip
+- **clifty-api** to send email
 
 <br>
 
