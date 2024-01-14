@@ -1,0 +1,112 @@
+#!/bin/bash
+
+package_name="clifty"
+link_clifty="https://github.com/Alygnt/Clifty"
+link_clifty_raw="https://raw.githubusercontent.com/Alygnt/Clifty/main"
+
+clear
+cd $HOME
+
+version=$(curl -s "${link_clifty_raw}/assets/update/version.txt")
+version="1.5"
+
+#Check whether package is installed
+package_installed() {
+    local package_name=$1
+
+    if dpkg -l | awk '{print $2}' | grep -wq "$package_name"; then
+        return 0  # Package is installed
+    else
+        return 1  # Package is not installed
+    fi
+}
+
+latest_version() {
+    current_ver=$(clifty -v)
+    if [ "$version" == "$current_ver" ]; then
+        echo "You already have Clifty latest version"
+        sleep 3
+        run
+    else 
+        install_now
+    fi
+}
+
+# Function to install dependencies
+dependencies() {
+    if [[ $(command -v curl) ]]; then
+        echo -ne ""
+    else
+        pkgs=(curl wget)
+        for pkg in "${pkgs[@]}"; do
+            type -p "$pkg" &>/dev/null || {
+                if [[ $(command -v pkg) ]]; then
+                    pkg install "$pkg" -y
+                elif [[ $(command -v apt) ]]; then
+                    apt install "$pkg" -y
+                elif [[ $(command -v apt-get) ]]; then
+                    apt-get install "$pkg" -y
+                elif [[ $(command -v pacman) ]]; then
+                    sudo pacman -S "$pkg" --noconfirm
+                elif [[ $(command -v dnf) ]]; then
+                    sudo dnf -y install "$pkg"
+                else
+                    echo -e "\n Unsupported package manager, Install packages manually."
+                    { reset_color; exit 1; }
+                fi
+            }
+        done
+    fi
+}
+
+# Function to set variables
+variables() {
+    version=$(curl -s https://raw.githubusercontent.com/Alygnt/Clifty/main/assets/update/version.txt)
+    link_clifty="https://github.com/Alygnt/Clifty"
+}
+
+# Function to install Clifty
+install() {
+    wget --no-check-certificate ${link_clifty}/releases/download/v_${version}/clifty_${version}.deb > /dev/null 2>&1
+    if [[ $(command -v termux-chroot) ]]; then
+        termux-chroot dpkg -i clifty_${version}.deb
+    else
+        if [ "$SUDO_USER" ]; then
+            sudo dpkg -i "clifty_${version}.deb"
+        else
+            dpkg -i "clifty_${version}.deb"
+        fi
+    fi
+    rm -rf clifty_${version}.deb
+}
+
+# Function to clean up
+clean() {
+    if [ -e install.sh ]; then
+        rm -rf install.sh
+    fi
+}
+
+# Function to run Clifty
+run() {
+    if [ "$SUDO_USER" ]; then
+        sudo clifty
+    else
+        clifty
+    fi
+}
+
+install_now(){
+    dependencies
+    variables
+    install
+    clean
+    run
+}
+
+if package_installed "$package_name"; then
+    latest_version
+else
+    install_now
+fi
+
