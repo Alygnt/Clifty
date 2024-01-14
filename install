@@ -66,7 +66,7 @@ variables() {
 }
 
 # Function to install Clifty
-install() {
+install_deb() {
     wget --no-check-certificate ${link_clifty}/releases/download/v_${version}/clifty_${version}.deb > /dev/null 2>&1
     if [[ $(command -v termux-chroot) ]]; then
         termux-chroot dpkg -i clifty_${version}.deb
@@ -105,7 +105,7 @@ finish(){
 install_now(){
     dependencies
     variables
-    Install
+    install_deb
 }
 
 if package_installed "$package_name"; then
