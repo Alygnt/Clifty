@@ -107,6 +107,10 @@ args(){
                 sbanner
                 exit 0
         fi
+        if [ "$1" == "--update" ] || [ "$1" == "-u" ]; then
+                update
+                exit 0
+        fi
 }
 
 colorcodes(){

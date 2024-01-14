@@ -24,9 +24,9 @@ package_installed() {
 latest_version() {
     current_ver=$(clifty -v)
     if [ "$version" == "$current_ver" ]; then
-        echo "You already have Clifty latest version"
-        sleep 3
-        run
+        clifty -cb
+        echo -ne  "\nYou already have Clifty latest version"
+        echo -ne "\nType 'clifty' to run it"
     else 
         install_now
     fi
@@ -82,8 +82,8 @@ install() {
 
 # Function to clean up
 clean() {
-    if [ -e install.sh ]; then
-        rm -rf install.sh
+    if [ -e install ]; then
+        rm -rf install
     fi
 }
 
@@ -96,17 +96,22 @@ run() {
     fi
 }
 
+finish(){
+    clear
+    clifty -b
+    echo -ne "\nClifty tool is now ready type 'clifty' to run it"
+}
+
 install_now(){
     dependencies
     variables
-    install
-    clean
-    run
+    Install
 }
 
 if package_installed "$package_name"; then
     latest_version
 else
     install_now
+    finish
 fi
 
